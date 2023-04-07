@@ -19,7 +19,7 @@
 
 
  <h4 align="center"> 
-		:construction:  Webserv is Under construction...  :construction:
+		:construction:  Webserv is under construction...  :construction:
 </h4> 
 
 <hr>
@@ -49,8 +49,8 @@ Describe your project
 
 The following tools were used in this project:
 
-- [C++](https://isocpp.org/std/the-standard)
-- [Docker](https://www.docker.com/)
+* [C++](https://isocpp.org/std/the-standard)
+* [Docker](https://www.docker.com/)
 
 ## Requirements ##
 
