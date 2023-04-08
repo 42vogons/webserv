@@ -3,41 +3,45 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+         #
+#    By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/27 00:08:05 by cpereira          #+#    #+#              #
-#    Updated: 2023/04/07 19:12:25 by cpereira         ###   ########.fr        #
+#    Updated: 2023/04/07 22:16:25 by anolivei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = test.out
+NAME = webserv
 
-ODIR =	./objs/
+SRC_DIR = srcs
 
-SRCS =	main.cpp 
+OBJ_DIR = .objs
 
-OBJS =	$(patsubst %.c, $(ODIR)%.o, $(SRCS))
+SRC =	$(SRC_DIR)/main.cpp
 
-CC = clang++
-C_FLAGS = -Wall -Werror -Wextra -std=c++98
+OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.opp, $(SRC))
 
+CC = c++
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -Wshadow -g -fsanitize=address
+RM = /bin/rm -rf
 
-$(NAME): $(OBJS)
-		@$(CC) $(OBJS) $(C_FLAGS) -g -o $@
-		@echo "\033[1;34mDone\033[0;37m"
+all: $(NAME)
 
-$(ODIR)%.o: $(SDIR)%.c
-		@mkdir -p $(ODIR)
-		@$(CC) $(C_FLAGS) -c $< -o $@
+$(NAME): $(OBJ)
+		@$(CC) $(OBJ) $(CFLAGS) -o $(NAME)
 
-
-all: karen
+$(OBJ_DIR)/%.opp: $(SRC_DIR)/%.cpp
+		@mkdir -p $(OBJ_DIR)
+		@$(CC) $(CFLAGS) -c $< -o $@
+		@echo "\033[0;32m[OK]\033[0m    \033[0;38;5;199mCompiling\033[0m $(<F)"
 
 clean:
-	@rm -rf $(ODIR)
+		@$(RM) $(OBJ_DIR)
+		@echo "\033[0;32m[OK]\033[0m    \033[0;38;5;44mRemoving objects\033[0m"
 
 fclean: clean
-	@rm -f $(NAME)
-	@echo "\033[1;33mCleaned\033[0;37m"
+		@$(RM) $(NAME)
+		@echo "\033[0;32m[OK]\033[0m    \033[0;38;5;44mRemoving $(NAME)\033[0m"
 
 re: fclean all
+
+.PHONY: all clean fclean re
