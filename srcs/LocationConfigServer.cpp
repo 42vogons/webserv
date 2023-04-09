@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationConfigServer.cpp                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:32:15 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/09 17:33:45 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/09 17:51:53 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,11 @@ LocationConfigServer& LocationConfigServer::operator=(const LocationConfigServer
 	if (this != &obj)
 	{
 		this->_autoIndex = obj._autoIndex;
+		this->_root = obj._root;
+		this->_allowedMethods = obj._allowedMethods;
+		this->_pagesIndex = obj._pagesIndex;
+		this->_cgi = obj._cgi;
+		
 	}
 	return (*this);
 }
