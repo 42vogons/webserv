@@ -1,3 +1,7 @@
+webserv
+.objs/
+.vscode/
+
 # Prerequisites
 *.d
 
