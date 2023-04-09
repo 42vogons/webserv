@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:32:15 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/09 17:51:53 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/09 18:51:22 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,26 @@ LocationConfigServer& LocationConfigServer::operator=(const LocationConfigServer
 	}
 	return (*this);
 }
+
+void	LocationConfigServer::setAutoIndex(bool autoIndex){_autoIndex = autoIndex;}
+void	LocationConfigServer::setRoot(std::string root){_root = root;}
+void	LocationConfigServer::setAllowedMethods(std::string name, bool status){
+	_allowedMethods[name] = status;
+}
+void	LocationConfigServer::setPagesIndex(std::string page){
+	if(_pagesIndex.find(page) == _pagesIndex.end())
+		_pagesIndex.insert(page);
+}
+void	LocationConfigServer::setCgi(std::string cgi){ _cgi= cgi;}
+
+bool	LocationConfigServer::getAutoIndex(void){return _autoIndex;}
+std::string	LocationConfigServer::getRoot(void){return _root;}
+bool	LocationConfigServer::getAllowedMethods(std::string methods){
+	// fazer verificação se não é nulo, se for estourar erro
+	return _allowedMethods.find(methods)->second;
+}
+std::set<std::string>	LocationConfigServer::getPagesIndex(void){return _pagesIndex;}
+std::string	LocationConfigServer::getCgi(void){return _cgi;}
 
 std::ostream&	operator<<(std::ostream& o, const LocationConfigServer& i)
 {

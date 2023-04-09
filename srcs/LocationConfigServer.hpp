@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationConfigServer.hpp                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:30:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/09 17:33:35 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/09 18:46:24 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,18 @@ class LocationConfigServer
 		virtual ~LocationConfigServer(void);
 
 		LocationConfigServer&	operator=(const LocationConfigServer& obj);
+
+		void	setAutoIndex(bool autoIndex);
+		void	setRoot(std::string root);
+		void	setAllowedMethods(std::string name, bool status);
+		void	setPagesIndex(std::string page);
+		void	setCgi(std::string cgi);
+
+		bool					getAutoIndex(void);
+		std::string				getRoot(void);
+		bool					getAllowedMethods(std::string methods);
+		std::set<std::string>	getPagesIndex(void);
+		std::string				getCgi(void);
 
 	private:
 		bool						_autoIndex;

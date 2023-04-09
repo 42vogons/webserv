@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/09 18:28:42 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/09 18:49:33 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,30 +51,30 @@ ConfigServer& ConfigServer::operator=(const ConfigServer& obj)
 	return (*this);
 }
 
-
-void ConfigServer::setServeName(std::string serverName){ this->_serverName = serverName;}
-void ConfigServer::setErrorPages(int code, std::string page){ 
+void	ConfigServer::setServeName(std::string serverName){ this->_serverName = serverName;}
+void	ConfigServer::setErrorPages(int code, std::string page){ 
 	this->_errorPages[code] =  page;
 }
-void ConfigServer::setPorts(int port){ 
+void	ConfigServer::setPorts(int port){ 
 	if (_ports.find(port) == _ports.end())
 		_ports.insert(port);
 }
-void ConfigServer::setClientMaxBodySize(int clientMaxBodySize){ this->_clientMaxBodySize = clientMaxBodySize;}
-void ConfigServer::setLocationConfigServer(std::string name, LocationConfigServer locattionConfigServer){
+void	ConfigServer::setClientMaxBodySize(int clientMaxBodySize){ this->_clientMaxBodySize = clientMaxBodySize;}
+void	ConfigServer::setLocationConfigServer(std::string name, LocationConfigServer locattionConfigServer){
 	this->_locationConfigServer[name] =  locattionConfigServer;
 }
-std::string ConfigServer::getServerName(void){return _serverName;}
-std::string ConfigServer::getErrorPages(int code){
+std::string	ConfigServer::getServerName(void){return _serverName;}
+std::string	ConfigServer::getErrorPages(int code){
+	// fazer verificação se não é nulo, se for estourar erro
 	return _errorPages.find(code)->second;
 }
-std::set<int> ConfigServer::getPorts(void){
+std::set<int>	ConfigServer::getPorts(void){
 	return _ports;
 }
 
-int ConfigServer::getClientMaxBodySize(void){return _clientMaxBodySize;}
+int	ConfigServer::getClientMaxBodySize(void){return _clientMaxBodySize;}
 
-LocationConfigServer ConfigServer::getLocationConfigServer(std::string name){
+LocationConfigServer	ConfigServer::getLocationConfigServer(std::string name){
 	return _locationConfigServer.find(name)->second;
 }
 
