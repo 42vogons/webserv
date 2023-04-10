@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationConfigServer.cpp                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:32:15 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/10 00:48:38 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/10 02:03:28 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ std::string	LocationConfigServer::getCgi(void){return _cgi;}
 
 std::ostream&	operator<<(std::ostream& o, const LocationConfigServer& i)
 {
-	o << "something" << i;
+	(void)i;
+	o << "something";
 	return o;
 }

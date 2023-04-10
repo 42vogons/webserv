@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigServer.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/10 00:52:16 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/10 02:03:09 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ LocationConfigServer	ConfigServer::getLocationConfigServer(std::string name){
 
 std::ostream&	operator<<(std::ostream& o, const ConfigServer& i)
 {
-	o << "something" << i;
+	(void)i;
+	o << "something";
 	return o;
 }
