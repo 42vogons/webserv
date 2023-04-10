@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/09 21:00:35 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/10 01:38:39 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 Socket::Socket(void) : _port(80)
 {
+	std::cout
+		<< "Socket default constructor called"
+		<< std::endl;
 	createSocketTCP();
 	configSocketAddress();
 	bindSocketToAddressAndWait();
@@ -23,6 +26,9 @@ Socket::Socket(void) : _port(80)
 
 Socket::Socket(int port) : _port(port)
 {
+	std::cout
+		<< "Socket constructor called"
+		<< std::endl;
 	createSocketTCP();
 	configSocketAddress();
 	bindSocketToAddressAndWait();
