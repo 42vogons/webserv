@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:23:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/09 21:06:41 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/10 01:36:07 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	main()
 		if(FD_ISSET(test.getServerFd(), &readfds))
 			test.acceptConnection();
 		if(FD_ISSET(test1.getServerFd(), &readfds))
-			test.acceptConnection();
+			test1.acceptConnection();
 	}
 }
 
