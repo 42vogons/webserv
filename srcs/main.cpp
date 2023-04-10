@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:23:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/08 17:38:02 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/10 00:51:40 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,32 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string.h>
+#include "ConfigServer.hpp"
 
 int main()
 {
+	ConfigServer configServer;
+	configServer.setServeName("teste");
+	configServer.setPorts(8081);
+	configServer.setPorts(8080);
+
+	LocationConfigServer locationConfigServer;
+	locationConfigServer.setAllowedMethods("POST",true);
+	configServer.setLocationConfigServer("teste", locationConfigServer);
+	std::cerr << "confLocation" << configServer.getLocationConfigServer("teste") << " ";
+	
+	
+
+	std::set<int> ports = configServer.getPorts();
+	std::set<int>::iterator it;
+	std::cerr << "Portas: ";
+	for (it = ports.begin(); it != ports.end(); ++it) {
+		std::cerr << *it << " ";
+	}
+
+	
+
+	
 	// Cria o socket TCP para a porta 8080
 	int server_fd = socket(AF_INET, SOCK_STREAM, 0);
 	// Configura o endereço do socket

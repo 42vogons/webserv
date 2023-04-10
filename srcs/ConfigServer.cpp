@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/09 18:49:33 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/10 00:52:16 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,14 +78,8 @@ LocationConfigServer	ConfigServer::getLocationConfigServer(std::string name){
 	return _locationConfigServer.find(name)->second;
 }
 
-
-
-
-
-
-
 std::ostream&	operator<<(std::ostream& o, const ConfigServer& i)
 {
-	o << "something";
+	o << "something" << i;
 	return o;
 }
