@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:23:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/10 00:51:40 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/14 18:16:31 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,48 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string.h>
-#include "ConfigServer.hpp"
+#include "Server.hpp"
+#include "Servers.hpp"
 
-int main()
+#include <iostream>
+#include <fstream>
+#include <string>
+
+int main(int argc, char*argv[])
 {
-	ConfigServer configServer;
+
+	if(argc != 2){
+		std::cout << "Error: could not open file." << std::endl;
+		return 1;
+	}
+
+	Server server;
+
+	Servers servers;
+	servers.readFile(argv[1]);
+
+	server = servers.getServer("sample_server_Z1");
+
+	std::set<int> ports = server.getPorts();
+
+	std::cout << "Server Name ==" << server.getServerName() << std::endl
+		<< " Ports :(" << ports.size()<<")" << std::endl
+		<< " 301" << server.getErrorPages(301) << std::endl;
+	
+	std::set<int>::iterator it;
+	for (it = ports.begin(); it != ports.end(); ++it) {
+		std::cout << *it << " ";
+	}
+
+	
+	
+	
+	
+	
+	
+
+
+	/*ConfigServer configServer;
 	configServer.setServeName("teste");
 	configServer.setPorts(8081);
 	configServer.setPorts(8080);
@@ -114,6 +151,6 @@ int main()
 			// Fecha a conexão com o cliente
 			close(client_fd2);
 		}
-	}
+	}*/
 	return (0);
 }
