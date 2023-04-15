@@ -14,26 +14,26 @@
 
 LocationServer::LocationServer(void)
 {
-	std::cout
+	/*std::cout
 		<< "LocationServer default constructor called"
-		<< std::endl;
+		<< std::endl;*/
 	return ;
 }
 
 LocationServer::LocationServer(const LocationServer& obj)
 {
-	std::cout
+	/*std::cout
 		<< "LocationServer copy constructor called"
-		<< std::endl;
+		<< std::endl;*/
 	*this = obj;
 	return ;
 }
 
 LocationServer::~LocationServer(void)
 {
-	std::cout
+	/*std::cout
 		<< "LocationServer destructor called"
-		<< std::endl;
+		<< std::endl;*/
 	return ;
 }
 
@@ -46,6 +46,10 @@ LocationServer& LocationServer::operator=(const LocationServer& obj)
 		this->_allowedMethods = obj._allowedMethods;
 		this->_pagesIndex = obj._pagesIndex;
 		this->_cgiPass = obj._cgiPass;
+		this->_redirect = obj._redirect;
+		this->_updatePath = obj._updatePath;
+		this->_cgiParam = obj._cgiParam;
+
 		
 	}
 	return (*this);
@@ -88,38 +92,39 @@ void	LocationServer::readLine(std::string line){
 
 	std::string key, valueString, valueString2;
 	bool valueBool;
-	//int valueInt;
-	
-	std::istringstream iss(line); // cria um stream de string para separar a primeira palavra da linha
-    iss >> key; // lê a primeira palavra da linha usando o stream de string
+
+	std::istringstream iss(line);
+    iss >> key ;
+
 	if (key.find("redirection") == 0) {
+		iss >> valueString;
 		this->setRedirect(valueString);
 	}
 	if (key.find("root") == 0) {
+		iss >> valueString;
 		this->setRoot(valueString);
 	}
 	if (key.find("upload_path") == 0) {
+		iss >> valueString;
 		this->setUpdatePath(valueString);
 	}
 	if (key.find("cgi_pass") == 0) {
+		iss >> valueString;
 		this->setCgiPass(valueString);
 	}
-	if (key.find("autoindex")){
-		iss >> valueBool;
+	if (key.find("autoindex") == 0){
+		iss >> std::boolalpha >> valueBool;
 		this->setAutoIndex(valueBool);
 	}
-	if (key.find("allowed_methods")){
-		iss >> valueString >> valueBool;
+	if (key.find("allowed_methods") == 0){
+		iss >> valueString >> std::boolalpha >> valueBool;
 		this->setAllowedMethods(valueString, valueBool);
 	}
-	if (key.find("cgi_param")){
+	if (key.find("cgi_param") == 0){
 		iss >> valueString >> valueString2;
 		this->setCgiParam(valueString, valueString2);
 	}
 }
-
-
-
 
 std::ostream&	operator<<(std::ostream& o, const LocationServer& i)
 {

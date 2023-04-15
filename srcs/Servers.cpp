@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:34:23 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/14 19:04:21 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/14 22:53:26 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ void Servers::addServer(std::string serverName, Server server){
 	this->_servers[serverName] =  server;
 	
 	//this->_Servers.insert("serverName", new Server("serverName"));
-	std::cout
+	/*std::cout
 		<< "add" 
 		<< serverName
-		<< std::endl;
+		<< std::endl;*/
 }
 
 void	Servers::setServer(std::string serverName, Server server){
@@ -82,7 +82,8 @@ void Servers::readFile(std::string fileName){
 	std::string line;
 	std::string key, name;
 	std::string lastServer;
-	LocationServer LocationServer;
+	LocationServer locationServer;
+	
 
 	int nivel;
 
@@ -105,15 +106,15 @@ void Servers::readFile(std::string fileName){
 				Server serverEdit = getServer(lastServer);
 				serverEdit.readLine(line);
 				setServer(lastServer, serverEdit);
+			}
+			if (nivel == 2){
+				Server serverEdit = getServer(lastServer);
+				locationServer = serverEdit.getLocationServer(serverEdit.getLastLocation());
+				locationServer.readLine(line);
+				serverEdit.setLocationServer(serverEdit.getLastLocation(), locationServer);
+				setServer(lastServer, serverEdit);
 				
 			}
-			/*if (nivel == 2){
-				std::istringstream iss(line);
-				iss >> key >> name;
-				if (key = "l")
-				Server serverEdit = getServer(lastServer);
-				serverEdit.setLocationServer()
-			}*/
 
 			
 		}

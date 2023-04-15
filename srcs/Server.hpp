@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:34:23 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/14 19:01:41 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/14 19:23:38 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ class Server
 		std::set<int>			getPorts(void) const;
 		int						getClientMaxBodySize(void);
 		LocationServer			getLocationServer(std::string name);
+		std::string				getLastLocation(void);
 		
 
 	private:
@@ -53,6 +54,7 @@ class Server
 		std::set<int>								_ports;
 		int											_clientMaxBodySize;
 		std::map<std::string, LocationServer>		_locationServer;
+		std::string									_lastLocation;
 	protected:
 };
 

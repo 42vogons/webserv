@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/14 18:27:49 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/14 22:53:57 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ Server& Server::operator=(const Server& obj)
 		this->_ports = obj._ports;
 		this->_clientMaxBodySize = obj._clientMaxBodySize;
 		this->_locationServer = obj._locationServer;
+		this->_lastLocation = obj._lastLocation;
 		
 	}
 	return (*this);
@@ -59,33 +60,44 @@ Server& Server::operator=(const Server& obj)
 
 void	Server::readLine(std::string line){
 
-	std::string key, arg2;
+	std::string key, valueString;
 
-	int value;
+	int valueInt;
 	
-	std::istringstream iss(line); // cria um stream de string para separar a primeira palavra da linha
-    iss >> key; // lê a primeira palavra da linha usando o stream de string
+	std::istringstream iss(line);
+    iss >> key;
 	if (key.find("listen") == 0) {
-		while (iss >> value)
+		while (iss >> valueInt)
 		{
-			this->setPorts(value);
-			std::cout << "listen" << value << std::endl;
+			this->setPorts(valueInt);
 		}
 	}
 	if (key.find("server_name") == 0){
-		iss >> arg2;
-		this->setServeName(arg2);
+		iss >> valueString;
+		this->setServeName(valueString);
 	}
 	if (key.find("client_max_body_size") == 0){
-		iss >> value;
-		this->setClientMaxBodySize(value);
+		iss >> valueInt;
+		this->setClientMaxBodySize(valueInt);
 	}
 	
 	if (key.find("error_page") == 0){
-		iss >> value >> arg2;
-		this->setErrorPages(value, arg2);
+		iss >> valueInt >> valueString;
+		this->setErrorPages(valueInt, valueString);
+	}
+
+	if (key.find("location") == 0){
+		iss >> valueString;
+		
+		LocationServer locationServer;
+		this->_lastLocation = valueString;
+		this->setLocationServer(valueString, locationServer);
 	}
 }
+
+std::string	Server::getLastLocation(void){return _lastLocation;}
+
+
 
 void	Server::setServeName(std::string serverName){ this->_serverName = serverName;}
 void	Server::setErrorPages(int code, std::string page){ 
