@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/09 20:40:07 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/14 22:52:49 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 #define SOCKET_HPP
 
 #include <iostream>
-#include <unistd.h>
+#include <unistd.h> //read write and close
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <string.h>
+#include <cstring> //strlen memset
 
 class Socket
 {
@@ -30,11 +30,11 @@ class Socket
 		Socket&	operator=(const Socket& obj);
 		void	createSocketTCP(void);
 		void	configSocketAddress(void);
-		void	bindSocketToAddressAndWait(void);
+		void	bindSocketToAddress(void);
 		void	waitConnection(void);
 		void	acceptConnection(void);
 
-		int		getServerFd(void);
+		int		getServerFd(void) const;
 
 	private:
 		int					_port;
