@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:23:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/14 22:59:56 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/14 23:09:28 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,13 @@ int main(int argc, char*argv[])
 	std::set<int> ports = server.getPorts();
 
 	std::cout << "Server Name ==" << server.getServerName() << std::endl
-		<< " 301" << server.getErrorPages(301) << std::endl
+		<< "301" << server.getErrorPages(301) << std::endl
 		<< "redirect " << server.getLocationServer("/images").getRedirect() << std::endl
 		<< "POST " << server.getLocationServer("/images").getAllowedMethods("POST") << std::endl
 		<< "GET " << server.getLocationServer("/images").getAllowedMethods("GET") << std::endl
+		<< "P2 " << server.getLocationServer("/images").getCgiParm("p2") << std::endl
 		
-		<< " Ports :(" << ports.size()<<")";
+		<< "Ports :(" << ports.size()<<")";
 	
 	std::set<int>::iterator it;
 	for (it = ports.begin(); it != ports.end(); ++it) {

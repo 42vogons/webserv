@@ -124,6 +124,13 @@ void	LocationServer::readLine(std::string line){
 		iss >> valueString >> valueString2;
 		this->setCgiParam(valueString, valueString2);
 	}
+
+	if (key.find("index") == 0){
+		while (iss >> valueString)
+			this->setPagesIndex(valueString);
+	}
+
+
 }
 
 std::ostream&	operator<<(std::ostream& o, const LocationServer& i)
