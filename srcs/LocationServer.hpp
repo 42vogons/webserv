@@ -37,21 +37,16 @@ class LocationServer
 		void	setUpdatePath(std::string redirect);
 		void	setCgiParam(std::string key, std::string value);
 
-
-
-
 		void	readLine(std::string line);
 
-		bool								getAutoIndex(void);
-		std::string							getRoot(void);
-		bool								getAllowedMethods(std::string methods);
-		std::set<std::string>				getPagesIndex(void);
-		std::string							getCgiPass(void);
-		std::string							getRedirect(void);
-		std::string							getUpdatePath(void);
-		std::string							getCgiParm(std::string param);
-
-
+		bool					getAutoIndex(void);
+		std::string				getRoot(void);
+		bool					getAllowedMethods(std::string methods);
+		std::set<std::string>	getPagesIndex(void);
+		std::string				getCgiPass(void);
+		std::string				getRedirect(void);
+		std::string				getUpdatePath(void);
+		std::string				getCgiParm(std::string param);
 
 	private:
 		bool								_autoIndex;
@@ -62,7 +57,6 @@ class LocationServer
 		std::string							_redirect;
 		std::string							_updatePath;
 		std::map<std::string, std::string>	_cgiParam;
-
 
 	protected:
 };

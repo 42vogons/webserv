@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:34:23 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/14 19:23:38 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/16 01:21:29 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class Server
 {
 	public:
 		Server(void);
-		Server(std::string nema);
+		Server(std::string name);
 		Server(const Server& obj);
 		virtual ~Server(void);
 
@@ -46,7 +46,6 @@ class Server
 		int						getClientMaxBodySize(void);
 		LocationServer			getLocationServer(std::string name);
 		std::string				getLastLocation(void);
-		
 
 	private:
 		std::string									_serverName;
