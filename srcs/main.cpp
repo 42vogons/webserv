@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:23:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/14 19:47:05 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/15 00:57:02 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,9 @@ void	handleSocketConnections(std::vector<Socket> vecSocket)
 int	main()
 {
 	Socket test(8080);
-	std::cout << test << std::endl;
 	Socket test1(8081);
-	std::cout << test1 << std::endl;
 	Socket test2(9000);
-	std::cout << test2 << std::endl;
 	Socket test3(7000);
-	std::cout << test3 << std::endl;
 	std::vector<Socket> vecSocket;
 	vecSocket.push_back(test);
 	vecSocket.push_back(test1);

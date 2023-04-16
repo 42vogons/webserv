@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/15 00:29:15 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/15 23:37:22 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 Socket::Socket(void) : _port(80)
 {
 	std::cout
-		<< "Socket default constructor called"
+		<< "Socket default constructor called on port "
+		<< _port
 		<< std::endl;
 	createSocketTCP();
 	configSocketAddress();
@@ -27,7 +28,8 @@ Socket::Socket(void) : _port(80)
 Socket::Socket(int port) : _port(port)
 {
 	std::cout
-		<< "Socket constructor called"
+		<< "Socket constructor called on port "
+		<< _port
 		<< std::endl;
 	createSocketTCP();
 	configSocketAddress();
@@ -39,7 +41,8 @@ Socket::Socket(int port) : _port(port)
 Socket::Socket(const Socket& obj)
 {
 	std::cout
-		<< "Socket copy constructor called"
+		<< "Socket copy constructor called on port "
+		<< obj._port
 		<< std::endl;
 	*this = obj;
 	return ;
@@ -48,7 +51,8 @@ Socket::Socket(const Socket& obj)
 Socket::~Socket(void)
 {
 	std::cout
-		<< "Socket destructor called"
+		<< "Socket destructor called on port "
+		<< _port
 		<< std::endl;
 	return ;
 }
@@ -70,7 +74,11 @@ void	Socket::createSocketTCP(void)
 	//address domain AF_INET: socket will be created for the IPv4 protocol
 	//type of socket SOCK_STREAM: connection-oriented socket
 	//0 the default protocol for the specified socket type should be used
+	struct timeval tv;
+	tv.tv_sec = 10;
+	tv.tv_usec = 0;
 	this->_server_fd = socket(AF_INET, SOCK_STREAM, 0);
+	setsockopt(this->_server_fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
 }
 
 void	Socket::configSocketAddress(void)
@@ -114,8 +122,8 @@ void	Socket::acceptConnection(void)
 {
 	int client_fd = accept(this->_server_fd, (struct sockaddr *)&this->_address, (socklen_t*)&this->_addrlen);
 	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;
-	char buffer[1024] = {0};
-	read(client_fd, buffer, 1024);
+	char buffer[4096] = {0};
+	read(client_fd, buffer, 4096);
 	std::cout << buffer << std::endl;
 	const char* response = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
 	write(client_fd, response, strlen(response));
