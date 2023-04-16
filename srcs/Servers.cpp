@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Servers.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:34:23 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/14 22:53:26 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/16 01:15:26 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,17 @@
 
 Servers::Servers(void)
 {
-	/*std::cout
-		<< "Servers default constructor called"
-		<< std::endl;*/
 	return ;
 }
 
 Servers::Servers(const Servers& obj)
 {
-	/*std::cout
-		<< "Servers copy constructor called"
-		<< std::endl;*/
 	*this = obj;
 	return ;
 }
 
 Servers::~Servers(void)
 {
-	/*std::cout
-		<< "Servers destructor called"
-		<< std::endl;*/
 	return ;
 }
 
@@ -46,86 +37,80 @@ Servers& Servers::operator=(const Servers& obj)
 	return (*this);
 }
 
-void Servers::addServer(std::string serverName, Server server){
-
-	this->_servers[serverName] =  server;
-	
-	//this->_Servers.insert("serverName", new Server("serverName"));
-	/*std::cout
-		<< "add" 
-		<< serverName
-		<< std::endl;*/
+void Servers::addServer(std::string serverName, Server server)
+{
+	this->_servers[serverName] = server;
 }
 
-void	Servers::setServer(std::string serverName, Server server){
+void	Servers::setServer(std::string serverName, Server server)
+{
 	this->_servers[serverName] =  server;
 }
 
-int Servers::countTabs(std::string line){
+int Servers::countTabs(std::string line)
+{
 	int countTab = 0;
-	for (unsigned int i = 0; i < line.length(); i++) {
-        if (line[i] == '\t') {
-            countTab++;
-        } else {
+	for (unsigned int i = 0; i < line.length(); i++)
+	{
+		if (line[i] == '\t')
+			countTab++;
+		else
 			break;
-		}
 	}
 	return countTab;
 }
 
-Server Servers::getServer(std::string serverName){
+Server Servers::getServer(std::string serverName)
+{
 	return _servers[serverName];
 }
 
-void Servers::readFile(std::string fileName){
-	std::ifstream myFile(fileName.c_str()); // abre o arquivo para leitura
+void Servers::readFile(std::string fileName)
+{
+	std::ifstream myFile(fileName.c_str());
 	std::string line;
 	std::string key, name;
 	std::string lastServer;
 	LocationServer locationServer;
-	
-
-	int nivel;
-
-    if (!myFile.is_open()) { // verifica se o arquivo foi aberto corretamente
-        std::cerr << "Erro ao abrir arquivo" << std::endl;
-    } else {
+	int level;
+	if (!myFile.is_open())
+		std::cerr << "Error opening file" << std::endl;
+	else
+	{
 		while (!myFile.eof() )
 		{
 			getline(myFile, line);
-			nivel = countTabs(line);
-			if (nivel == 0 && line.size() > 1){
-				std::istringstream iss(line); 
-    			iss >> key;
+			level = countTabs(line);
+			if (level == 0 && line.size() > 1)
+			{
+				std::istringstream iss(line);
+				iss >> key;
 				Server server(key);
 				lastServer = key;
 				addServer(key, server);
 			}
-			if (nivel == 1){
-				
+			if (level == 1)
+			{
 				Server serverEdit = getServer(lastServer);
 				serverEdit.readLine(line);
 				setServer(lastServer, serverEdit);
 			}
-			if (nivel == 2){
+			if (level == 2)
+			{
 				Server serverEdit = getServer(lastServer);
 				locationServer = serverEdit.getLocationServer(serverEdit.getLastLocation());
 				locationServer.readLine(line);
 				serverEdit.setLocationServer(serverEdit.getLastLocation(), locationServer);
 				setServer(lastServer, serverEdit);
-				
 			}
-
-			
 		}
 	}
 	myFile.close();
 }
 
-
 std::ostream&	operator<<(std::ostream& o, const Servers& i)
 {
-	
-	o << "something"<< i;;
+	(void)i;
+	o << "something";
 	return o;
 }
