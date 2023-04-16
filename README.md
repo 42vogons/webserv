@@ -38,23 +38,26 @@
 
 ## About ##
 
-Describe your project
+This project is about writing an HTTP server.<br>
+You will be able to test it with an actual browser.<br>
+HTTP is one of the most used protocols on the internet.<br>
+Knowing its arcane will be useful, even if you won’t be working on a website.
 
 ## Features ##
 
-* feature1
-* feature2
+* Socket
+* Parse the config file
+* change /etc/hosts (?)
 
 ## Technologies ##
 
 The following tools were used in this project:
 
 * [C++](https://isocpp.org/std/the-standard)
-* [Docker](https://www.docker.com/)
 
 ## Requirements ##
 
-Before starting, you need to have [Git](https://git-scm.com) and [Docker](https://www.docker.com/) installed.
+Before starting, you need to have [Git](https://git-scm.com) installed.
 
 ## Starting ##
 
@@ -69,6 +72,11 @@ cd webserv
 make
 
 # The server will initialize in the <http://localhost:9000>
+```
+
+To use the template to initialize files:
+```shell
+bash template.sh path_to_your_class class_name
 ```
 
 ## License ##
