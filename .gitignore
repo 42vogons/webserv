@@ -1,6 +1,7 @@
 webserv
 .objs/
 .vscode/
+hosts_backup
 
 # Prerequisites
 *.d

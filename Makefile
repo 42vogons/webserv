@@ -6,7 +6,7 @@
 #    By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/27 00:08:05 by cpereira          #+#    #+#              #
-#    Updated: 2023/04/15 23:45:27 by anolivei         ###   ########.fr        #
+#    Updated: 2023/04/16 20:31:47 by anolivei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -Wshadow -g -fsanitize=address
 RM = /bin/rm -rf
 
-all: $(NAME)
+all: hosts $(NAME)
 
 $(NAME): $(OBJ)
 		@$(CC) $(OBJ) $(CFLAGS) -o $(NAME)
@@ -45,6 +45,12 @@ clean:
 fclean: clean
 		@$(RM) $(NAME)
 		@echo "\033[0;32m[OK]\033[0m    \033[0;38;5;44mRemoving $(NAME)\033[0m"
+		@echo "\033[0;32m[OK]\033[0m    \033[0;38;5;44mRestoring /etc/hosts\033[0m"
+		@sudo cp ./hosts_backup /etc/hosts
+
+hosts:
+		@echo "\033[0;32m[OK]\033[0m    \033[0;38;5;199mMaking a backup of\033[0m /etc/hosts"
+		@cp /etc/hosts ./hosts_backup
 
 re: fclean all
 
