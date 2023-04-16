@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:23:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/15 23:49:40 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/16 00:01:45 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,28 +43,28 @@ void	handleSocketConnections(std::vector<Socket> vecSocket)
 	}
 }
 
-int	main()
+void	confTests(void)
 {
 	Server server;
 	Servers servers;
 	servers.readFile("./conf/conf_sample");
 	server = servers.getServer("sample_server_Z1");
 	std::set<int> ports = server.getPorts();
-	std::cout << "Server Name ==" << server.getServerName() << std::endl
-		<< "301" << server.getErrorPages(301) << std::endl
+	std::cout << "server_name: " << server.getServerName() << std::endl
+		<< "301 " << server.getErrorPages(301) << std::endl
 		<< "redirect " << server.getLocationServer("/images").getRedirect() << std::endl
 		<< "POST " << server.getLocationServer("/images").getAllowedMethods("POST") << std::endl
 		<< "GET " << server.getLocationServer("/images").getAllowedMethods("GET") << std::endl
 		<< "P2 " << server.getLocationServer("/images").getCgiParm("p2") << std::endl
-		
-		<< "Ports :(" << ports.size()<<")";
+		<< "Ports: (" << ports.size()<<") ";
 	std::set<int>::iterator it;
 	for (it = ports.begin(); it != ports.end(); ++it)
-	{
 		std::cout << *it << " ";
-	}
 	std::cout << std::endl;
+}
 
+void	socketTests(void)
+{
 	Socket test(8080);
 	Socket test1(8081);
 	Socket test2(9000);
@@ -75,5 +75,11 @@ int	main()
 	vecSocket.push_back(test2);
 	vecSocket.push_back(test3);
 	handleSocketConnections(vecSocket);
+}
+
+int	main(void)
+{
+	confTests();
+	socketTests();
 	return (0);
 }
