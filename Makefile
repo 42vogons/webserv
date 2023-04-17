@@ -6,7 +6,7 @@
 #    By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/27 00:08:05 by cpereira          #+#    #+#              #
-#    Updated: 2023/04/16 20:31:47 by anolivei         ###   ########.fr        #
+#    Updated: 2023/04/17 00:49:27 by anolivei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ OBJ_DIR = .objs
 
 SRC =	$(SRC_DIR)/main.cpp \
 		$(SRC_DIR)/Socket.cpp \
+		$(SRC_DIR)/Sockets.cpp \
 		$(SRC_DIR)/Server.cpp \
 		$(SRC_DIR)/Servers.cpp \
 		$(SRC_DIR)/LocationServer.cpp
@@ -54,4 +55,4 @@ hosts:
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean hosts re
