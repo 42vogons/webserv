@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:34:23 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/16 01:21:29 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/16 22:29:15 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ class Server
 		void	setPorts(int port);
 		void	setClientMaxBodySize(int clientMaxBodySize);
 		void	setLocationServer(std::string name, LocationServer locationServer);
+		void	addHostServerName(std::string serverName, std::string ipAddress);
 
 		std::string				getServerName(void);
 		std::string				getErrorPages(int code);
