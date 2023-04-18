@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:34:23 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/16 01:15:26 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/16 23:31:12 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,11 @@ int Servers::countTabs(std::string line)
 Server Servers::getServer(std::string serverName)
 {
 	return _servers[serverName];
+}
+
+std::map<std::string, Server>	Servers::getServers(void)
+{
+	return (this->_servers);
 }
 
 void Servers::readFile(std::string fileName)

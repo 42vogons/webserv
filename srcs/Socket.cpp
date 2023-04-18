@@ -6,18 +6,14 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/15 23:44:20 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/17 22:59:10 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Socket.hpp"
 
-Socket::Socket(void) : _port(80)
+Socket::Socket(void) : _port(80), _server(NULL)
 {
-	std::cout
-		<< "Socket default constructor called on port "
-		<< _port
-		<< std::endl;
 	createSocketTCP();
 	configSocketAddress();
 	bindSocketToAddress();
@@ -25,12 +21,8 @@ Socket::Socket(void) : _port(80)
 	return ;
 }
 
-Socket::Socket(int port) : _port(port)
+Socket::Socket(int port, Server server) : _port(port), _server(server)
 {
-	std::cout
-		<< "Socket constructor called on port "
-		<< _port
-		<< std::endl;
 	createSocketTCP();
 	configSocketAddress();
 	bindSocketToAddress();
@@ -40,20 +32,12 @@ Socket::Socket(int port) : _port(port)
 
 Socket::Socket(const Socket& obj)
 {
-	std::cout
-		<< "Socket copy constructor called on port "
-		<< obj._port
-		<< std::endl;
 	*this = obj;
 	return ;
 }
 
 Socket::~Socket(void)
 {
-	std::cout
-		<< "Socket destructor called on port "
-		<< _port
-		<< std::endl;
 	return ;
 }
 
@@ -65,6 +49,7 @@ Socket& Socket::operator=(const Socket& obj)
 		this->_server_fd = obj._server_fd;
 		this->_addrlen = obj._addrlen;
 		this->_address = obj._address;
+		this->_server = obj._server;
 	}
 	return (*this);
 }
@@ -120,6 +105,7 @@ int	Socket::getServerFd(void) const
 
 void	Socket::acceptConnection(void)
 {
+	int maxBodySize = this->_server.getClientMaxBodySize();
 	int client_fd = accept(this->_server_fd, (struct sockaddr *)&this->_address, (socklen_t*)&this->_addrlen);
 	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;
 	char buffer[4096] = {0};
