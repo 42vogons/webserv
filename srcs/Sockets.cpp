@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 19:36:11 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/17 22:39:18 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/17 22:53:36 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ Sockets& Sockets::operator=(const Sockets& obj)
 	if (this != &obj)
 	{
 		this->_vecSocket = obj._vecSocket;
+		this->_servers = obj._servers;
+		this->_serversMap = obj._serversMap;
 	}
 	return (*this);
 }
@@ -56,7 +58,7 @@ void	Sockets::createVecSocket(void)
 		--itSet;
 		while (itSet != iteSet)
 		{
-			Socket socket(*itSet, &itMap->second);
+			Socket socket(*itSet, itMap->second);
 			this->_vecSocket.push_back(socket);
 			itSet++;
 		}

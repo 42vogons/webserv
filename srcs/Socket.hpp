@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/17 22:40:08 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/17 22:49:02 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class Socket
 {
 	public:
 		Socket(void);
-		Socket(int port, Server *server);
+		Socket(int port, Server server);
 		Socket(const Socket& obj);
 		virtual ~Socket(void);
 
@@ -42,7 +42,7 @@ class Socket
 		int					_server_fd;
 		int					_addrlen;
 		struct sockaddr_in	_address;
-		Server				*_server;
+		Server				_server;
 
 	protected:
 };

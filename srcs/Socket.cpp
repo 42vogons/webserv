@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/17 22:42:48 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/17 22:59:10 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Socket::Socket(void) : _port(80), _server(NULL)
 	return ;
 }
 
-Socket::Socket(int port, Server *server) : _port(port), _server(server)
+Socket::Socket(int port, Server server) : _port(port), _server(server)
 {
 	createSocketTCP();
 	configSocketAddress();
@@ -49,6 +49,7 @@ Socket& Socket::operator=(const Socket& obj)
 		this->_server_fd = obj._server_fd;
 		this->_addrlen = obj._addrlen;
 		this->_address = obj._address;
+		this->_server = obj._server;
 	}
 	return (*this);
 }
@@ -104,20 +105,16 @@ int	Socket::getServerFd(void) const
 
 void	Socket::acceptConnection(void)
 {
-	int maxBodySize = _server->getClientMaxBodySize();
-	std::cout << maxBodySize << std::endl;
+	int maxBodySize = this->_server.getClientMaxBodySize();
 	int client_fd = accept(this->_server_fd, (struct sockaddr *)&this->_address, (socklen_t*)&this->_addrlen);
 	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;
 	char buffer[4096] = {0};
 	read(client_fd, buffer, 4096);
-	//char* buffer = new char[maxBodySize];
-	//read(client_fd, buffer, maxBodySize);
 	std::cout << buffer << std::endl;
 	const char* response = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
 	write(client_fd, response, strlen(response));
 	std::cout << "Message sent to client" << std::endl;
 	close(client_fd);
-	//delete[] buffer;
 }
 
 std::ostream&	operator<<(std::ostream& o, const Socket& i)
