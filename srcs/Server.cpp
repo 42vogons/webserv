@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/16 01:20:52 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/17 22:45:00 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ std::set<int>	Server::getPorts(void) const
 
 int	Server::getClientMaxBodySize(void)
 {
-	return _clientMaxBodySize;
+	return this->_clientMaxBodySize;
 }
 
 LocationServer	Server::getLocationServer(std::string name)

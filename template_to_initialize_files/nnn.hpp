@@ -1,7 +1,7 @@
 #ifndef nnn_HPP
 #define nnn_HPP
 
-#include <iostream>
+# include <iostream>
 
 class nnn
 {
@@ -13,6 +13,7 @@ class nnn
 		nnn&	operator=(const nnn& obj);
 
 	private:
+		int	_XXX;
 
 	protected:
 };

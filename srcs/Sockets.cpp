@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 19:36:11 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/17 00:47:01 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/17 22:39:18 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 Sockets::Sockets(void)
 {
-	std::cout
-		<< "Sockets default constructor called"
-		<< std::endl;
 	this->_servers.readFile("./conf/conf_sample");
 	this->_serversMap = this->_servers.getServers();
 	return ;
@@ -24,18 +21,12 @@ Sockets::Sockets(void)
 
 Sockets::Sockets(const Sockets& obj)
 {
-	std::cout
-		<< "Sockets copy constructor called"
-		<< std::endl;
 	*this = obj;
 	return ;
 }
 
 Sockets::~Sockets(void)
 {
-	std::cout
-		<< "Sockets destructor called"
-		<< std::endl;
 	return ;
 }
 
@@ -50,26 +41,22 @@ Sockets& Sockets::operator=(const Sockets& obj)
 
 void	Sockets::createVecSocket(void)
 {
-	std::cout << "oi" << std::endl;
 	std::map<std::string, Server>::iterator itMap = this->_serversMap.begin();
 	std::map<std::string, Server>::iterator iteMap = this->_serversMap.end();
 	++itMap;
 	--itMap;
 	std::set<int>	ports;
-	std::cout << "oi" << std::endl;
 	while (itMap != iteMap)
 	{
-		std::cout << "oi" << std::endl;
 		ports.clear();
 		ports = itMap->second.getPorts();
-		std::cout << "oi" << std::endl;
 		std::set<int>::iterator itSet = ports.begin();
 		std::set<int>::iterator iteSet = ports.end();
 		++itSet;
 		--itSet;
 		while (itSet != iteSet)
 		{
-			Socket socket(*itSet);
+			Socket socket(*itSet, &itMap->second);
 			this->_vecSocket.push_back(socket);
 			itSet++;
 		}
