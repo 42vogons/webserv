@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/19 18:52:24 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/19 19:04:20 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,7 @@ void	Socket::readPage(std::string filename, int code, std::string status, std::s
 	std::stringstream response;
 	std::string fileContent;
 
+	// verifica se consegue abrir o arquivo
 	if (file.good())
 	{
 		buffer << file.rdbuf();
@@ -148,6 +149,7 @@ void	Socket::readPage(std::string filename, int code, std::string status, std::s
 		code = 404;
 		status = "Not Found";
 	}
+	// monta a resposta que será enviada para o client
 	response << "HTTP/1.1 " << code << " " << status << "\nContent-Type: text/html\nContent-Length: ";
 	response << fileContent.length() << "\n\n" << fileContent;	
 	content = response.str();
@@ -162,7 +164,6 @@ void	Socket::checkHost(std::string& response)
 	locationServer = _server.getLocationServer(this->_receiver.getBaseURL());
 	if (locationServer.getRoot() == "")
 	{
-		// colocar checagem se existe dentro do readPage??
 		readPage(_server.getErrorPages(404), 404, "Not Found", response);
 		return ;
 	}
@@ -177,18 +178,15 @@ void	Socket::checkHost(std::string& response)
 		return ;
 	}
 
-	// verifica se está na pasta e sem um endpoint
+	// verifica se está na pasta e se endpoint é vazio
 	if (_receiver.getEndpoint() == "")
 	{
-		std::cout << "Endpoint vazio" << std::endl;
-		// verifica se o endpoint é nulo, se for, irá verificar os arquivos de index e verificar se eles existem 
+		// percorre todos os getPagesIndex e tenta localizar algum válido
 		std::set<std::string> pages = locationServer.getPagesIndex();
 		for (std::set<std::string>::iterator it = pages.begin(); it != pages.end(); ++it) 
 		{
 			std::string page = *it;
-			
 			std::string endpoint = locationServer.getRoot() + "/" + page;
-			std::cout << "tentando " << endpoint << std::endl;
 			std::ifstream file(endpoint.c_str());
 			if (file.good()){
 				readPage(endpoint, 200, "Ok", response);
@@ -199,6 +197,7 @@ void	Socket::checkHost(std::string& response)
 		
 		// verifica se o autoindex está ligado, se tiver ele vai monstar o autoindex se não tiver vai mandar 404
 		if (locationServer.getAutoIndex()){
+			// cria um indextemporário o qual é apagado depois de printar na tela
 			autoIndex(locationServer.getRoot());
 			std::string endpoint = locationServer.getRoot() + "/autoIndex.html" ;
 			readPage(endpoint, 200, "Ok", response);
@@ -207,10 +206,9 @@ void	Socket::checkHost(std::string& response)
 		}
 		else
 			readPage(_server.getErrorPages(404), 404, "Not Found", response);
-		
 		return ;
 	}
-		
+	
 	std::string endpoint = locationServer.getRoot() + "/" + _receiver.getEndpoint();
 	std::ifstream file(endpoint.c_str());
 	readPage(endpoint, 200, "Ok", response);
@@ -222,9 +220,6 @@ void	Socket::autoIndex(std::string path){
 
 	std::ofstream os;
 	os.open((path + "/autoIndex.html").c_str());
-	
-
-	//std::ostringstream os;
 	DIR *dir;
 	struct dirent *ent;
 
@@ -248,7 +243,6 @@ void	Socket::autoIndex(std::string path){
 	os << "</body></html>" << std::endl;
 	os.close();
 }
-
 
 std::ostream&	operator<<(std::ostream& o, const Socket& i)
 {
