@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/19 18:34:28 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/19 18:36:55 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,6 +218,7 @@ bool	Socket::checkHost(std::string& response)
 
 	readPage(endpoint, 200, "Ok", response);
 
+	
 	/*if (file.good()){
 		std::cout << "aloc" << _receiver.getEndpoint() << std::endl;
 		readPage(endpoint, 200, "Ok", response);
