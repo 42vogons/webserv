@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/19 17:58:19 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/19 18:41:54 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ class Socket
 		void		waitConnection(void);
 		void		acceptConnection(void);
 		void		setReceiver(Receiver receiver);
-		bool		checkHost(std::string& response);
+		void		checkHost(std::string& response);
 		void		readPage(std::string filename, int code, std::string status, std::string& content);
-		std::string	autoIndex(std::string path);
+		void		autoIndex(std::string path);
 
 		int			getServerFd(void) const;
 		Receiver	getReceiver(void);

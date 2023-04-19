@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/19 18:36:55 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/19 18:52:24 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,11 +151,12 @@ void	Socket::readPage(std::string filename, int code, std::string status, std::s
 	response << "HTTP/1.1 " << code << " " << status << "\nContent-Type: text/html\nContent-Length: ";
 	response << fileContent.length() << "\n\n" << fileContent;	
 	content = response.str();
+	file.close();
 }
 
 
 
-bool	Socket::checkHost(std::string& response)
+void	Socket::checkHost(std::string& response)
 {
 	LocationServer locationServer;
 	locationServer = _server.getLocationServer(this->_receiver.getBaseURL());
@@ -163,22 +164,18 @@ bool	Socket::checkHost(std::string& response)
 	{
 		// colocar checagem se existe dentro do readPage??
 		readPage(_server.getErrorPages(404), 404, "Not Found", response);
-		return 0;
+		return ;
 	}
 	if (! locationServer.getAllowedMethods(this->_receiver.getMethod()))
 	{
 		readPage(_server.getErrorPages(403), 403, "Refused", response);
-		return 0;
+		return ;
 	}
 	if (this->_server.getServerName() != this->_receiver.getHost())
 	{
 		std::cout << "ko" << std::endl;
-		return 0;
+		return ;
 	}
-
-	
-	
-	
 
 	// verifica se está na pasta e sem um endpoint
 	if (_receiver.getEndpoint() == "")
@@ -195,7 +192,8 @@ bool	Socket::checkHost(std::string& response)
 			std::ifstream file(endpoint.c_str());
 			if (file.good()){
 				readPage(endpoint, 200, "Ok", response);
-				return 0;
+				file.close();
+				return ;
 			}
 		}
 		
@@ -205,30 +203,22 @@ bool	Socket::checkHost(std::string& response)
 			std::string endpoint = locationServer.getRoot() + "/autoIndex.html" ;
 			readPage(endpoint, 200, "Ok", response);
 			remove(endpoint.c_str());
-			return 0;
+			return ;
 		}
 		else
 			readPage(_server.getErrorPages(404), 404, "Not Found", response);
 		
-		return 0;
+		return ;
 	}
 		
 	std::string endpoint = locationServer.getRoot() + "/" + _receiver.getEndpoint();
 	std::ifstream file(endpoint.c_str());
-
 	readPage(endpoint, 200, "Ok", response);
-
-	
-	/*if (file.good()){
-		std::cout << "aloc" << _receiver.getEndpoint() << std::endl;
-		readPage(endpoint, 200, "Ok", response);
-	}
-	else
-		readPage(_server.getErrorPages(404), 404, "Not Found", response);*/
-	return (1);
+	file.close();
+	return ;
 }
 
-std::string     Socket::autoIndex(std::string path){
+void	Socket::autoIndex(std::string path){
 
 	std::ofstream os;
 	os.open((path + "/autoIndex.html").c_str());
@@ -256,8 +246,7 @@ std::string     Socket::autoIndex(std::string path){
 	}
 
 	os << "</body></html>" << std::endl;
-	return "ok";
-
+	os.close();
 }
 
 

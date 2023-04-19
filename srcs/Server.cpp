@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/19 13:48:23 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/19 18:48:11 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ void	Server::readLine(std::string line)
 	int valueInt;
 	std::istringstream iss(line);
 	iss >> key;
+	if (key.empty() || key.substr(0, 1) == "#")
+		return;
 	if (key.find("listen") == 0) 
 	{
 		while (iss >> valueInt)
