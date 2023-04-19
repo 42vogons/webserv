@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/17 22:49:02 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/18 21:57:00 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,13 @@
 #define SOCKET_HPP
 
 #include "Server.hpp"
+#include "Receiver.hpp"
 #include <iostream>
 #include <unistd.h> //read write and close
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <cstring> //strlen memset
+#include <dirent.h> // para ler diretorios
 
 class Socket
 {
@@ -29,13 +31,19 @@ class Socket
 		virtual ~Socket(void);
 
 		Socket&	operator=(const Socket& obj);
-		void	createSocketTCP(void);
-		void	configSocketAddress(void);
-		void	bindSocketToAddress(void);
-		void	waitConnection(void);
-		void	acceptConnection(void);
 
-		int		getServerFd(void) const;
+		void		createSocketTCP(void);
+		void		configSocketAddress(void);
+		void		bindSocketToAddress(void);
+		void		waitConnection(void);
+		void		acceptConnection(void);
+		void		setReceiver(Receiver receiver);
+		bool		checkHost(std::string& response);
+		void		readPage(std::string filename, int code, std::string status, std::string& content);
+		std::string	autoIndex(const char* path);
+
+		int			getServerFd(void) const;
+		Receiver	getReceiver(void);
 
 	private:
 		int					_port;
@@ -43,6 +51,7 @@ class Socket
 		int					_addrlen;
 		struct sockaddr_in	_address;
 		Server				_server;
+		Receiver			_receiver;
 
 	protected:
 };

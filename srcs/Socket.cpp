@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/17 22:59:10 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/18 23:24:35 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,19 @@ Socket& Socket::operator=(const Socket& obj)
 		this->_addrlen = obj._addrlen;
 		this->_address = obj._address;
 		this->_server = obj._server;
+		this->_receiver = obj._receiver;
 	}
 	return (*this);
+}
+
+void	Socket::setReceiver(Receiver receiver)
+{
+	this->_receiver = receiver;
+}
+
+Receiver	Socket::getReceiver(void)
+{
+	return (this->_receiver);
 }
 
 void	Socket::createSocketTCP(void)
@@ -105,16 +116,64 @@ int	Socket::getServerFd(void) const
 
 void	Socket::acceptConnection(void)
 {
-	int maxBodySize = this->_server.getClientMaxBodySize();
+	Receiver receiver;
+	std::string response ;
 	int client_fd = accept(this->_server_fd, (struct sockaddr *)&this->_address, (socklen_t*)&this->_addrlen);
 	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;
 	char buffer[4096] = {0};
 	read(client_fd, buffer, 4096);
-	std::cout << buffer << std::endl;
-	const char* response = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
-	write(client_fd, response, strlen(response));
+	receiver.readBuffer(buffer);
+	setReceiver(receiver);
+	checkHost(response);
+	write(client_fd, response.c_str(), response.length());
 	std::cout << "Message sent to client" << std::endl;
 	close(client_fd);
+}
+
+void	Socket::readPage(std::string filename, int code, std::string status, std::string& content)
+{
+	std::ifstream file(filename.c_str());
+	std::stringstream buffer;
+	buffer << file.rdbuf();
+	std::string fileContent = buffer.str();
+	std::stringstream response;
+	response << "HTTP/1.1 ";
+	response << code;
+	response << " ";
+	response << status;
+	response << "\nContent-Type: text/html\nContent-Length: ";
+	response << fileContent.length();
+	response << "\n\n";
+	response << fileContent;
+	content = response.str();
+}
+
+bool	Socket::checkHost(std::string& response)
+{
+	LocationServer locationServer;
+	locationServer = _server.getLocationServer(this->_receiver.getBaseURL());
+	if (locationServer.getRoot() == "")
+	{
+		readPage("pages/site1/error404.html", 404, "Not Found", response);
+		return 0;
+	}
+	if (! locationServer.getAllowedMethods(this->_receiver.getMethod()))
+	{
+		readPage("pages/site1/error403.html", 403, "Refused", response);
+		return 0;
+	}
+	if (this->_server.getServerName() != this->_receiver.getHost())
+	{
+		std::cout << "ko" << std::endl;
+		return 0;
+	}
+	std::string endpoint = locationServer.getRoot() + "/" + _receiver.getEndpoint();
+	std::ifstream file(endpoint.c_str());
+	if (file.good())
+		readPage(endpoint, 200, "Ok", response);
+	else
+		readPage("pages/site1/error404.html", 404, "Not Found", response);
+	return (1);
 }
 
 std::ostream&	operator<<(std::ostream& o, const Socket& i)
