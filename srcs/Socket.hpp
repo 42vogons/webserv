@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/18 21:57:00 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/19 17:58:19 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ class Socket
 		void		setReceiver(Receiver receiver);
 		bool		checkHost(std::string& response);
 		void		readPage(std::string filename, int code, std::string status, std::string& content);
-		std::string	autoIndex(const char* path);
+		std::string	autoIndex(std::string path);
 
 		int			getServerFd(void) const;
 		Receiver	getReceiver(void);
