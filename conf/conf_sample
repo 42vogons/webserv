@@ -20,7 +20,7 @@ sample_server_Z1 {
 		#index	index.htm index.html4 index.php
 		index	index.htm index.html index.php
 		autoindex	true
-		allowed_methods	GET		false
+		allowed_methods	GET		true
 		allowed_methods	POST	true
 		allowed_methods	DELETE	true
 		cgi_param p1 um

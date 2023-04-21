@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 19:36:11 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/17 22:53:36 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/21 18:41:50 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ Sockets::Sockets(const Sockets& obj)
 
 Sockets::~Sockets(void)
 {
+	std::cout << "destructor called\n";
 	return ;
 }
 
@@ -92,6 +93,20 @@ void	Sockets::handleSocketConnections(void)
 			if(FD_ISSET(this->_vecSocket[i].getServerFd(), &readfds))
 				this->_vecSocket[i].acceptConnection();
 		}
+	}
+}
+
+void	Sockets::close_sockets(void)
+{
+	std::vector<Socket>::iterator it = this->_vecSocket.begin();
+	std::vector<Socket>::iterator ite = this->_vecSocket.end();
+	++it;
+	--it;
+	while (it != ite)
+	{
+		close(it->getServerFd());
+		std::cout << "socket closed " << it->getServerFd() << std::endl;
+		it++;
 	}
 }
 

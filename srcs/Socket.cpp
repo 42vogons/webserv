@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/20 23:42:36 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/21 00:17:15 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,8 @@ void	Socket::readPage(std::string filename, int code, std::string status, std::s
 	}
 	else
 	{
-		if (fileError.good()){
+		if (fileError.good())
+		{
 			buffer << fileError.rdbuf();
 			fileContent = buffer.str();
 		}
