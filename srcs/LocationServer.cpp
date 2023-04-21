@@ -133,6 +133,8 @@ void	LocationServer::readLine(std::string line)
 	bool valueBool;
 	std::istringstream iss(line);
 	iss >> key ;
+	if (key.empty() || key.substr(0, 1) == "#")
+		return;
 	if (key.find("redirection") == 0)
 	{
 		iss >> valueString;
