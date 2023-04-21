@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 19:35:12 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/17 00:35:04 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/21 18:23:12 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class Sockets
 		Sockets&	operator=(const Sockets& obj);
 		void		handleSocketConnections(void);
 		void		createVecSocket(void);
+		void		close_sockets(void);
 
 	private:
 		std::vector<Socket>				_vecSocket;

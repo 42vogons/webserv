@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/17 22:45:00 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/19 18:48:11 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ void	Server::readLine(std::string line)
 	int valueInt;
 	std::istringstream iss(line);
 	iss >> key;
+	if (key.empty() || key.substr(0, 1) == "#")
+		return;
 	if (key.find("listen") == 0) 
 	{
 		while (iss >> valueInt)
@@ -123,8 +125,12 @@ std::string	Server::getServerName(void)
 
 std::string	Server::getErrorPages(int code)
 {
+	
 	//todo: fazer verificação se não é nulo, se for estourar erro
-	return _errorPages.find(code)->second;
+	
+	if (_errorPages.find(code) != _errorPages.end())
+		return _errorPages.find(code)->second;
+	return _errorPages.find(404)->second;
 }
 
 std::set<int>	Server::getPorts(void) const
@@ -139,7 +145,9 @@ int	Server::getClientMaxBodySize(void)
 
 LocationServer	Server::getLocationServer(std::string name)
 {
-	return _locationServer.find(name)->second;
+	if (_locationServer.find(name) != _locationServer.end())
+		return _locationServer.find(name)->second;
+	return LocationServer();
 }
 
 std::ostream&	operator<<(std::ostream& o, const Server& i)
