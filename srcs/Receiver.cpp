@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Receiver.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 22:37:12 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/18 23:12:09 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/20 22:31:21 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void Receiver::readBuffer(char buffer[4096])
 	std::string key;
 	std::string value;
 	std::istringstream iss(buffer);
-	std::string line2;
 	std::string protocol;
 	iss >> _method >> protocol >> _version;
 	std::size_t lastSlashPos = protocol.find_last_of("/");
@@ -62,7 +61,7 @@ void Receiver::readBuffer(char buffer[4096])
 		_baseURL = "";
 		_endpoint = protocol;
 	}
-	while (std::getline(iss, line2))
+	while (std::getline(iss, key))
 	{
 		iss >> key;
 		if (key.find("Host:") == 0)

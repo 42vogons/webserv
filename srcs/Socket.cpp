@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/19 19:04:20 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/20 23:23:37 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,16 +162,25 @@ void	Socket::checkHost(std::string& response)
 {
 	LocationServer locationServer;
 	locationServer = _server.getLocationServer(this->_receiver.getBaseURL());
-	if (locationServer.getRoot() == "")
-	{
-		readPage(_server.getErrorPages(404), 404, "Not Found", response);
+
+	std::string redirect = locationServer.getRedirect();
+	if (!redirect.empty()){
+		response = "HTTP/1.1 301 Found\r\nLocation: http://" + redirect + "\r\n\r\n";
 		return ;
 	}
+
 	if (! locationServer.getAllowedMethods(this->_receiver.getMethod()))
 	{
 		readPage(_server.getErrorPages(403), 403, "Refused", response);
 		return ;
 	}
+
+	if (locationServer.getRoot() == "")
+	{
+		readPage(_server.getErrorPages(404), 404, "Not Found", response);
+		return ;
+	}
+	
 	if (this->_server.getServerName() != this->_receiver.getHost())
 	{
 		std::cout << "ko" << std::endl;
@@ -194,6 +203,10 @@ void	Socket::checkHost(std::string& response)
 				return ;
 			}
 		}
+		
+			
+		
+			
 		
 		// verifica se o autoindex está ligado, se tiver ele vai monstar o autoindex se não tiver vai mandar 404
 		if (locationServer.getAutoIndex()){
