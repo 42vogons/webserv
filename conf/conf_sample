@@ -55,9 +55,6 @@ sample_server_Z1 {
 		cgi_param p10 dez
 		cgi_param p20 vinte
 	}
-	location / {
-		root /www/site1
-	}
 }
 
 

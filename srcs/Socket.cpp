@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/20 23:23:37 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/20 23:42:36 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ void	Socket::acceptConnection(void)
 void	Socket::readPage(std::string filename, int code, std::string status, std::string& content)
 {
 	std::ifstream file(filename.c_str());
+	std::ifstream fileError(_server.getErrorPages(404).c_str());
 	std::stringstream buffer;
 	std::stringstream response;
 	std::string fileContent;
@@ -145,9 +146,16 @@ void	Socket::readPage(std::string filename, int code, std::string status, std::s
 	}
 	else
 	{
-		fileContent = "Page not Found";
-		code = 404;
-		status = "Not Found";
+		if (fileError.good()){
+			buffer << fileError.rdbuf();
+			fileContent = buffer.str();
+		}
+		else
+		{
+			fileContent = "Page not Found";
+			code = 404;
+			status = "Not Found";
+		}
 	}
 	// monta a resposta que será enviada para o client
 	response << "HTTP/1.1 " << code << " " << status << "\nContent-Type: text/html\nContent-Length: ";
