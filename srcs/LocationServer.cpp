@@ -97,8 +97,11 @@ std::string	LocationServer::getRoot(void)
 
 bool	LocationServer::getAllowedMethods(std::string methods)
 {
-	//todo: fazer verificação se não é nulo, se for estourar erro
-	return _allowedMethods.find(methods)->second;
+
+	if (_allowedMethods.find(methods) != _allowedMethods.end())
+		return _allowedMethods.find(methods)->second;
+	else
+		return 0;
 }
 
 std::set<std::string>	LocationServer::getPagesIndex(void)
@@ -123,8 +126,9 @@ std::string	LocationServer::getUpdatePath(void)
 
 std::string	LocationServer::getCgiParm(std::string param)
 {
-	//todo: fazer verificação se não é nulo se for extoura erro
-	return _cgiParam.find(param)->second;
+	if (_cgiParam.find(param) != _cgiParam.end())
+		return _cgiParam.find(param)->second;
+	return NULL;
 }
 
 void	LocationServer::readLine(std::string line)

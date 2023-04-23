@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/19 18:48:11 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/21 23:41:19 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,13 @@
 
 Server::Server(void) : _serverName("default")
 {
+	_clientMaxBodySize = 8000;
 	return ;
 }
 
 Server::Server(std::string name) : _serverName(name)
 {
+	_clientMaxBodySize = 8000;
 	return ;
 }
 
@@ -125,9 +127,6 @@ std::string	Server::getServerName(void)
 
 std::string	Server::getErrorPages(int code)
 {
-	
-	//todo: fazer verificação se não é nulo, se for estourar erro
-	
 	if (_errorPages.find(code) != _errorPages.end())
 		return _errorPages.find(code)->second;
 	return _errorPages.find(404)->second;

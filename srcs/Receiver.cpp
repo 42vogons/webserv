@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 22:37:12 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/20 22:31:21 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/22 00:00:16 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ void Receiver::readBuffer(char buffer[4096])
 	std::size_t lastSlashPos = protocol.find_last_of("/");
 	if (lastSlashPos != std::string::npos)
 	{
-		_baseURL = protocol.substr(0, lastSlashPos);
+		std::cout << "1" << std::endl;
+		_baseURL = protocol.substr(0, lastSlashPos + 1);
 		_endpoint = protocol.substr(lastSlashPos + 1);
 	}
 	else
@@ -61,6 +62,11 @@ void Receiver::readBuffer(char buffer[4096])
 		_baseURL = "";
 		_endpoint = protocol;
 	}
+	std::cout << "protocol" << protocol << std::endl;
+	std::cout << "_baseURL" << _baseURL << std::endl;
+	std::cout << "_endpoint" << _endpoint << std::endl;
+
+	
 	while (std::getline(iss, key))
 	{
 		iss >> key;

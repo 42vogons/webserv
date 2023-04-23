@@ -1,6 +1,6 @@
 sample_server_Z1 {
 
-	listen 8080 8081
+	listen 8080 8081 8085 8086 8087
 	server_name localhost
 	client_max_body_size 8000
 
@@ -87,6 +87,9 @@ sample_server_Z2 {
 		index joao e maria 
 		allowed_methods	GET		false
 	}
+
+	
+
 	listen 8082 
 	server_name www.site15.com
 	client_max_body_size 4000
