@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/22 17:17:40 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/23 00:48:03 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ Socket::Socket(const Socket& obj)
 
 Socket::~Socket(void)
 {
-	close(this->_client_fd);
+	this->closeClientFd();
+	this->closeServerFd();
 	return ;
 }
 
@@ -48,6 +49,7 @@ Socket& Socket::operator=(const Socket& obj)
 	{
 		this->_port = obj._port;
 		this->_server_fd = obj._server_fd;
+		this->_client_fd = obj._client_fd;
 		this->_addrlen = obj._addrlen;
 		this->_address = obj._address;
 		this->_server = obj._server;
@@ -127,6 +129,12 @@ void	Socket::closeServerFd(void)
 {
 	if (fdIsValid(this->_server_fd))
 		close(this->_server_fd);
+}
+
+void	Socket::closeClientFd(void)
+{
+	if (fdIsValid(this->_client_fd))
+		close(this->_client_fd);
 }
 
 std::ostream&	operator<<(std::ostream& o, const Socket& i)

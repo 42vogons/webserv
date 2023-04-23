@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 19:36:11 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/22 16:11:12 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/23 00:50:48 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ Sockets::~Sockets(void)
 		if (this->_vecSocket[i])
 		{
 			this->_vecSocket[i]->closeServerFd();
+			this->_vecSocket[i]->closeClientFd();
 			delete this->_vecSocket[i];
 		}
 	}
@@ -45,6 +46,7 @@ Sockets& Sockets::operator=(const Sockets& obj)
 		this->_vecSocket = obj._vecSocket;
 		this->_servers = obj._servers;
 		this->_serversMap = obj._serversMap;
+		this->_poll = obj._poll;
 	}
 	return (*this);
 }

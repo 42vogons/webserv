@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/22 16:57:21 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/23 00:47:29 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ class Socket
 		void		waitConnection(void);
 		void		acceptConnection(void);
 		void		closeServerFd(void);
+		void		closeClientFd(void);
 
 		void		setReceiver(Receiver receiver);
 		void		checkHost(std::string& response);
