@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/23 00:48:03 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/24 00:03:29 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,9 @@ Receiver	Socket::getReceiver(void)
 
 void	Socket::createSocketTCP(void)
 {
+	int opt = 1;
 	this->_server_fd = socket(AF_INET, SOCK_STREAM, 0);
+	setsockopt(_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(int));
 }
 
 void	Socket::configSocketAddress(void)
