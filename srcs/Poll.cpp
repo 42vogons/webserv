@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/22 14:58:15 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/22 15:31:23 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/24 00:06:53 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	Poll::start(std::vector <Socket *> &sockets)
 
 void	Poll::exec(void)
 {
-	int ret = poll(this->_socketsToWatch, this->_size, 0);
+	int ret = poll(this->_socketsToWatch, this->_size, 1000);
 	if (ret == -1)
 		throw (PollError());
 }
