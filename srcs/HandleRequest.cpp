@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Receiver.cpp                                       :+:      :+:    :+:   */
+/*   HandleRequest.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,25 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Receiver.hpp"
+#include "HandleRequest.hpp"
 
-Receiver::Receiver(void)
+HandleRequest::HandleRequest(void)
 {
 	return ;
 }
 
-Receiver::Receiver(const Receiver& obj)
+HandleRequest::HandleRequest(const HandleRequest& obj)
 {
 	*this = obj;
 	return ;
 }
 
-Receiver::~Receiver(void)
+HandleRequest::~HandleRequest(void)
 {
 	return ;
 }
 
-Receiver& Receiver::operator=(const Receiver& obj)
+HandleRequest& HandleRequest::operator=(const HandleRequest& obj)
 {
 	if (this != &obj)
 	{
@@ -43,7 +43,7 @@ Receiver& Receiver::operator=(const Receiver& obj)
 	return (*this);
 }
 
-void Receiver::readBuffer(char buffer[4096])
+void HandleRequest::readBuffer(char buffer[4096])
 {
 	std::string key;
 	std::string value;
@@ -84,27 +84,27 @@ void Receiver::readBuffer(char buffer[4096])
 	return ;
 }
 
-std::string Receiver::getHost(void)
+std::string HandleRequest::getHost(void)
 {
 	return (this->_host);
 }
 
-std::string Receiver::getMethod(void)
+std::string HandleRequest::getMethod(void)
 {
 	return (this->_method);
 }
 
-std::string Receiver::getBaseURL(void)
+std::string HandleRequest::getBaseURL(void)
 {
 	return (this->_baseURL);
 }
 
-std::string Receiver::getEndpoint(void)
+std::string HandleRequest::getEndpoint(void)
 {
 	return (this->_endpoint);
 }
 
-std::ostream&	operator<<(std::ostream& o, const Receiver& i)
+std::ostream&	operator<<(std::ostream& o, const HandleRequest& i)
 {
 	(void)i;
 	o << "something";

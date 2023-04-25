@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/24 00:03:29 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/24 22:58:34 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,19 +53,19 @@ Socket& Socket::operator=(const Socket& obj)
 		this->_addrlen = obj._addrlen;
 		this->_address = obj._address;
 		this->_server = obj._server;
-		this->_receiver = obj._receiver;
+		this->_HandleRequest = obj._HandleRequest;
 	}
 	return (*this);
 }
 
-void	Socket::setReceiver(Receiver receiver)
+void	Socket::setHandleRequest(HandleRequest HandleRequest)
 {
-	this->_receiver = receiver;
+	this->_HandleRequest = HandleRequest;
 }
 
-Receiver	Socket::getReceiver(void)
+HandleRequest	Socket::getHandleRequest(void)
 {
-	return (this->_receiver);
+	return (this->_HandleRequest);
 }
 
 void	Socket::createSocketTCP(void)
@@ -113,10 +113,10 @@ void	Socket::acceptConnection(void)
 	char buffer[4096] = {0};
 	read(this->_client_fd, buffer, 4096);
 
-	Receiver receiver;
+	HandleRequest HandleRequest;
 	std::string response ;
-	receiver.readBuffer(buffer);
-	setReceiver(receiver);
+	HandleRequest.readBuffer(buffer);
+	setHandleRequest(HandleRequest);
 	checkHost(response);
 	write(this->_client_fd, response.c_str(), response.length());
 	std::cout << "Message sent to client" << std::endl;
@@ -184,14 +184,14 @@ void	Socket::readPage(std::string filename, int code, std::string status, std::s
 void	Socket::checkHost(std::string& response)
 {
 	LocationServer locationServer;
-	locationServer = _server.getLocationServer(this->_receiver.getBaseURL());
+	locationServer = _server.getLocationServer(this->_HandleRequest.getBaseURL());
 	std::string redirect = locationServer.getRedirect();
 	if (!redirect.empty())
 	{
 		response = "HTTP/1.1 301 Found\r\nLocation: http://" + redirect + "\r\n\r\n";
 		return ;
 	}
-	if (! locationServer.getAllowedMethods(this->_receiver.getMethod()))
+	if (! locationServer.getAllowedMethods(this->_HandleRequest.getMethod()))
 	{
 		readPage(_server.getErrorPages(403), 403, "Refused", response);
 		return ;
@@ -201,12 +201,12 @@ void	Socket::checkHost(std::string& response)
 		readPage(_server.getErrorPages(404), 404, "Not Found", response);
 		return ;
 	}
-	if (this->_server.getServerName() != this->_receiver.getHost())
+	if (this->_server.getServerName() != this->_HandleRequest.getHost())
 	{
 		std::cout << "ko" << std::endl;
 		return ;
 	}
-	if (_receiver.getEndpoint() == "")
+	if (_HandleRequest.getEndpoint() == "")
 	{
 		std::set<std::string> pages = locationServer.getPagesIndex();
 		for (std::set<std::string>::iterator it = pages.begin(); it != pages.end(); ++it) 
@@ -232,7 +232,7 @@ void	Socket::checkHost(std::string& response)
 			readPage(_server.getErrorPages(404), 404, "Not Found", response);
 		return ;
 	}
-	std::string endpoint = locationServer.getRoot() + "/" + _receiver.getEndpoint();
+	std::string endpoint = locationServer.getRoot() + "/" + _HandleRequest.getEndpoint();
 	std::ifstream file(endpoint.c_str());
 	readPage(endpoint, 200, "Ok", response);
 	file.close();

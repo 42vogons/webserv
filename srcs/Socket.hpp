@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/23 00:47:29 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/24 22:58:43 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #define SOCKET_HPP
 
 #include "Server.hpp"
-#include "Receiver.hpp"
+#include "HandleRequest.hpp"
 #include <iostream>
 #include <unistd.h> //read write and close
 #include <sys/socket.h>
@@ -41,13 +41,13 @@ class Socket
 		void		closeServerFd(void);
 		void		closeClientFd(void);
 
-		void		setReceiver(Receiver receiver);
+		void		setHandleRequest(HandleRequest HandleRequest);
 		void		checkHost(std::string& response);
 		void		readPage(std::string filename, int code, std::string status, std::string& content);
 		void		autoIndex(std::string path);
 
 		int			getServerFd(void) const;
-		Receiver	getReceiver(void);
+		HandleRequest	getHandleRequest(void);
 
 	private:
 		int					_port;
@@ -56,7 +56,7 @@ class Socket
 		unsigned int		_addrlen;
 		struct sockaddr_in	_address;
 		Server				_server;
-		Receiver			_receiver;
+		HandleRequest			_HandleRequest;
 
 	protected:
 		class AcceptConnectionError : public std::exception
