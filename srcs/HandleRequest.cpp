@@ -43,7 +43,7 @@ HandleRequest& HandleRequest::operator=(const HandleRequest& obj)
 	return (*this);
 }
 
-void HandleRequest::readBuffer(char buffer[4096])
+void HandleRequest::readBuffer(std::string buffer)
 {
 	std::string key;
 	std::string value;

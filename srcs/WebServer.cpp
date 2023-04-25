@@ -15,7 +15,7 @@
 WebServer::WebServer(void)
 {
 	this->_servers.readFile("./conf/conf_sample");
-	this->_serversMap = this->_servers.getServers();
+	this->_serversMap = this->_servers.getServersMap();
 	return ;
 }
 

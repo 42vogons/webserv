@@ -28,7 +28,7 @@ class HandleRequest
 
 		HandleRequest&	operator=(const HandleRequest& obj);
 
-		void	readBuffer(char buffer[4096]);
+		void	readBuffer(std::string buffer);
 
 		std::string		getHost(void);
 		std::string		getMethod(void);

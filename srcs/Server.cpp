@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/19 18:48:11 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/24 23:44:50 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ Server& Server::operator=(const Server& obj)
 {
 	if (this != &obj)
 	{
-		this->_serverName = obj._serverName;
-		this->_errorPages = obj._errorPages;
 		this->_ports = obj._ports;
+		this->_serverName = obj._serverName;
 		this->_clientMaxBodySize = obj._clientMaxBodySize;
+		this->_errorPages = obj._errorPages;
 		this->_locationServer = obj._locationServer;
 		this->_lastLocation = obj._lastLocation;
 	}
@@ -49,9 +49,11 @@ Server& Server::operator=(const Server& obj)
 
 void	Server::readLine(std::string line)
 {
-	std::string key, valueString;
-	int valueInt;
-	std::istringstream iss(line);
+	std::string			key;
+	std::string			valueString;
+	int					valueInt;
+	std::istringstream	iss(line);
+
 	iss >> key;
 	if (key.empty() || key.substr(0, 1) == "#")
 		return;
@@ -78,34 +80,21 @@ void	Server::readLine(std::string line)
 	if (key.find("location") == 0)
 	{
 		iss >> valueString;
-		
 		LocationServer locationServer;
 		this->_lastLocation = valueString;
 		this->setLocationServer(valueString, locationServer);
 	}
 }
 
-std::string	Server::getLastLocation(void)
+void	Server::setPorts(int port)
 {
-	return _lastLocation;
+	if (this->_ports.find(port) == this->_ports.end())
+		this->_ports.insert(port);
 }
-
-
 
 void	Server::setServeName(std::string serverName)
 {
 	this->_serverName = serverName;
-}
-
-void	Server::setErrorPages(int code, std::string page)
-{
-	this->_errorPages[code] =  page;
-}
-
-void	Server::setPorts(int port)
-{
-	if (_ports.find(port) == _ports.end())
-		_ports.insert(port);
 }
 
 void	Server::setClientMaxBodySize(int clientMaxBodySize)
@@ -113,46 +102,52 @@ void	Server::setClientMaxBodySize(int clientMaxBodySize)
 	this->_clientMaxBodySize = clientMaxBodySize;
 }
 
+void	Server::setErrorPages(int code, std::string page)
+{
+	this->_errorPages[code] =  page;
+}
+
 void	Server::setLocationServer(std::string name, LocationServer locationServer)
 {
 	this->_locationServer[name] =  locationServer;
 }
 
-std::string	Server::getServerName(void)
-{
-	return (_serverName);
-}
-
-std::string	Server::getErrorPages(int code)
-{
-	
-	//todo: fazer verificação se não é nulo, se for estourar erro
-	
-	if (_errorPages.find(code) != _errorPages.end())
-		return _errorPages.find(code)->second;
-	return _errorPages.find(404)->second;
-}
-
 std::set<int>	Server::getPorts(void) const
 {
-	return (_ports);
+	return (this->_ports);
 }
 
-int	Server::getClientMaxBodySize(void)
+std::string	Server::getServerName(void) const
 {
-	return this->_clientMaxBodySize;
+	return (this->_serverName);
 }
 
-LocationServer	Server::getLocationServer(std::string name)
+int	Server::getClientMaxBodySize(void) const
 {
-	if (_locationServer.find(name) != _locationServer.end())
-		return _locationServer.find(name)->second;
+	return (this->_clientMaxBodySize);
+}
+
+std::string	Server::getErrorPages(int code) const
+{
+	if (this->_errorPages.find(code) != this->_errorPages.end())
+		return (this->_errorPages.find(code)->second);
+	return (this->_errorPages.find(404)->second);
+}
+
+LocationServer	Server::getLocationServer(std::string name) const
+{
+	if (this->_locationServer.find(name) != this->_locationServer.end())
+		return (this->_locationServer.find(name)->second);
 	return LocationServer();
+}
+
+std::string	Server::getLastLocation(void) const
+{
+	return (this->_lastLocation);
 }
 
 std::ostream&	operator<<(std::ostream& o, const Server& i)
 {
-	(void)i;
-	o << "something";
+	o << "server: " << i.getServerName();
 	return o;
 }
