@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Receiver.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 22:37:17 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/18 22:53:32 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/24 23:11:41 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class Receiver
 
 		Receiver&	operator=(const Receiver& obj);
 
-		void	readBuffer(char buffer[4096]);
+		void	readBuffer(std::string buffer);
 
 		std::string		getHost(void);
 		std::string		getMethod(void);
@@ -42,7 +42,13 @@ class Receiver
 		std::string	_version;
 		std::string	_host;
 		int			_contentLength;
-		std::string _body;
+		std::string	_body;
+		std::string	_contentType;
+		// file
+		std::string	_boundary;
+		std::string	_contentDisposition;
+		std::string	_name;
+		std::string	_fileName;
 
 	protected:
 };

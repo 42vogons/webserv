@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/21 23:48:23 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/24 23:15:20 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,13 +116,24 @@ int	Socket::getServerFd(void) const
 
 void	Socket::acceptConnection(void)
 {
+	std::string newBody;
 	Receiver receiver;
 	std::string response ;
 	int client_fd = accept(this->_server_fd, (struct sockaddr *)&this->_address, (socklen_t*)&this->_addrlen);
 	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;
 	char buffer[4096] = {0};
-	read(client_fd, buffer, 4096);
-	receiver.readBuffer(buffer);
+	
+	while (read(client_fd, buffer, 4096) > 0)
+	{
+		newBody += buffer;
+		memset(buffer, 0, 4096);
+	}
+		
+		
+	
+	//read(client_fd, buffer, 4096);
+	
+	receiver.readBuffer(newBody);
 	setReceiver(receiver);
 	checkHost(response);
 	write(client_fd, response.c_str(), response.length());

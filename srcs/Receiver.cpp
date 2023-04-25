@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 22:37:12 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/22 00:00:16 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/24 23:11:21 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,14 @@ Receiver& Receiver::operator=(const Receiver& obj)
 	return (*this);
 }
 
-void Receiver::readBuffer(char buffer[4096])
+void Receiver::readBuffer(std::string buffer)
 {
 	std::string key;
 	std::string value;
+
+	std::cout << "in" << buffer << std::endl;
+
+	
 	std::istringstream iss(buffer);
 	std::string protocol;
 	iss >> _method >> protocol >> _version;
@@ -79,11 +83,26 @@ void Receiver::readBuffer(char buffer[4096])
 			_host = value.substr(0, value.find(':'));
 			std::cout << "host: " << _host << std::endl;
 		}
+
+		if (key.find("Content-Type") == 0)
+		{
+			iss >> _contentType;
+		}
+
+		if (key.find("Content-Disposition"))
+		{
+			iss >> _contentDisposition;
+			std::cout << _contentDisposition << std::endl;
+		}
+
+		
 		if (key.find("Content-Length:") == 0)
 		{
 			iss >> _contentLength;
-			break;
+			//break;
 		}
+		
+		
 	}
 	return ;
 }
