@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Sockets.hpp                                        :+:      :+:    :+:   */
+/*   WebServer.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 19:35:12 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/22 16:00:21 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/24 22:50:33 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SOCKETS_HPP
-#define SOCKETS_HPP
+#ifndef WEBSERVER_HPP
+#define WEBSERVER_HPP
 
 #include <iostream>
 #include <vector>
@@ -22,14 +22,14 @@
 #include "Socket.hpp"
 #include "Poll.hpp"
 
-class Sockets
+class WebServer
 {
 	public:
-		Sockets(void);
-		Sockets(const Sockets& obj);
-		virtual ~Sockets(void);
+		WebServer(void);
+		WebServer(const WebServer& obj);
+		virtual ~WebServer(void);
 
-		Sockets&	operator=(const Sockets& obj);
+		WebServer&	operator=(const WebServer& obj);
 		void		handleSocketConnections(void);
 		void		createVecSocket(void);
 
@@ -46,6 +46,6 @@ class Sockets
 	protected:
 };
 
-std::ostream&	operator<<(std::ostream& o, const Sockets& i);
+std::ostream&	operator<<(std::ostream& o, const WebServer& i);
 
 #endif

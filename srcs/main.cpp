@@ -6,14 +6,14 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:23:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/22 15:51:56 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/24 22:53:57 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Sockets.hpp"
+#include "WebServer.hpp"
 #include <csignal>
 
-Sockets sockets;
+WebServer web_server;
 
 static void handle_signal(int signal)
 {
@@ -23,6 +23,6 @@ static void handle_signal(int signal)
 int	main(void)
 {
 	signal(SIGINT, handle_signal);
-	sockets.handleSocketConnections();
+	web_server.handleSocketConnections();
 	return (0);
 }
