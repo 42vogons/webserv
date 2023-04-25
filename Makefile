@@ -6,7 +6,7 @@
 #    By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/27 00:08:05 by cpereira          #+#    #+#              #
-#    Updated: 2023/04/21 19:03:15 by anolivei         ###   ########.fr        #
+#    Updated: 2023/04/22 14:58:06 by anolivei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ OBJ_DIR = .objs
 SRC =	$(SRC_DIR)/main.cpp \
 		$(SRC_DIR)/Socket.cpp \
 		$(SRC_DIR)/Sockets.cpp \
+		$(SRC_DIR)/Poll.cpp \
 		$(SRC_DIR)/Server.cpp \
 		$(SRC_DIR)/Servers.cpp \
 		$(SRC_DIR)/LocationServer.cpp \

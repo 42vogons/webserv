@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:23:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/21 18:38:46 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/22 15:51:56 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ Sockets sockets;
 
 static void handle_signal(int signal)
 {
-	sockets.close_sockets();
 	exit(signal);
 }
 

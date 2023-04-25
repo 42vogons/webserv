@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Receiver.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 22:37:12 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/20 22:31:21 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/24 00:04:18 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ void Receiver::readBuffer(char buffer[4096])
 		_baseURL = "";
 		_endpoint = protocol;
 	}
+	if (_baseURL == "")
+		_baseURL = "/";
 	while (std::getline(iss, key))
 	{
 		iss >> key;
