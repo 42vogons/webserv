@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Receiver.hpp                                       :+:      :+:    :+:   */
+/*   HandleRequest.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RECEIVER_HPP
-#define RECEIVER_HPP
+#ifndef HANDLE_REQUEST_HPP
+#define HANDLE_REQUEST_HPP
 
 #include <iostream>
 #include <fstream>
@@ -19,14 +19,14 @@
 #include <sstream>
 #include <cstdlib>
 
-class Receiver
+class HandleRequest
 {
 	public:
-		Receiver(void);
-		Receiver(const Receiver& obj);
-		virtual ~Receiver(void);
+		HandleRequest(void);
+		HandleRequest(const HandleRequest& obj);
+		virtual ~HandleRequest(void);
 
-		Receiver&	operator=(const Receiver& obj);
+		HandleRequest&	operator=(const HandleRequest& obj);
 
 		void	readBuffer(char buffer[4096]);
 
@@ -47,6 +47,6 @@ class Receiver
 	protected:
 };
 
-std::ostream&	operator<<(std::ostream& o, const Receiver& i);
+std::ostream&	operator<<(std::ostream& o, const HandleRequest& i);
 
 #endif

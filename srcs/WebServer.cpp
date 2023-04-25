@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Sockets.cpp                                        :+:      :+:    :+:   */
+/*   WebServer.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 19:36:11 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/23 00:50:48 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/24 22:50:06 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Sockets.hpp"
+#include "WebServer.hpp"
 
-Sockets::Sockets(void)
+WebServer::WebServer(void)
 {
 	this->_servers.readFile("./conf/conf_sample");
 	this->_serversMap = this->_servers.getServers();
 	return ;
 }
 
-Sockets::Sockets(const Sockets& obj)
+WebServer::WebServer(const WebServer& obj)
 {
 	*this = obj;
 	return ;
 }
 
-Sockets::~Sockets(void)
+WebServer::~WebServer(void)
 {
 	for (size_t i = 0; i < this->_vecSocket.size(); i++)
 	{
@@ -39,7 +39,7 @@ Sockets::~Sockets(void)
 	return ;
 }
 
-Sockets& Sockets::operator=(const Sockets& obj)
+WebServer& WebServer::operator=(const WebServer& obj)
 {
 	if (this != &obj)
 	{
@@ -51,7 +51,7 @@ Sockets& Sockets::operator=(const Sockets& obj)
 	return (*this);
 }
 
-void	Sockets::createVecSocket(void)
+void	WebServer::createVecSocket(void)
 {
 	std::map<std::string, Server>::iterator itMap = this->_serversMap.begin();
 	std::map<std::string, Server>::iterator iteMap = this->_serversMap.end();
@@ -76,7 +76,7 @@ void	Sockets::createVecSocket(void)
 	}
 }
 
-void	Sockets::handleSocketConnections(void)
+void	WebServer::handleSocketConnections(void)
 {
 	this->createVecSocket();
 	this->_poll.start(this->_vecSocket);
@@ -106,13 +106,13 @@ void	Sockets::handleSocketConnections(void)
 	}
 }
 
-void	Sockets::_checkEvent(Poll &poll, size_t index)
+void	WebServer::_checkEvent(Poll &poll, size_t index)
 {
 	if (this->_checkEventMask(poll.getReturnEvents(index)))
 		this->_connect(poll.getSocket(index));
 }
 
-bool	Sockets::_checkEventMask(short revents)
+bool	WebServer::_checkEventMask(short revents)
 {
 	if ((revents & POLLIN) == POLLIN)
 		return (true);
@@ -123,7 +123,7 @@ bool	Sockets::_checkEventMask(short revents)
 	return (false);
 }
 
-void	Sockets::_connect(Socket *socket)
+void	WebServer::_connect(Socket *socket)
 {
 	try
 	{
@@ -135,7 +135,7 @@ void	Sockets::_connect(Socket *socket)
 	}
 }
 
-std::ostream&	operator<<(std::ostream& o, const Sockets& i)
+std::ostream&	operator<<(std::ostream& o, const WebServer& i)
 {
 	(void)i;
 	o << "something";
