@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/19 18:48:11 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/21 18:58:23 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	Server::readLine(std::string line)
 	{
 		iss >> valueString;
 		this->setServeName(valueString);
+		addHostServerName(valueString,"127.0.0.1");
 	}
 	if (key.find("client_max_body_size") == 0)
 	{
@@ -148,6 +149,27 @@ LocationServer	Server::getLocationServer(std::string name)
 	if (_locationServer.find(name) != _locationServer.end())
 		return _locationServer.find(name)->second;
 	return LocationServer();
+}
+
+void	Server::addHostServerName(std::string serverName, std::string ipAddress){
+	std::ifstream fileHost("/etc/hosts");
+	std::string line;
+	std::string context;
+	int add = 0;
+	
+	while (getline(fileHost, line)){
+		if (line.find(serverName) != std::string::npos)
+			continue;
+		if (line.find("127.0.0.1") == std::string::npos && add == 0){
+			add = 1;
+			context += ipAddress + "\t" + serverName + "\n";
+		}
+		context += line + "\n";
+	}
+	fileHost.close();
+	std::ofstream newFile("/etc/hosts");
+	newFile << context.c_str();
+	newFile.close();
 }
 
 std::ostream&	operator<<(std::ostream& o, const Server& i)
