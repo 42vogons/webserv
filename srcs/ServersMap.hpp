@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Servers.hpp                                        :+:      :+:    :+:   */
+/*   ServersMap.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,34 +10,35 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVERS_HPP
-#define SERVERS_HPP
+#ifndef SERVERS_MAP_HPP
+#define SERVERS_MAP_HPP
 
 #include <map>
 #include "Server.hpp"
 
-class Servers
+class ServersMap
 {
 	public:
-		Servers(void);
-		Servers(const Servers& obj);
-		virtual ~Servers(void);
+		ServersMap(void);
+		ServersMap(const ServersMap& obj);
+		virtual ~ServersMap(void);
 
-		Servers&	operator=(const Servers& obj);
+		ServersMap&	operator=(const ServersMap& obj);
 
 		void	addServer(std::string serverName, Server server);
 		void	readFile(std::string fileName);
 		int		countTabs(std::string line);
-		Server	getServer(std::string serverName);
-		void	setServer(std::string serverName, Server server);
-		std::map<std::string, Server>	getServers(void);
+
+		void							setServer(std::string serverName, Server server);
+		Server							getServer(std::string serverName);
+		std::map<std::string, Server>	getServersMap(void);
 
 	private:
-		std::map<std::string, Server>	_servers;
+		std::map<std::string, Server>	_serversMap;
 
 	protected:
 };
 
-std::ostream&	operator<<(std::ostream& o, const Servers& i);
+std::ostream&	operator<<(std::ostream& o, const ServersMap& i);
 
 #endif
