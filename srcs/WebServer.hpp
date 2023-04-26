@@ -17,7 +17,7 @@
 #include <vector>
 #include <set>
 #include <map>
-#include "Servers.hpp"
+#include "ServersMap.hpp"
 #include "Server.hpp"
 #include "Socket.hpp"
 #include "Poll.hpp"
@@ -39,7 +39,7 @@ class WebServer
 		void	_connect(Socket *socket);
 	
 		std::vector<Socket *>			_vecSocket;
-		Servers							_servers;
+		ServersMap						_servers;
 		std::map<std::string, Server>	_serversMap;
 		Poll							_poll;
 

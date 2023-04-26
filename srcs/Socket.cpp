@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/25 00:12:24 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/25 23:05:20 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,25 +110,20 @@ void	Socket::acceptConnection(void)
 	if (this->_client_fd == -1)
 		throw (AcceptConnectionError()); 
 	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;
-
 	char c = {0};
 	int bytes_read = 1;
 	int sum_bytes = 0;
-	
 	std::string buffer;
-	
 	while (bytes_read > 0)
 	{
 		bytes_read = recv(this->_client_fd, &c, 1, 0);
 		if(bytes_read <=0)
 			break;
-			
 		buffer.append(1,c);
 		if (buffer.find("\r\n\r\n") != std::string::npos || bytes_read == 0 )
 			break;
 		sum_bytes += bytes_read;
 	}
-	
 	HandleRequest HandleRequest;
 	std::string response ;
 	HandleRequest.readBuffer(buffer);
@@ -136,6 +131,7 @@ void	Socket::acceptConnection(void)
 	checkHost(response);
 	write(this->_client_fd, response.c_str(), response.length());
 	std::cout << "Message sent to client" << std::endl;
+	this->closeClientFd();
 }
 
 bool fdIsValid(int fd)
