@@ -2,6 +2,7 @@ webserv
 .objs/
 .vscode/
 hosts_backup
+valgrind-out.txt 
 
 # Prerequisites
 *.d

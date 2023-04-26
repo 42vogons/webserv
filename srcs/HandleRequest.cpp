@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Receiver.cpp                                       :+:      :+:    :+:   */
+/*   HandleRequest.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 22:37:12 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/24 23:11:21 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/24 00:04:18 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Receiver.hpp"
+#include "HandleRequest.hpp"
 
-Receiver::Receiver(void)
+HandleRequest::HandleRequest(void)
 {
 	return ;
 }
 
-Receiver::Receiver(const Receiver& obj)
+HandleRequest::HandleRequest(const HandleRequest& obj)
 {
 	*this = obj;
 	return ;
 }
 
-Receiver::~Receiver(void)
+HandleRequest::~HandleRequest(void)
 {
 	return ;
 }
 
-Receiver& Receiver::operator=(const Receiver& obj)
+HandleRequest& HandleRequest::operator=(const HandleRequest& obj)
 {
 	if (this != &obj)
 	{
@@ -43,12 +43,12 @@ Receiver& Receiver::operator=(const Receiver& obj)
 	return (*this);
 }
 
-void Receiver::readBuffer(std::string buffer)
+void HandleRequest::readBuffer(std::string buffer)
 {
 	std::string key;
 	std::string value;
 
-	std::cout << "in" << buffer << std::endl;
+	//std::cout << "in" << buffer << std::endl;
 
 	
 	std::istringstream iss(buffer);
@@ -57,7 +57,6 @@ void Receiver::readBuffer(std::string buffer)
 	std::size_t lastSlashPos = protocol.find_last_of("/");
 	if (lastSlashPos != std::string::npos)
 	{
-		std::cout << "1" << std::endl;
 		_baseURL = protocol.substr(0, lastSlashPos + 1);
 		_endpoint = protocol.substr(lastSlashPos + 1);
 	}
@@ -66,11 +65,8 @@ void Receiver::readBuffer(std::string buffer)
 		_baseURL = "";
 		_endpoint = protocol;
 	}
-	std::cout << "protocol" << protocol << std::endl;
-	std::cout << "_baseURL" << _baseURL << std::endl;
-	std::cout << "_endpoint" << _endpoint << std::endl;
-
-	
+	if (_baseURL == "")
+		_baseURL = "/";
 	while (std::getline(iss, key))
 	{
 		iss >> key;
@@ -84,15 +80,16 @@ void Receiver::readBuffer(std::string buffer)
 			std::cout << "host: " << _host << std::endl;
 		}
 
-		if (key.find("Content-Type") == 0)
+		if (key.find("Content-Type:") == 0)
 		{
 			iss >> _contentType;
 		}
-
-		if (key.find("Content-Disposition"))
+		
+		std::cout << "key" << key << std::endl;
+		if (key.find("Content-Disposition:") == 0)
 		{
 			iss >> _contentDisposition;
-			std::cout << _contentDisposition << std::endl;
+			std::cout  <<"Content-Disposition=====" << _contentDisposition << std::endl;
 		}
 
 		
@@ -107,27 +104,27 @@ void Receiver::readBuffer(std::string buffer)
 	return ;
 }
 
-std::string Receiver::getHost(void)
+std::string HandleRequest::getHost(void)
 {
 	return (this->_host);
 }
 
-std::string Receiver::getMethod(void)
+std::string HandleRequest::getMethod(void)
 {
 	return (this->_method);
 }
 
-std::string Receiver::getBaseURL(void)
+std::string HandleRequest::getBaseURL(void)
 {
 	return (this->_baseURL);
 }
 
-std::string Receiver::getEndpoint(void)
+std::string HandleRequest::getEndpoint(void)
 {
 	return (this->_endpoint);
 }
 
-std::ostream&	operator<<(std::ostream& o, const Receiver& i)
+std::ostream&	operator<<(std::ostream& o, const HandleRequest& i)
 {
 	(void)i;
 	o << "something";

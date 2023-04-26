@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Sockets.hpp                                        :+:      :+:    :+:   */
+/*   WebServer.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 19:35:12 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/21 18:23:12 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/24 22:50:33 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SOCKETS_HPP
-#define SOCKETS_HPP
+#ifndef WEBSERVER_HPP
+#define WEBSERVER_HPP
 
 #include <iostream>
 #include <vector>
@@ -20,27 +20,32 @@
 #include "Servers.hpp"
 #include "Server.hpp"
 #include "Socket.hpp"
+#include "Poll.hpp"
 
-class Sockets
+class WebServer
 {
 	public:
-		Sockets(void);
-		Sockets(const Sockets& obj);
-		virtual ~Sockets(void);
+		WebServer(void);
+		WebServer(const WebServer& obj);
+		virtual ~WebServer(void);
 
-		Sockets&	operator=(const Sockets& obj);
+		WebServer&	operator=(const WebServer& obj);
 		void		handleSocketConnections(void);
 		void		createVecSocket(void);
-		void		close_sockets(void);
 
 	private:
-		std::vector<Socket>				_vecSocket;
+		void	_checkEvent(Poll &poll, size_t index);
+		bool	_checkEventMask(short revents);
+		void	_connect(Socket *socket);
+	
+		std::vector<Socket *>			_vecSocket;
 		Servers							_servers;
 		std::map<std::string, Server>	_serversMap;
+		Poll							_poll;
 
 	protected:
 };
 
-std::ostream&	operator<<(std::ostream& o, const Sockets& i);
+std::ostream&	operator<<(std::ostream& o, const WebServer& i);
 
 #endif
