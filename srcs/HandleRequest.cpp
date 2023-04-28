@@ -32,96 +32,72 @@ HandleRequest& HandleRequest::operator=(const HandleRequest& obj)
 {
 	if (this != &obj)
 	{
-		this->_method = obj._method;
-		this->_baseURL = obj._baseURL;
-		this->_endpoint = obj._endpoint;
-		this->_version = obj._version;
-		this->_host = obj._host;
-		this->_contentLength = obj._contentLength;
-		this->_body = obj._body;
+		this->_headers = obj._headers;
 	}
 	return (*this);
 }
 
 void HandleRequest::readBuffer(std::string buffer)
 {
+	std::string::size_type start = 0;
+	std::string::size_type end = 0;
+
+	std::string line;
 	std::string key;
 	std::string value;
+	std::stringstream file(buffer);
 
 	std::cout << "in" << buffer << std::endl;
 
-	
-	std::istringstream iss(buffer);
+	std::getline(file, line);
+
+	std::istringstream iss(line);
 	std::string protocol;
-	iss >> _method >> protocol >> _version;
+	iss >> _headers["Method"] >> protocol >> _headers["Version"];
 	std::size_t lastSlashPos = protocol.find_last_of("/");
 	if (lastSlashPos != std::string::npos)
 	{
-		_baseURL = protocol.substr(0, lastSlashPos + 1);
-		_endpoint = protocol.substr(lastSlashPos + 1);
+		_headers["BaseUrl"] = protocol.substr(0, lastSlashPos + 1);
+		_headers["Endpoint"] = protocol.substr(lastSlashPos + 1);
 	}
 	else
 	{
-		_baseURL = "";
-		_endpoint = protocol;
+		_headers["BaseUrl"] = "/";
+		_headers["Endpoint"] = protocol;
 	}
-	if (_baseURL == "")
-		_baseURL = "/";
-	while (std::getline(iss, key))
+	
+	// precisa melhorar essa função
+	
+	while (std::getline(file, line))
 	{
-		iss >> key;
-		if (key.find("Host:") == 0)
-		{
-			iss >> value;
-			std::cout << "host full: " << value << std::endl;
-			std::size_t x = value.find(':');
-			std::cout << "x: " << x << std::endl;
-			_host = value.substr(0, value.find(':'));
-			std::cout << "host: " << _host << std::endl;
-		}
+		start = 0;
+		end = line.find(':');
+		key = line.substr(start, end - start);
+		start = end + 1;
+		end = line.size() - start - 1;
+		// remove os espaços iniciais
+		while (end > 0 && line[start] == ' ') {
+            ++start;
+            --end;
+        }
+		value = line.substr(start, end);
 
-		if (key.find("Content-Type:") == 0)
-		{
-			iss >> _contentType;
-		}
-		
-		std::cout << "key" << key << std::endl;
-		if (key.find("Content-Disposition:") == 0)
-		{
-			iss >> _contentDisposition;
-			std::cout  <<"Content-Disposition=====" << _contentDisposition << std::endl;
-		}
-
-		
-		if (key.find("Content-Length:") == 0)
-		{
-			iss >> _contentLength;
-			//break;
-		}
-		
-		
+		std::cout << "key = *"<< key <<"* value=*"<< value << "*" << std::endl;
+		_headers[key] = value;
 	}
+	start = 0;
+	line = _headers["Host"];
+	end = line.find(':');
+	_headers["Host"] = line.substr(start, end - start);
+	start = end + 1;
+	end = line.size() - start - 1;
+	_headers["Port"] = line.substr(start, end);
 	return ;
 }
 
-std::string HandleRequest::getHost(void)
+std::string HandleRequest::getField(std::string field)
 {
-	return (this->_host);
-}
-
-std::string HandleRequest::getMethod(void)
-{
-	return (this->_method);
-}
-
-std::string HandleRequest::getBaseURL(void)
-{
-	return (this->_baseURL);
-}
-
-std::string HandleRequest::getEndpoint(void)
-{
-	return (this->_endpoint);
+	return _headers[field];
 }
 
 std::ostream&	operator<<(std::ostream& o, const HandleRequest& i)

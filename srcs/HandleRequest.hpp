@@ -18,6 +18,7 @@
 #include <string>
 #include <sstream>
 #include <cstdlib>
+#include <map>
 
 class HandleRequest
 {
@@ -30,26 +31,10 @@ class HandleRequest
 
 		void	readBuffer(std::string buffer);
 
-		std::string		getHost(void);
-		std::string		getMethod(void);
-		std::string		getBaseURL(void);
-		std::string		getEndpoint(void);
+		std::string		getField(std::string field);
 
 	private:
-		std::string	_method;
-		std::string	_baseURL;
-		std::string	_endpoint;
-		std::string	_version;
-		std::string	_host;
-		int			_contentLength;
-		std::string	_body;
-		std::string	_contentType;
-		// file
-		std::string	_boundary;
-		std::string	_contentDisposition;
-		std::string	_name;
-		std::string	_fileName;
-
+		std::map<std::string, std::string> _headers;
 	protected:
 };
 

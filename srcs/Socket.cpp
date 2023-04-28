@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/28 15:38:31 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/28 19:12:40 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,78 +122,14 @@ void	Socket::acceptConnection(void)
 		return;
 	}
 
-	std::string http_request(buffer, buffer + bytes_received);
-    std::stringstream ss(http_request);
-    std::string request_line;
-    getline(ss, request_line);
-
-	std::string filename;
-	std::string content_disposition = http_request.substr(http_request.find("Content-Disposition"));
-    size_t filename_start = content_disposition.find("filename=") + 10;
-    size_t filename_end = content_disposition.find("\"", filename_start);
-    if (filename_start != std::string::npos && filename_end != std::string::npos) {
-        filename = content_disposition.substr(filename_start, filename_end - filename_start);
-    }
-	// Check if file was uploaded
-	size_t content_length_start = http_request.find("Content-Length: ") + 16;
-	size_t content_length_end = http_request.find("\r\n", content_length_start);
-	if (content_length_start != std::string::npos && content_length_end != std::string::npos) {
-		int content_length = atoi(http_request.substr(content_length_start, content_length_end - content_length_start).c_str());
-		if (content_length == 0) {
-			std::cerr << "Arquivo não enviado pelo cliente" << std::endl;
-			close(_client_fd);
-			return;
-		}
-		int bytes_left = content_length;
-		/*std::ifstream file(upload_dir + filename, std::ifstream::in);
-		        //std::ofstream file(upload_dir + filename, std::ios_base::out | std::ios_base::binary);
-        if (!file.is_open()) {
-            std::cerr << "Erro ao criar arquivo " << filename << std::endl;
-            close(_client_fd);
-            return;
-        }*/
-
-        while (bytes_left > 0) {
-            int bytes_to_read = std::min(bytes_left, BUFFER_SIZE);
-            bytes_received = recv(_client_fd, buffer, bytes_to_read, 0);
-            if (bytes_received == -1) {
-                std::cerr << "Erro ao receber dados do cliente" << std::endl;
-                close(_client_fd);
-                break;
-            }
-
-            //file.write(buffer, bytes_received);
-            bytes_left -= bytes_received;
-        }
-
-        //file.close();
-        std::cout << "Arquivo " << filename << " recebido e salvo em " << upload_dir << std::endl;
-    }
-	std::string http_response = "HTTP/1.1 200 OK\r\n\r\n";
-    send(_client_fd, http_response.c_str(), http_response.length(), 0);
 	
-	
-	/*char c = {0};
-	int bytes_read = 1;
-	int sum_bytes = 0;
-	std::string buffer;
-	while (bytes_read > 0)
-	{
-		bytes_read = recv(this->_client_fd, &c, 1, 0);
-		if(bytes_read <=0)
-			break;
-		buffer.append(1,c);
-		if (buffer.find("\r\n\r\n") != std::string::npos || bytes_read == 0 )
-			break;
-		sum_bytes += bytes_read;
-	}*/
-	/*HandleRequest HandleRequest;
+	HandleRequest HandleRequest;
 	std::string response ;
 	HandleRequest.readBuffer(buffer);
 	setHandleRequest(HandleRequest);
 	checkHost(response);
 	write(this->_client_fd, response.c_str(), response.length());
-	std::cout << "Message sent to client" << std::endl;*/
+	std::cout << "Message sent to client" << std::endl;
 	this->closeClientFd();
 }
 
@@ -259,14 +195,14 @@ void	Socket::readPage(std::string filename, int code, std::string status, std::s
 void	Socket::checkHost(std::string& response)
 {
 	LocationServer locationServer;
-	locationServer = _server.getLocationServer(this->_HandleRequest.getBaseURL());
+	locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
 	std::string redirect = locationServer.getRedirect();
 	if (!redirect.empty())
 	{
 		response = "HTTP/1.1 301 Found\r\nLocation: http://" + redirect + "\r\n\r\n";
 		return ;
 	}
-	if (! locationServer.getAllowedMethods(this->_HandleRequest.getMethod()))
+	if (! locationServer.getAllowedMethods(this->_HandleRequest.getField("Method")))
 	{
 		readPage(_server.getErrorPages(403), 403, "Refused", response);
 		return ;
@@ -276,12 +212,12 @@ void	Socket::checkHost(std::string& response)
 		readPage(_server.getErrorPages(404), 404, "Not Found", response);
 		return ;
 	}
-	if (this->_server.getServerName() != this->_HandleRequest.getHost())
+	if (this->_server.getServerName() != this->_HandleRequest.getField("Host"))
 	{
 		std::cout << "ko" << std::endl;
 		return ;
 	}
-	if (_HandleRequest.getEndpoint() == "")
+	if (this->_HandleRequest.getField("Endpoint") == "")
 	{
 		std::set<std::string> pages = locationServer.getPagesIndex();
 		for (std::set<std::string>::iterator it = pages.begin(); it != pages.end(); ++it) 
@@ -307,7 +243,7 @@ void	Socket::checkHost(std::string& response)
 			readPage(_server.getErrorPages(404), 404, "Not Found", response);
 		return ;
 	}
-	std::string endpoint = locationServer.getRoot() + "/" + _HandleRequest.getEndpoint();
+	std::string endpoint = locationServer.getRoot() + "/" + this->_HandleRequest.getField("Endpoint");
 	std::ifstream file(endpoint.c_str());
 	readPage(endpoint, 200, "Ok", response);
 	file.close();
