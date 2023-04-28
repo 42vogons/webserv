@@ -1,6 +1,6 @@
 sample_server_Z1 {
 
-	listen 8080 8081 8085 8086 8092
+	listen 8080 8081 8085 8086 8092 8093
 	server_name localhost
 	client_max_body_size 8000
 

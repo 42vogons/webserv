@@ -48,7 +48,7 @@ void HandleRequest::readBuffer(std::string buffer)
 	std::string key;
 	std::string value;
 
-	//std::cout << "in" << buffer << std::endl;
+	std::cout << "in" << buffer << std::endl;
 
 	
 	std::istringstream iss(buffer);
