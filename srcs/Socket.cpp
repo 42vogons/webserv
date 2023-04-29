@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/28 21:49:01 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/28 22:14:50 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,13 +197,16 @@ void	Socket::checkHost(std::string& response)
 	LocationServer locationServer;
 	locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
 	std::cout << "base*"<< this->_HandleRequest.getField("BaseUrl") << "*" << std::endl;
-	std::string redirect = locationServer.getRedirect();
+	std::string redirect = locationServer.getField("eedirection");
 	if (!redirect.empty())
 	{
 		response = "HTTP/1.1 301 Found\r\nLocation: http://" + redirect + "\r\n\r\n";
 		return ;
 	}
-	if (! locationServer.getAllowedMethods(this->_HandleRequest.getField("Method")))
+	
+	
+	//if (! locationServer.getAllowedMethods(this->_HandleRequest.getField("Method")))
+	if (locationServer.getField(this->_HandleRequest.getField("Method")) != "true")
 	{
 		readPage(_server.getErrorPages(403), 403, "Refused", response);
 		return ;

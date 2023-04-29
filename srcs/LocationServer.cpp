@@ -40,6 +40,7 @@ LocationServer& LocationServer::operator=(const LocationServer& obj)
 		this->_redirect = obj._redirect;
 		this->_updatePath = obj._updatePath;
 		this->_cgiParam = obj._cgiParam;
+		this->_variables = obj._variables;
 	}
 	return (*this);
 }
@@ -131,19 +132,28 @@ std::string	LocationServer::getCgiParm(std::string param)
 	return NULL;
 }
 
+std::string	LocationServer::getField(std::string field)
+{
+	return _variables[field];
+}
+
 void	LocationServer::readLine(std::string line)
 {
-	std::string key, valueString, valueString2;
+	std::string key, valueString, valueString2, value ;
 	bool valueBool;
 	std::istringstream iss(line);
-	iss >> key ;
+	iss >> key >> value ;
 	if (key.empty() || key.substr(0, 1) == "#")
 		return;
-	if (key.find("redirection") == 0)
+
+	if (key.find("allowed_methods") == 0)
 	{
-		iss >> valueString;
-		this->setRedirect(valueString);
-	}
+		key = value;
+		iss >> value ;
+	}	
+
+	_variables[key] = value;
+
 	if (key.find("root") == 0)
 	{
 		iss >> valueString;
@@ -164,11 +174,12 @@ void	LocationServer::readLine(std::string line)
 		iss >> std::boolalpha >> valueBool;
 		this->setAutoIndex(valueBool);
 	}
+	/*
 	if (key.find("allowed_methods") == 0)
 	{
 		iss >> valueString >> std::boolalpha >> valueBool;
 		this->setAllowedMethods(valueString, valueBool);
-	}
+	}*/
 	if (key.find("cgi_param") == 0)
 	{
 		iss >> valueString >> valueString2;

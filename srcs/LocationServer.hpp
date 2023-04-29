@@ -36,6 +36,7 @@ class LocationServer
 		void	setRedirect(std::string redirect);
 		void	setUpdatePath(std::string redirect);
 		void	setCgiParam(std::string key, std::string value);
+		std::string	getField(std::string field);
 
 		void	readLine(std::string line);
 
@@ -57,6 +58,7 @@ class LocationServer
 		std::string							_redirect;
 		std::string							_updatePath;
 		std::map<std::string, std::string>	_cgiParam;
+		std::map<std::string, std::string>	_variables;
 		
 
 	protected:
