@@ -60,14 +60,14 @@ void HandleRequest::readBuffer(std::string buffer)
 		_headers["BaseUrl"] = protocol.substr(0, lastSlashPos + 1);
 		_headers["Endpoint"] = protocol.substr(lastSlashPos + 1);
 	}
-	else
+	if (_headers["BaseUrl"] == "")
 	{
 		_headers["BaseUrl"] = "/";
 		_headers["Endpoint"] = protocol;
 	}
 	
 	// precisa melhorar essa função
-	
+
 	while (std::getline(file, line))
 	{
 		start = 0;

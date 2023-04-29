@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/28 19:12:40 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/04/28 21:49:01 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,6 +196,7 @@ void	Socket::checkHost(std::string& response)
 {
 	LocationServer locationServer;
 	locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
+	std::cout << "base*"<< this->_HandleRequest.getField("BaseUrl") << "*" << std::endl;
 	std::string redirect = locationServer.getRedirect();
 	if (!redirect.empty())
 	{

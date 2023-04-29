@@ -57,6 +57,7 @@ class LocationServer
 		std::string							_redirect;
 		std::string							_updatePath;
 		std::map<std::string, std::string>	_cgiParam;
+		
 
 	protected:
 };
