@@ -32,20 +32,20 @@ LocationServer& LocationServer::operator=(const LocationServer& obj)
 {
 	if (this != &obj)
 	{
-		this->_autoIndex = obj._autoIndex;
-		this->_root = obj._root;
+		//this->_autoIndex = obj._autoIndex;
+		//this->_root = obj._root;
 		this->_allowedMethods = obj._allowedMethods;
 		this->_pagesIndex = obj._pagesIndex;
-		this->_cgiPass = obj._cgiPass;
-		this->_redirect = obj._redirect;
-		this->_updatePath = obj._updatePath;
+		//this->_cgiPass = obj._cgiPass;
+		//this->_redirect = obj._redirect;
+		//this->_updatePath = obj._updatePath;
 		this->_cgiParam = obj._cgiParam;
 		this->_variables = obj._variables;
 	}
 	return (*this);
 }
 
-void	LocationServer::setAutoIndex(bool autoIndex)
+/*void	LocationServer::setAutoIndex(bool autoIndex)
 {
 	_autoIndex = autoIndex;
 }
@@ -68,7 +68,7 @@ void	LocationServer::setRedirect(std::string redirect)
 void	LocationServer::setUpdatePath(std::string updatePath)
 {
 	_updatePath= updatePath;
-}
+}*/
 
 void	LocationServer::setCgiParam(std::string key, std::string value)
 {
@@ -86,6 +86,7 @@ void	LocationServer::setPagesIndex(std::string page)
 		_pagesIndex.insert(page);
 }
 
+/*
 bool	LocationServer::getAutoIndex(void)
 {
 	return _autoIndex;
@@ -94,7 +95,7 @@ bool	LocationServer::getAutoIndex(void)
 std::string	LocationServer::getRoot(void)
 {
 	return _root;
-}
+}*/
 
 bool	LocationServer::getAllowedMethods(std::string methods)
 {
@@ -110,6 +111,9 @@ std::set<std::string>	LocationServer::getPagesIndex(void)
 	return _pagesIndex;
 }
 
+/*
+
+
 std::string	LocationServer::getCgiPass(void)
 {
 	return _cgiPass;
@@ -123,7 +127,7 @@ std::string	LocationServer::getRedirect(void)
 std::string	LocationServer::getUpdatePath(void)
 {
 	return _updatePath;
-}
+}*/
 
 std::string	LocationServer::getCgiParm(std::string param)
 {
@@ -140,7 +144,6 @@ std::string	LocationServer::getField(std::string field)
 void	LocationServer::readLine(std::string line)
 {
 	std::string key, valueString, valueString2, value ;
-	bool valueBool;
 	std::istringstream iss(line);
 	iss >> key >> value ;
 	if (key.empty() || key.substr(0, 1) == "#")
@@ -153,33 +156,6 @@ void	LocationServer::readLine(std::string line)
 	}	
 
 	_variables[key] = value;
-
-	if (key.find("root") == 0)
-	{
-		iss >> valueString;
-		this->setRoot(valueString);
-	}
-	if (key.find("upload_path") == 0)
-	{
-		iss >> valueString;
-		this->setUpdatePath(valueString);
-	}
-	if (key.find("cgi_pass") == 0)
-	{
-		iss >> valueString;
-		this->setCgiPass(valueString);
-	}
-	if (key.find("autoindex") == 0)
-	{
-		iss >> std::boolalpha >> valueBool;
-		this->setAutoIndex(valueBool);
-	}
-	/*
-	if (key.find("allowed_methods") == 0)
-	{
-		iss >> valueString >> std::boolalpha >> valueBool;
-		this->setAllowedMethods(valueString, valueBool);
-	}*/
 	if (key.find("cgi_param") == 0)
 	{
 		iss >> valueString >> valueString2;
@@ -190,6 +166,9 @@ void	LocationServer::readLine(std::string line)
 		while (iss >> valueString)
 			this->setPagesIndex(valueString);
 	}
+
+	
+
 }
 
 std::ostream&	operator<<(std::ostream& o, const LocationServer& i)
