@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/24 23:44:50 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/25 23:04:53 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,13 @@
 
 Server::Server(void) : _serverName("default")
 {
+	_clientMaxBodySize = 8000;
 	return ;
 }
 
 Server::Server(std::string name) : _serverName(name)
 {
+	_clientMaxBodySize = 8000;
 	return ;
 }
 

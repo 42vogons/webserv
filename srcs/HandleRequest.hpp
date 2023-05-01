@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HandleRequest.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 22:37:17 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/18 22:53:32 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/04/24 23:11:41 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <string>
 #include <sstream>
 #include <cstdlib>
+#include <map>
 
 class HandleRequest
 {
@@ -30,20 +31,10 @@ class HandleRequest
 
 		void	readBuffer(std::string buffer);
 
-		std::string		getHost(void);
-		std::string		getMethod(void);
-		std::string		getBaseURL(void);
-		std::string		getEndpoint(void);
+		std::string		getField(std::string field);
 
 	private:
-		std::string	_method;
-		std::string	_baseURL;
-		std::string	_endpoint;
-		std::string	_version;
-		std::string	_host;
-		int			_contentLength;
-		std::string _body;
-
+		std::map<std::string, std::string> _headers;
 	protected:
 };
 

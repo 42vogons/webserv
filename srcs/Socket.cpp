@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/25 00:41:06 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/05/01 18:56:47 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ Socket& Socket::operator=(const Socket& obj)
 		this->_address = obj._address;
 		this->_server = obj._server;
 		this->_HandleRequest = obj._HandleRequest;
+		this->_header= obj._header;
+		this->_body = obj._body;
+		
 	}
 	return (*this);
 }
@@ -104,34 +107,67 @@ int	Socket::getServerFd(void) const
 	return (this->_server_fd);
 }
 
+std::string Socket::receiveInformation(void){
+	const int BUFFER_SIZE = 1024;
+	char buffer[BUFFER_SIZE];
+	int bytes_received = 0;
+	std::string received;
+
+	while ((bytes_received = recv(_client_fd, buffer, sizeof(buffer), 0)) > 0) 
+	{
+		received.append(buffer, bytes_received);
+		if (bytes_received < BUFFER_SIZE)
+			break;
+	}
+
+	if (bytes_received == -1) {
+		close(this->_client_fd);
+		return "";
+	}
+	return received;
+}
+
 void	Socket::acceptConnection(void)
 {
 	this->_client_fd = accept(this->_server_fd, (struct sockaddr *)&this->_address, (socklen_t*)&this->_addrlen);
 	if (this->_client_fd == -1)
 		throw (AcceptConnectionError()); 
 	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;
-	char c = {0};
-	int bytes_read = 1;
-	int sum_bytes = 0;
-	std::string buffer;
-	while (bytes_read > 0)
-	{
-		bytes_read = recv(this->_client_fd, &c, 1, 0);
-		if(bytes_read <=0)
-			break;
-		buffer.append(1,c);
-		if (buffer.find("\r\n\r\n") != std::string::npos || bytes_read == 0 )
-			break;
-		sum_bytes += bytes_read;
-	}
-	HandleRequest HandleRequest;
+
+	this->_header = receiveInformation();
+	if (this->findField(_header, "GET") == "")
+		this->_body = receiveInformation();
+	
 	std::string response ;
-	HandleRequest.readBuffer(buffer);
+	HandleRequest HandleRequest;
+	HandleRequest.readBuffer(_header);
 	setHandleRequest(HandleRequest);
-	checkHost(response);
-	write(this->_client_fd, response.c_str(), response.length());
-	std::cout << "Message sent to client" << std::endl;
-	this->closeClientFd();
+	process(response);
+
+	//std::string response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+	send(_client_fd, response.c_str(), response.size(), 0);
+
+	close(_client_fd);
+	std::cout << "Conexão fechada" << std::endl;
+}
+
+std::string	Socket::findField(std::string src, std::string field){
+	
+	size_t pos = src.find(field);
+    if (pos == std::string::npos) {
+        return "";
+    }
+    pos += field.length();
+    size_t end_pos = src.find("\r\n", pos);
+    if (end_pos == std::string::npos) {
+        end_pos = src.find(";", pos);
+        if (end_pos == std::string::npos) {
+            return "";
+        }
+    }
+	if (src[pos] == '"')
+		return src.substr(pos + 1, end_pos - pos - 2);
+	return src.substr(pos, end_pos - pos);
 }
 
 bool fdIsValid(int fd)
@@ -193,38 +229,30 @@ void	Socket::readPage(std::string filename, int code, std::string status, std::s
 	file.close();
 }
 
-void	Socket::checkHost(std::string& response)
-{
+void	Socket::executeGet(std::string& response){
+
 	LocationServer locationServer;
-	locationServer = _server.getLocationServer(this->_HandleRequest.getBaseURL());
-	std::string redirect = locationServer.getRedirect();
+	locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
+	std::string redirect = locationServer.getField("redirection");
 	if (!redirect.empty())
 	{
 		response = "HTTP/1.1 301 Found\r\nLocation: http://" + redirect + "\r\n\r\n";
 		return ;
 	}
-	if (! locationServer.getAllowedMethods(this->_HandleRequest.getMethod()))
+		
+	if (locationServer.getField(this->_HandleRequest.getField("Method")) != "true")
 	{
 		readPage(_server.getErrorPages(403), 403, "Refused", response);
 		return ;
 	}
-	if (locationServer.getRoot() == "")
-	{
-		readPage(_server.getErrorPages(404), 404, "Not Found", response);
-		return ;
-	}
-	if (this->_server.getServerName() != this->_HandleRequest.getHost())
-	{
-		std::cout << "ko" << std::endl;
-		return ;
-	}
-	if (_HandleRequest.getEndpoint() == "")
+
+	if (this->_HandleRequest.getField("Endpoint") == "")
 	{
 		std::set<std::string> pages = locationServer.getPagesIndex();
 		for (std::set<std::string>::iterator it = pages.begin(); it != pages.end(); ++it) 
 		{
 			std::string page = *it;
-			std::string endpoint = locationServer.getRoot() + "/" + page;
+			std::string endpoint = locationServer.getField("root") + "/" + page;
 			std::ifstream file(endpoint.c_str());
 			if (file.good()){
 				readPage(endpoint, 200, "Ok", response);
@@ -232,10 +260,11 @@ void	Socket::checkHost(std::string& response)
 				return ;
 			}
 		}
-		if (locationServer.getAutoIndex())
+		
+		if (locationServer.getField("autoindex") == "true")
 		{
-			autoIndex(locationServer.getRoot());
-			std::string endpoint = locationServer.getRoot() + "/autoIndex.html" ;
+			autoIndex(locationServer.getField("root"));
+			std::string endpoint = locationServer.getField("root") + "/autoIndex.html" ;
 			readPage(endpoint, 200, "Ok", response);
 			remove(endpoint.c_str());
 			return ;
@@ -244,11 +273,84 @@ void	Socket::checkHost(std::string& response)
 			readPage(_server.getErrorPages(404), 404, "Not Found", response);
 		return ;
 	}
-	std::string endpoint = locationServer.getRoot() + "/" + _HandleRequest.getEndpoint();
-	std::ifstream file(endpoint.c_str());
-	readPage(endpoint, 200, "Ok", response);
-	file.close();
+	if (this->_server.getServerName() != this->_HandleRequest.getField("Host"))
+	{
+		std::cout << "ko" << std::endl;
+		return ;
+	}
+	if (this->_HandleRequest.getField("Endpoint").find(".png") == std::string::npos)
+	{
+		std::string endpoint = locationServer.getField("root") + "/" + this->_HandleRequest.getField("Endpoint");
+		std::ifstream file(endpoint.c_str());
+		readPage(endpoint, 200, "Ok", response);
+		file.close();	
+	}	
+	
+	
+	
+
+	
+}
+
+void	Socket::process(std::string& response)
+{
+	
+	LocationServer locationServer;
+	locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
+	std::string method = this->_HandleRequest.getField("Method");
+
+	std::cout << "base" << this->_HandleRequest.getField("BaseUrl") << std::endl;
+	std::cout << "locationServer***" << locationServer.getField("GET") << "**" << std::endl;
+	std::cout << "base*"<< this->_HandleRequest.getField("BaseUrl") << "*" << std::endl;
+	std::cout << "method*"<< method << "*" << std::endl;
+	
+
+	
+	// melhorar o context de resposta
+	// se methodo == post
+	if (method == "POST")
+		createFile(response);
+	
+	if (method == "GET")
+	{
+		executeGet(response);
+		
+	}
+		
+
+
+	
 	return ;
+}
+
+
+void	Socket::createFile(std::string& response){
+	
+	
+	std::string upload_dir = ".";
+	
+	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
+	
+	std::string fileName = locationServer.getField("upload_path") + "/" + findField(_header, "filename=");
+	
+	std::cout << "fileName" << fileName << std::endl;
+	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
+	if (file.is_open()) {
+		file.write(_body.data(), _body.size());
+		file.close(); 
+		std::ifstream infile(fileName.c_str());
+		std::string file_contents((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
+		if (file_contents == _body) {
+			std::cout << "Arquivo salvo corretamente!" << std::endl;
+		} else {
+			std::cout << "Erro ao salvar o arquivo!" << std::endl;
+		}
+	} else {
+		std::cout << "Erro ao abrir o arquivo para escrita!" << std::endl;
+	}
+	std::string endpoint = locationServer.getField("root") + "/sucess.html";
+	readPage(endpoint, 200, "Ok", response);
+	
 }
 
 void	Socket::autoIndex(std::string path)

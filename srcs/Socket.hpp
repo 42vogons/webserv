@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/24 22:58:43 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/05/01 18:12:42 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,15 @@
 #include <cstring> //strlen memset
 #include <dirent.h> // para ler diretorios
 #include <fcntl.h>
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <cstring>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
 
 class Socket
 {
@@ -40,11 +49,17 @@ class Socket
 		void		acceptConnection(void);
 		void		closeServerFd(void);
 		void		closeClientFd(void);
+		void		createFile(std::string& response);
+		
 
 		void		setHandleRequest(HandleRequest HandleRequest);
-		void		checkHost(std::string& response);
+		void		process(std::string& response);
 		void		readPage(std::string filename, int code, std::string status, std::string& content);
 		void		autoIndex(std::string path);
+		void		executeGet(std::string& response);
+
+		std::string	receiveInformation(void);
+		std::string	findField(std::string src, std::string field);
 
 		int			getServerFd(void) const;
 		HandleRequest	getHandleRequest(void);
@@ -56,7 +71,9 @@ class Socket
 		unsigned int		_addrlen;
 		struct sockaddr_in	_address;
 		Server				_server;
-		HandleRequest			_HandleRequest;
+		HandleRequest		_HandleRequest;
+		std::string			_header;
+		std::string			_body;
 
 	protected:
 		class AcceptConnectionError : public std::exception
