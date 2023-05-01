@@ -27,7 +27,7 @@ sample_server_Z1 {
 		cgi_param p2 dois
 	}
 
-	location /uploads {
+	location /uploads/ {
 		root pages/site1/uploads
 		autoindex	true
 		allowed_methods	GET		true

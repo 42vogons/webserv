@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/05/01 18:25:22 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/05/01 18:56:47 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,11 +278,16 @@ void	Socket::executeGet(std::string& response){
 		std::cout << "ko" << std::endl;
 		return ;
 	}
+	if (this->_HandleRequest.getField("Endpoint").find(".png") == std::string::npos)
+	{
+		std::string endpoint = locationServer.getField("root") + "/" + this->_HandleRequest.getField("Endpoint");
+		std::ifstream file(endpoint.c_str());
+		readPage(endpoint, 200, "Ok", response);
+		file.close();	
+	}	
 	
-	std::string endpoint = locationServer.getField("root") + "/" + this->_HandleRequest.getField("Endpoint");
-	std::ifstream file(endpoint.c_str());
-	readPage(endpoint, 200, "Ok", response);
-	file.close();
+	
+	
 
 	
 }

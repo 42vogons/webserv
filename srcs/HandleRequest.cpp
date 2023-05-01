@@ -93,7 +93,7 @@ void HandleRequest::readBuffer(std::string buffer)
         }
 		value = line.substr(start, end);
 
-		std::cout << "key = *"<< key <<"* value=*"<< value << "*" << std::endl;
+		//std::cout << "key = *"<< key <<"* value=*"<< value << "*" << std::endl;
 		_headers[key] = value;
 	}
 	start = 0;
