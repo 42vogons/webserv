@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/05/01 16:29:28 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/05/01 18:21:13 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,40 +129,26 @@ std::string Socket::receiveInformation(void){
 
 void	Socket::acceptConnection(void)
 {
-
-
-	const std::string UPLOAD_DIR = "/tmp/";
-	std::string upload_dir = "/home/cpereira/42/projetos_42/uploads/";
-
 	this->_client_fd = accept(this->_server_fd, (struct sockaddr *)&this->_address, (socklen_t*)&this->_addrlen);
 	if (this->_client_fd == -1)
 		throw (AcceptConnectionError()); 
 	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;
-	
+
 	this->_header = receiveInformation();
-	this->_body = receiveInformation();
+	if (this->findField(_header, "GET") == "")
+		this->_body = receiveInformation();
 	
 	std::string response ;
 	HandleRequest HandleRequest;
 	HandleRequest.readBuffer(_header);
 	setHandleRequest(HandleRequest);
-	checkHost(response);
-
-	
+	process(response);
 
 	//std::string response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
 	send(_client_fd, response.c_str(), response.size(), 0);
 
 	close(_client_fd);
 	std::cout << "Conexão fechada" << std::endl;
-		/////
-
-	/*
-	
-	
-	write(this->_client_fd, response.c_str(), response.length());
-	std::cout << "Message sent to client" << std::endl;
-	this->closeClientFd();*/
 }
 
 std::string	Socket::findField(std::string src, std::string field){
@@ -243,24 +229,11 @@ void	Socket::readPage(std::string filename, int code, std::string status, std::s
 	file.close();
 }
 
-void	Socket::checkHost(std::string& response)
-{
-	
+void	Socket::executeGet(std::string& response){
+
 	LocationServer locationServer;
 	locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
-	std::cout << "autoindex***" << locationServer.getField("autoindex") << "**" << std::endl;
-	std::cout << "base*"<< this->_HandleRequest.getField("BaseUrl") << "*" << std::endl;
 	std::string redirect = locationServer.getField("redirection");
-
-	// se methodo == post
-	if (this->_HandleRequest.getField("Method") == "POST")
-	{
-		createFile();
-		return;
-	}
-
-
-	///// ESSE BLOCO É PARA O METHODO GET
 	if (!redirect.empty())
 	{
 		response = "HTTP/1.1 301 Found\r\nLocation: http://" + redirect + "\r\n\r\n";
@@ -273,7 +246,7 @@ void	Socket::checkHost(std::string& response)
 		return ;
 	}
 
-		if (this->_HandleRequest.getField("Endpoint") == "")
+	if (this->_HandleRequest.getField("Endpoint") == "")
 	{
 		std::set<std::string> pages = locationServer.getPagesIndex();
 		for (std::set<std::string>::iterator it = pages.begin(); it != pages.end(); ++it) 
@@ -300,7 +273,6 @@ void	Socket::checkHost(std::string& response)
 			readPage(_server.getErrorPages(404), 404, "Not Found", response);
 		return ;
 	}
-
 	if (this->_server.getServerName() != this->_HandleRequest.getField("Host"))
 	{
 		std::cout << "ko" << std::endl;
@@ -309,19 +281,47 @@ void	Socket::checkHost(std::string& response)
 	
 	std::string endpoint = locationServer.getField("root") + "/" + this->_HandleRequest.getField("Endpoint");
 	std::ifstream file(endpoint.c_str());
-	readPage(endpoint, 200, "Ok", response);
-	file.close();
+	
+}
+
+void	Socket::process(std::string& response)
+{
+	
+	LocationServer locationServer;
+	locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
+	std::string method = this->_HandleRequest.getField("Method");
+
+	std::cout << "base" << this->_HandleRequest.getField("BaseUrl") << std::endl;
+	std::cout << "locationServer***" << locationServer.getField("GET") << "**" << std::endl;
+	std::cout << "base*"<< this->_HandleRequest.getField("BaseUrl") << "*" << std::endl;
+	
+	// melhorar o context de resposta
+	// se methodo == post
+	if (method == "POST")
+		createFile(response);
+	
+	if (method == "GET")
+	{
+		executeGet(response);
+		std::string endpoint = locationServer.getField("root") + "/" + this->_HandleRequest.getField("Endpoint");
+		std::ifstream file(endpoint.c_str());
+		readPage(endpoint, 200, "Ok", response);
+		file.close();
+	}
+		
+
+
+	
 	return ;
 }
 
 
-void	Socket::createFile(void){
+void	Socket::createFile(std::string& response){
 	
 	
-	std::string upload_dir = "/home/cpereira/42/projetos_42/webserver/";
+	std::string upload_dir = ".";
 	
 	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
-	std::cout << "lala " << upload_dir + locationServer.getField("upload_path") << std::endl;;
 	
 	std::string fileName = locationServer.getField("upload_path") + "/" + findField(_header, "filename=");
 	
@@ -340,6 +340,9 @@ void	Socket::createFile(void){
 	} else {
 		std::cout << "Erro ao abrir o arquivo para escrita!" << std::endl;
 	}
+	std::string endpoint = locationServer.getField("root") + "/sucess.html";
+	readPage(endpoint, 200, "Ok", response);
+	
 }
 
 void	Socket::autoIndex(std::string path)
