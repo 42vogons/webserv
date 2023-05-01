@@ -39,7 +39,7 @@ HandleRequest& HandleRequest::operator=(const HandleRequest& obj)
 
 void HandleRequest::readBuffer(std::string buffer)
 {
-	
+
 	std::string::size_type start = 0;
 	std::string::size_type end = 0;
 
@@ -56,10 +56,20 @@ void HandleRequest::readBuffer(std::string buffer)
 	std::string protocol;
 	iss >> _headers["Method"] >> protocol >> _headers["Version"];
 	std::size_t lastSlashPos = protocol.find_last_of("/");
+	std::cout << "last" << protocol.size();
 	if (lastSlashPos != std::string::npos)
 	{
-		_headers["BaseUrl"] = protocol.substr(0, lastSlashPos + 1);
-		_headers["Endpoint"] = protocol.substr(lastSlashPos + 1);
+		if (protocol.size() - 1 != lastSlashPos)
+		{
+			_headers["BaseUrl"] = protocol.substr(0, lastSlashPos + 1);
+			_headers["Endpoint"] = protocol.substr(lastSlashPos + 1);
+		}
+		else
+		{
+			_headers["BaseUrl"] = protocol.substr(0, lastSlashPos);
+			_headers["Endpoint"] = protocol.substr(lastSlashPos + 1);
+		}
+		
 	}
 	if (_headers["BaseUrl"] == "")
 	{

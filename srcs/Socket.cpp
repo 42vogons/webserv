@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/05/01 18:21:13 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/05/01 18:25:22 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,6 +281,9 @@ void	Socket::executeGet(std::string& response){
 	
 	std::string endpoint = locationServer.getField("root") + "/" + this->_HandleRequest.getField("Endpoint");
 	std::ifstream file(endpoint.c_str());
+	readPage(endpoint, 200, "Ok", response);
+	file.close();
+
 	
 }
 
@@ -294,6 +297,9 @@ void	Socket::process(std::string& response)
 	std::cout << "base" << this->_HandleRequest.getField("BaseUrl") << std::endl;
 	std::cout << "locationServer***" << locationServer.getField("GET") << "**" << std::endl;
 	std::cout << "base*"<< this->_HandleRequest.getField("BaseUrl") << "*" << std::endl;
+	std::cout << "method*"<< method << "*" << std::endl;
+	
+
 	
 	// melhorar o context de resposta
 	// se methodo == post
@@ -303,10 +309,7 @@ void	Socket::process(std::string& response)
 	if (method == "GET")
 	{
 		executeGet(response);
-		std::string endpoint = locationServer.getField("root") + "/" + this->_HandleRequest.getField("Endpoint");
-		std::ifstream file(endpoint.c_str());
-		readPage(endpoint, 200, "Ok", response);
-		file.close();
+		
 	}
 		
 
