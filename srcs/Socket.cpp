@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/30 15:10:27 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/05/01 14:03:17 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,33 +104,110 @@ int	Socket::getServerFd(void) const
 	return (this->_server_fd);
 }
 
+std::string Socket::receiveInformation(void){
+	const int BUFFER_SIZE = 1024;
+	char buffer[BUFFER_SIZE];
+	int bytes_received = 0;
+	std::string received;
+
+	while ((bytes_received = recv(_client_fd, buffer, sizeof(buffer), 0)) > 0) 
+	{
+		received.append(buffer, bytes_received);
+		if (bytes_received < BUFFER_SIZE)
+			break;
+	}
+
+	if (bytes_received == -1) {
+		close(this->_client_fd);
+		return "";
+	}
+	return received;
+}
+
 void	Socket::acceptConnection(void)
 {
 
-	const int BUFFER_SIZE = 4096;
-	char buffer[BUFFER_SIZE];
-	std::string upload_dir = "/home/user/documents/";
+
+	const std::string UPLOAD_DIR = "/tmp/";
+	std::string upload_dir = "/home/cpereira/42/projetos_42/uploads/";
 
 	this->_client_fd = accept(this->_server_fd, (struct sockaddr *)&this->_address, (socklen_t*)&this->_addrlen);
 	if (this->_client_fd == -1)
 		throw (AcceptConnectionError()); 
 	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;
 	
-    int bytes_received = recv(_client_fd, buffer, sizeof(buffer), 0);
+	std::string header = receiveInformation();
+	std::string body = receiveInformation();
+	std::cout << "body" << body << std::endl;
+	
+
+	//int bytes_received = recv(_client_fd, buffer, sizeof(buffer), 0);
+	
+	/*
 	if (bytes_received == -1) {
 		close(this->_client_fd);
 		return;
-	}
+	}*/
 
 	
+		/////
+	std::string boundary = header.substr(header.find("boundary=") + 9);
+	boundary = "--" + boundary.substr(0, boundary.find("\r\n"));
+	std::size_t file_start = header.find(boundary + "\r\n\r\n") + (boundary.length() + 4);
+	std::size_t file_end = header.find(boundary, file_start);
+	std::string file_content = header.substr(file_start, file_end - file_start);
+
+	std::cout << "aaaaaa" << boundary << std::endl;
+	std::cout << "file" << file_content.c_str() << std::endl;
+
+	std::string filename = upload_dir + "joaojoao2.png";
+	//std::ofstream file(filename.c_str(), std::ios::out | std::ios::binary);
+
+	
+	/*std::string content = "Ola mundo";
+	file.write(content.c_str(), content.size());
+	//file.write(body.c_str(), body.size());
+	file.close();*/
+
+
+
+
+	std::ofstream file(filename.c_str(), std::ios::out | std::ios::binary);
+	if (file.is_open()) {
+		file.write(body.data(), body.size());
+		file.close(); 
+		std::ifstream infile(filename.c_str());
+		std::string file_contents((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
+		if (file_contents == body) {
+			std::cout << "Arquivo salvo corretamente!" << std::endl;
+		} else {
+			std::cout << "Erro ao salvar o arquivo!" << std::endl;
+		}
+	} else {
+		std::cout << "Erro ao abrir o arquivo para escrita!" << std::endl;
+	}
+
+
+
+	
+
+	// Envia a resposta HTTP
+	std::string response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+	send(_client_fd, response.c_str(), response.size(), 0);
+
+	close(_client_fd);
+	std::cout << "Conexão fechada" << std::endl;
+		/////
+
+	/*
 	HandleRequest HandleRequest;
 	std::string response ;
-	HandleRequest.readBuffer(buffer);
+	HandleRequest.readBuffer(header);
 	setHandleRequest(HandleRequest);
 	checkHost(response);
 	write(this->_client_fd, response.c_str(), response.length());
 	std::cout << "Message sent to client" << std::endl;
-	this->closeClientFd();
+	this->closeClientFd();*/
 }
 
 bool fdIsValid(int fd)

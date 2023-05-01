@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/28 15:37:06 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/05/01 13:39:27 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ class Socket
 		void		readPage(std::string filename, int code, std::string status, std::string& content);
 		void		autoIndex(std::string path);
 
+		std::string	receiveInformation(void);
+
 		int			getServerFd(void) const;
 		HandleRequest	getHandleRequest(void);
 
@@ -65,7 +67,7 @@ class Socket
 		unsigned int		_addrlen;
 		struct sockaddr_in	_address;
 		Server				_server;
-		HandleRequest			_HandleRequest;
+		HandleRequest		_HandleRequest;
 
 	protected:
 		class AcceptConnectionError : public std::exception
