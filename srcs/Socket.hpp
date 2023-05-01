@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/05/01 13:39:27 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/05/01 15:38:14 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ class Socket
 		void		acceptConnection(void);
 		void		closeServerFd(void);
 		void		closeClientFd(void);
+		void		createFile(void);
+		
 
 		void		setHandleRequest(HandleRequest HandleRequest);
 		void		checkHost(std::string& response);
@@ -56,6 +58,7 @@ class Socket
 		void		autoIndex(std::string path);
 
 		std::string	receiveInformation(void);
+		std::string	findField(std::string src, std::string field);
 
 		int			getServerFd(void) const;
 		HandleRequest	getHandleRequest(void);
@@ -68,6 +71,8 @@ class Socket
 		struct sockaddr_in	_address;
 		Server				_server;
 		HandleRequest		_HandleRequest;
+		std::string			_header;
+		std::string			_body;
 
 	protected:
 		class AcceptConnectionError : public std::exception

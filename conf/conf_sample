@@ -15,7 +15,7 @@ sample_server_Z1 {
 	location / {
 		#redirection www.amazon.com
 		root pages/site1
-		upload_path /www/site1/uploads
+		upload_path pages/site1/uploads
 		cgi_pass	pass
 		#index	index.htm index.html4 index.php
 		index	index.htm index.htm index.php

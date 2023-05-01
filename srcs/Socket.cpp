@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/05/01 14:03:17 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/05/01 16:29:28 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ Socket& Socket::operator=(const Socket& obj)
 		this->_address = obj._address;
 		this->_server = obj._server;
 		this->_HandleRequest = obj._HandleRequest;
+		this->_header= obj._header;
+		this->_body = obj._body;
+		
 	}
 	return (*this);
 }
@@ -136,63 +139,18 @@ void	Socket::acceptConnection(void)
 		throw (AcceptConnectionError()); 
 	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;
 	
-	std::string header = receiveInformation();
-	std::string body = receiveInformation();
-	std::cout << "body" << body << std::endl;
+	this->_header = receiveInformation();
+	this->_body = receiveInformation();
 	
-
-	//int bytes_received = recv(_client_fd, buffer, sizeof(buffer), 0);
-	
-	/*
-	if (bytes_received == -1) {
-		close(this->_client_fd);
-		return;
-	}*/
-
-	
-		/////
-	std::string boundary = header.substr(header.find("boundary=") + 9);
-	boundary = "--" + boundary.substr(0, boundary.find("\r\n"));
-	std::size_t file_start = header.find(boundary + "\r\n\r\n") + (boundary.length() + 4);
-	std::size_t file_end = header.find(boundary, file_start);
-	std::string file_content = header.substr(file_start, file_end - file_start);
-
-	std::cout << "aaaaaa" << boundary << std::endl;
-	std::cout << "file" << file_content.c_str() << std::endl;
-
-	std::string filename = upload_dir + "joaojoao2.png";
-	//std::ofstream file(filename.c_str(), std::ios::out | std::ios::binary);
-
-	
-	/*std::string content = "Ola mundo";
-	file.write(content.c_str(), content.size());
-	//file.write(body.c_str(), body.size());
-	file.close();*/
-
-
-
-
-	std::ofstream file(filename.c_str(), std::ios::out | std::ios::binary);
-	if (file.is_open()) {
-		file.write(body.data(), body.size());
-		file.close(); 
-		std::ifstream infile(filename.c_str());
-		std::string file_contents((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
-		if (file_contents == body) {
-			std::cout << "Arquivo salvo corretamente!" << std::endl;
-		} else {
-			std::cout << "Erro ao salvar o arquivo!" << std::endl;
-		}
-	} else {
-		std::cout << "Erro ao abrir o arquivo para escrita!" << std::endl;
-	}
-
-
+	std::string response ;
+	HandleRequest HandleRequest;
+	HandleRequest.readBuffer(_header);
+	setHandleRequest(HandleRequest);
+	checkHost(response);
 
 	
 
-	// Envia a resposta HTTP
-	std::string response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+	//std::string response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
 	send(_client_fd, response.c_str(), response.size(), 0);
 
 	close(_client_fd);
@@ -200,14 +158,30 @@ void	Socket::acceptConnection(void)
 		/////
 
 	/*
-	HandleRequest HandleRequest;
-	std::string response ;
-	HandleRequest.readBuffer(header);
-	setHandleRequest(HandleRequest);
-	checkHost(response);
+	
+	
 	write(this->_client_fd, response.c_str(), response.length());
 	std::cout << "Message sent to client" << std::endl;
 	this->closeClientFd();*/
+}
+
+std::string	Socket::findField(std::string src, std::string field){
+	
+	size_t pos = src.find(field);
+    if (pos == std::string::npos) {
+        return "";
+    }
+    pos += field.length();
+    size_t end_pos = src.find("\r\n", pos);
+    if (end_pos == std::string::npos) {
+        end_pos = src.find(";", pos);
+        if (end_pos == std::string::npos) {
+            return "";
+        }
+    }
+	if (src[pos] == '"')
+		return src.substr(pos + 1, end_pos - pos - 2);
+	return src.substr(pos, end_pos - pos);
 }
 
 bool fdIsValid(int fd)
@@ -276,13 +250,23 @@ void	Socket::checkHost(std::string& response)
 	locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
 	std::cout << "autoindex***" << locationServer.getField("autoindex") << "**" << std::endl;
 	std::cout << "base*"<< this->_HandleRequest.getField("BaseUrl") << "*" << std::endl;
-	std::string redirect = locationServer.getField("eedirection");
+	std::string redirect = locationServer.getField("redirection");
+
+	// se methodo == post
+	if (this->_HandleRequest.getField("Method") == "POST")
+	{
+		createFile();
+		return;
+	}
+
+
+	///// ESSE BLOCO É PARA O METHODO GET
 	if (!redirect.empty())
 	{
 		response = "HTTP/1.1 301 Found\r\nLocation: http://" + redirect + "\r\n\r\n";
 		return ;
 	}
-	
+		
 	if (locationServer.getField(this->_HandleRequest.getField("Method")) != "true")
 	{
 		readPage(_server.getErrorPages(403), 403, "Refused", response);
@@ -328,6 +312,34 @@ void	Socket::checkHost(std::string& response)
 	readPage(endpoint, 200, "Ok", response);
 	file.close();
 	return ;
+}
+
+
+void	Socket::createFile(void){
+	
+	
+	std::string upload_dir = "/home/cpereira/42/projetos_42/webserver/";
+	
+	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
+	std::cout << "lala " << upload_dir + locationServer.getField("upload_path") << std::endl;;
+	
+	std::string fileName = locationServer.getField("upload_path") + "/" + findField(_header, "filename=");
+	
+	std::cout << "fileName" << fileName << std::endl;
+	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
+	if (file.is_open()) {
+		file.write(_body.data(), _body.size());
+		file.close(); 
+		std::ifstream infile(fileName.c_str());
+		std::string file_contents((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
+		if (file_contents == _body) {
+			std::cout << "Arquivo salvo corretamente!" << std::endl;
+		} else {
+			std::cout << "Erro ao salvar o arquivo!" << std::endl;
+		}
+	} else {
+		std::cout << "Erro ao abrir o arquivo para escrita!" << std::endl;
+	}
 }
 
 void	Socket::autoIndex(std::string path)

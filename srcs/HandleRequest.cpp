@@ -39,6 +39,7 @@ HandleRequest& HandleRequest::operator=(const HandleRequest& obj)
 
 void HandleRequest::readBuffer(std::string buffer)
 {
+	
 	std::string::size_type start = 0;
 	std::string::size_type end = 0;
 
