@@ -86,17 +86,6 @@ void	LocationServer::setPagesIndex(std::string page)
 		_pagesIndex.insert(page);
 }
 
-/*
-bool	LocationServer::getAutoIndex(void)
-{
-	return _autoIndex;
-}
-
-std::string	LocationServer::getRoot(void)
-{
-	return _root;
-}*/
-
 bool	LocationServer::getAllowedMethods(std::string methods)
 {
 
@@ -110,24 +99,6 @@ std::set<std::string>	LocationServer::getPagesIndex(void)
 {
 	return _pagesIndex;
 }
-
-/*
-
-
-std::string	LocationServer::getCgiPass(void)
-{
-	return _cgiPass;
-}
-
-std::string	LocationServer::getRedirect(void)
-{
-	return _redirect;
-}
-
-std::string	LocationServer::getUpdatePath(void)
-{
-	return _updatePath;
-}*/
 
 std::string	LocationServer::getCgiParm(std::string param)
 {
@@ -167,7 +138,7 @@ void	LocationServer::readLine(std::string line)
 			this->setPagesIndex(valueString);
 	}
 
-	
+
 
 	
 

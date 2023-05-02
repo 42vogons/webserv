@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/05/01 18:56:47 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/05/01 22:44:26 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,6 @@ void	Socket::acceptConnection(void)
 	setHandleRequest(HandleRequest);
 	process(response);
 
-	//std::string response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
 	send(_client_fd, response.c_str(), response.size(), 0);
 
 	close(_client_fd);
@@ -285,11 +284,7 @@ void	Socket::executeGet(std::string& response){
 		readPage(endpoint, 200, "Ok", response);
 		file.close();	
 	}	
-	
-	
-	
 
-	
 }
 
 void	Socket::process(std::string& response)
@@ -316,10 +311,6 @@ void	Socket::process(std::string& response)
 		executeGet(response);
 		
 	}
-		
-
-
-	
 	return ;
 }
 
