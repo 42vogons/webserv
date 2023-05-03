@@ -32,6 +32,7 @@ class WebServer
 		WebServer&	operator=(const WebServer& obj);
 		void		handleSocketConnections(void);
 		void		createVecSocket(void);
+		void		loadFile(std::string file);
 
 	private:
 		void	_checkEvent(Poll &poll, size_t index);

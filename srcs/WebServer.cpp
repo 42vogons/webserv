@@ -14,8 +14,8 @@
 
 WebServer::WebServer(void)
 {
-	this->_servers.readFile("./conf/conf_sample");
-	this->_serversMap = this->_servers.getServersMap();
+	//this->_servers.readFile("./conf/conf_sample");
+	//this->_serversMap = this->_servers.getServersMap();
 	return ;
 }
 
@@ -49,6 +49,11 @@ WebServer& WebServer::operator=(const WebServer& obj)
 		this->_poll = obj._poll;
 	}
 	return (*this);
+}
+
+void	WebServer::loadFile(std::string file){
+	this->_servers.readFile(file);
+	this->_serversMap = this->_servers.getServersMap();
 }
 
 void	WebServer::createVecSocket(void)
