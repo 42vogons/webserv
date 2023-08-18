@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/05/01 18:12:42 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/18 15:52:25 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ class Socket
 		void		acceptConnection(void);
 		void		closeServerFd(void);
 		void		closeClientFd(void);
-		void		createFile(std::string& response);
+		
 		
 
 		void		setHandleRequest(HandleRequest HandleRequest);
@@ -57,6 +57,7 @@ class Socket
 		void		readPage(std::string filename, int code, std::string status, std::string& content);
 		void		autoIndex(std::string path);
 		void		executeGet(std::string& response);
+		void		executePost();
 
 		std::string	receiveInformation(void);
 		std::string	findField(std::string src, std::string field);

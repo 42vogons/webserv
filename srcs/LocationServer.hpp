@@ -38,6 +38,7 @@ class LocationServer
 		bool					getAllowedMethods(std::string methods);
 		std::set<std::string>	getPagesIndex(void);
 		std::string				getCgiParm(std::string param);
+		std::string				getAllCgiParm(void);
 
 	private:
 		std::map<std::string, bool>			_allowedMethods;

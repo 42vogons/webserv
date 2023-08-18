@@ -107,6 +107,20 @@ std::string	LocationServer::getCgiParm(std::string param)
 	return NULL;
 }
 
+std::string LocationServer::getAllCgiParm(void){
+	std::string concatenatedArguments;
+    
+    for (std::map<std::string, std::string>::iterator it = _cgiParam.begin(); it != _cgiParam.end(); ++it)
+	{
+		concatenatedArguments += it->first + "=" + it->second + "&";
+	}
+    	
+    if (!concatenatedArguments.empty())
+        concatenatedArguments.erase(concatenatedArguments.size() - 1);
+    return concatenatedArguments;
+
+}
+
 std::string	LocationServer::getField(std::string field)
 {
 	return _variables[field];
@@ -114,9 +128,9 @@ std::string	LocationServer::getField(std::string field)
 
 void	LocationServer::readLine(std::string line)
 {
-	std::string key, valueString, valueString2, value ;
+	std::string key, valueString, valueString2, value, value2;
 	std::istringstream iss(line);
-	iss >> key >> value ;
+	iss >> key >> value >> value2;
 	if (key.empty() || key.substr(0, 1) == "#")
 		return;
 
@@ -129,8 +143,7 @@ void	LocationServer::readLine(std::string line)
 	_variables[key] = value;
 	if (key.find("cgi_param") == 0)
 	{
-		iss >> valueString >> valueString2;
-		this->setCgiParam(valueString, valueString2);
+		this->setCgiParam(value, value2);
 	}
 	if (key.find("index") == 0)
 	{

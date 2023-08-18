@@ -14,8 +14,8 @@ sample_server_Z1 {
 
 	location / {
 		#redirection www.amazon.com
-		root pages/site1
-		upload_path pages/site1/uploads
+		root pages/site1/index.html
+		upload_path pages/site1
 		cgi_pass	pass
 		#index	index.htm index.html4 index.php
 		index	index.htm index.html index.php
@@ -23,8 +23,24 @@ sample_server_Z1 {
 		allowed_methods	GET		true
 		allowed_methods	POST	true
 		allowed_methods	DELETE	true
-		cgi_param p1 um
-		cgi_param p2 dois
+		cgi sum.py
+		cgi_param num1 5
+		cgi_param num2 6
+	}
+
+	location /sum/ {
+		root pages/site1/sum.html
+		upload_path pages/site1
+		cgi_pass	pass
+		#index	index.htm index.html4 index.php
+		index	index.htm index.html index.php
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+		cgi sum.py
+		cgi_param num1 5
+		cgi_param num2 6
 	}
 
 	location /uploads/ {
@@ -32,6 +48,7 @@ sample_server_Z1 {
 		autoindex	true
 		allowed_methods	GET		true
 	}
+
 
 	location /mercadolivre {
 		redirection www.mercadolivre.com.br
@@ -68,7 +85,7 @@ sample_server_Z1 {
 sample_server_Z2 {
 
 	location /images {
-		redirection www.buscape.com
+		redirection www.globo.com
 		root /var/www
 		upload_path /uploads
 		allowed_methods	POST	true

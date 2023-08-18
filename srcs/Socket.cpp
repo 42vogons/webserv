@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/05/01 22:44:26 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/18 18:35:50 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,7 +304,7 @@ void	Socket::process(std::string& response)
 	// melhorar o context de resposta
 	// se methodo == post
 	if (method == "POST")
-		createFile(response);
+		executePost();
 	
 	if (method == "GET")
 	{
@@ -315,11 +315,53 @@ void	Socket::process(std::string& response)
 }
 
 
-void	Socket::createFile(std::string& response){
+void	Socket::executePost(){
+
+	std::cout <<" inicio" << std::endl;
+
+LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
+
+	std::cout << "cgi" << locationServer.getField("cgi") << std::endl;
+
+	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
+	const char *cgi = cgiPath.c_str();
+
+	const char *variables = locationServer.getAllCgiParm().c_str();
+
+	std::cout << "para" << locationServer.getAllCgiParm() << std::endl;
 	
 	
+	//char *cgi = "cgi/" + locationServer.getField("cgi");
+	
+	char *const args[] = { (char*)"python", (char*)cgi, (char*)variables, (char*)"num3=3", NULL };
+    char *const env[] = { NULL };
+
+    pid_t child_pid = fork();
+
+    if (child_pid == -1)
+    {
+        perror("fork");
+
+    }
+    else if (child_pid == 0)  // Processo filho
+    {
+        if (execve("/usr/bin/python3", args, env) == -1)
+        {
+            perror("execve");
+
+        }
+    }
+    else  // Processo pai
+    {
+        // Código para o processo pai, se necessário
+    }
+
+
+
+	////
+	
+	/*
 	std::string upload_dir = ".";
-	
 	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
 	
 	std::string fileName = locationServer.getField("upload_path") + "/" + findField(_header, "filename=");
@@ -340,7 +382,7 @@ void	Socket::createFile(std::string& response){
 		std::cout << "Erro ao abrir o arquivo para escrita!" << std::endl;
 	}
 	std::string endpoint = locationServer.getField("root") + "/sucess.html";
-	readPage(endpoint, 200, "Ok", response);
+	readPage(endpoint, 200, "Ok", response);*/
 	
 }
 
