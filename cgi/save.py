@@ -1,43 +1,32 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+
 import cgi
 import os
 
-upload_dir = '/uploads'
+# Configurar o cabeçalho da resposta
+print("Content-Type: text/html\n")
 
+# Ler os dados do formulário
 form = cgi.FieldStorage()
 
 if "file" in form:
     fileitem = form["file"]
-    if fileitem.filename:
-        filepath = os.path.join(upload_dir, os.path.basename(fileitem.filename))
-        with open(filepath, 'wb') as f:
-            f.write(fileitem.file.read())
-        print("Content-type: text/html\n")
-        print("<html>")
-        print("<head><title>Upload Concluído</title></head>")
-        print("<body>")
-        print("<h1>Upload Concluído</h1>")
-        print(f"<p>O arquivo '{fileitem.filename}' foi enviado e salvo em '{filepath}'</p>")
-        print("</body>")
-        print("</html>")
+
+    if fileitem.file:
+        # Caminho onde o arquivo será salvo
+        filepath = os.path.join("upload", fileitem.filename)
+
+        # Salvar o arquivo
+        with open(filepath, "wb") as output_file:
+            while True:
+                chunk = fileitem.file.read(8192)
+                if not chunk:
+                    break
+                output_file.write(chunk)
+
+        print("<h2>Arquivo '{}' foi enviado e salvo com sucesso!</h2>".format(fileitem.filename))
     else:
-        print("Content-type: text/html\n")
-        print("<html>")
-        print("<head><title>Erro no Upload</title></head>")
-        print("<body>")
-        print("<h1>Erro no Upload</h1>")
-        print("<p>Nenhum arquivo foi selecionado.</p>")
-        print("</body>")
-        print("</html>")
+        print("<h2>Erro: Nenhum arquivo foi enviado.</h2>")
 else:
-    print("Content-type: text/html\n")
-    print("<html>")
-    print("<head><title>Formulário de Upload</title></head>")
-    print("<body>")
-    print("<h1>Formulário de Upload</h1>")
-    print('<form enctype="multipart/form-data" method="post">')
-    print('<label for="file">Selecione um arquivo:</label>')
-    print('<input type="file" id="file" name="file"><br><br>')
-    print('<input type="submit" value="Enviar">')
-    print('</form>')
-    print("</body>")
-    print("</html>")
+    print("<h2>Erro: Nenhum arquivo foi encontrado no formulário.</h2>")

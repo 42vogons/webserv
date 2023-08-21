@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/18 18:35:50 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/21 16:27:05 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,6 @@ Socket& Socket::operator=(const Socket& obj)
 		this->_address = obj._address;
 		this->_server = obj._server;
 		this->_HandleRequest = obj._HandleRequest;
-		this->_header= obj._header;
-		this->_body = obj._body;
-		
 	}
 	return (*this);
 }
@@ -70,6 +67,22 @@ HandleRequest	Socket::getHandleRequest(void)
 {
 	return (this->_HandleRequest);
 }
+
+
+/*std::map<std::string, std::string>	Socket::getVariables(void)
+{
+	std::istringstream iss(this->getBody());
+    std::string pair;
+
+    while (std::getline(iss, pair, '&')) {
+        size_t equalPos = pair.find('=');
+        if (equalPos != std::string::npos) {
+            std::string key = pair.substr(0, equalPos);
+            std::string value = pair.substr(equalPos + 1);
+            _variables[key] = value;
+        }
+    }
+}*/
 
 void	Socket::createSocketTCP(void)
 {
@@ -134,13 +147,13 @@ void	Socket::acceptConnection(void)
 		throw (AcceptConnectionError()); 
 	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;
 
-	this->_header = receiveInformation();
-	if (this->findField(_header, "GET") == "")
-		this->_body = receiveInformation();
+	std::string header = receiveInformation();
+	//if (this->findField(header, "GET") == "")
+	//	this->_body = receiveInformation();
 	
 	std::string response ;
 	HandleRequest HandleRequest;
-	HandleRequest.readBuffer(_header);
+	HandleRequest.readBuffer(header);
 	setHandleRequest(HandleRequest);
 	process(response);
 
@@ -298,9 +311,7 @@ void	Socket::process(std::string& response)
 	std::cout << "locationServer***" << locationServer.getField("GET") << "**" << std::endl;
 	std::cout << "base*"<< this->_HandleRequest.getField("BaseUrl") << "*" << std::endl;
 	std::cout << "method*"<< method << "*" << std::endl;
-	
 
-	
 	// melhorar o context de resposta
 	// se methodo == post
 	if (method == "POST")
@@ -319,24 +330,25 @@ void	Socket::executePost(){
 
 	std::cout <<" inicio" << std::endl;
 
-LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
+	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
 
 	std::cout << "cgi" << locationServer.getField("cgi") << std::endl;
 
 	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
-	const char *cgi = cgiPath.c_str();
 
-	const char *variables = locationServer.getAllCgiParm().c_str();
+	std::string body = this->_HandleRequest.getBody();
 
-	std::cout << "para" << locationServer.getAllCgiParm() << std::endl;
+	if (body.empty())
+		body = locationServer.getAllCgiParm().c_str();
 	
-	
-	//char *cgi = "cgi/" + locationServer.getField("cgi");
-	
-	char *const args[] = { (char*)"python", (char*)cgi, (char*)variables, (char*)"num3=3", NULL };
-    char *const env[] = { NULL };
 
-    pid_t child_pid = fork();
+	std::cout << "body ="<< body << std::endl;
+	locationServer.getAllCgiParm();
+	
+	const char *args[] = { "python", cgiPath.c_str(), body.c_str(), "num3=3", NULL };
+	const char *env[] = { NULL };
+
+	pid_t child_pid = fork();
 
     if (child_pid == -1)
     {
@@ -345,11 +357,10 @@ LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.g
     }
     else if (child_pid == 0)  // Processo filho
     {
-        if (execve("/usr/bin/python3", args, env) == -1)
-        {
-            perror("execve");
-
-        }
+        if (execve("/usr/bin/python3", const_cast<char* const*>(args), const_cast<char* const*>(env)) == -1)
+    {
+        perror("execve");
+    }
     }
     else  // Processo pai
     {

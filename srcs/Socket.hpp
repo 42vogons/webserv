@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/18 15:52:25 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/21 14:01:56 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,11 @@ class Socket
 
 		std::string	receiveInformation(void);
 		std::string	findField(std::string src, std::string field);
+		
 
 		int			getServerFd(void) const;
 		HandleRequest	getHandleRequest(void);
+
 
 	private:
 		int					_port;
@@ -73,8 +75,7 @@ class Socket
 		struct sockaddr_in	_address;
 		Server				_server;
 		HandleRequest		_HandleRequest;
-		std::string			_header;
-		std::string			_body;
+		//std::map<std::string, std::string> _variables;
 
 	protected:
 		class AcceptConnectionError : public std::exception

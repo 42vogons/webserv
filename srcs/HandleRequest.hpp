@@ -32,9 +32,12 @@ class HandleRequest
 		void	readBuffer(std::string buffer);
 
 		std::string		getField(std::string field);
+		std::string		getBody(void);
+		std::map<std::string, std::string> getHeaders(void);
 
 	private:
 		std::map<std::string, std::string> _headers;
+		std::string _body;
 	protected:
 };
 

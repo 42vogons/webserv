@@ -111,10 +111,8 @@ std::string LocationServer::getAllCgiParm(void){
 	std::string concatenatedArguments;
     
     for (std::map<std::string, std::string>::iterator it = _cgiParam.begin(); it != _cgiParam.end(); ++it)
-	{
 		concatenatedArguments += it->first + "=" + it->second + "&";
-	}
-    	
+	    	
     if (!concatenatedArguments.empty())
         concatenatedArguments.erase(concatenatedArguments.size() - 1);
     return concatenatedArguments;

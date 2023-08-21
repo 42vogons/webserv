@@ -33,16 +33,17 @@ HandleRequest& HandleRequest::operator=(const HandleRequest& obj)
 	if (this != &obj)
 	{
 		this->_headers = obj._headers;
+		this->_body = obj._body;
 	}
 	return (*this);
 }
 
 void HandleRequest::readBuffer(std::string buffer)
 {
+	bool isBody = false;
 
 	std::string::size_type start = 0;
 	std::string::size_type end = 0;
-
 	std::string line;
 	std::string key;
 	std::string value;
@@ -77,10 +78,14 @@ void HandleRequest::readBuffer(std::string buffer)
 		_headers["Endpoint"] = protocol;
 	}
 	
-	// precisa melhorar essa função
 
 	while (std::getline(file, line))
 	{
+		if (isBody == true){
+			_body += line;
+			continue;
+		}
+		
 		start = 0;
 		end = line.find(':');
 		key = line.substr(start, end - start);
@@ -93,9 +98,18 @@ void HandleRequest::readBuffer(std::string buffer)
         }
 		value = line.substr(start, end);
 
-		//std::cout << "key = *"<< key <<"* value=*"<< value << "*" << std::endl;
-		_headers[key] = value;
+		std::cout << "key = *"<< key <<"* value=*"<< value << "*" << std::endl;
+		if (value == "")
+			isBody = true;
+		else
+			_headers[key] = value;
 	}
+	
+	
+	std::cout << "Body ----------------" << std::endl;
+	std::cout << _body << std::endl;
+	std::cout << "Body ----------------" << std::endl;
+
 	start = 0;
 	line = _headers["Host"];
 	end = line.find(':');
@@ -109,6 +123,10 @@ void HandleRequest::readBuffer(std::string buffer)
 std::string HandleRequest::getField(std::string field)
 {
 	return _headers[field];
+}
+
+std::string HandleRequest::getBody(void){
+	return _body;
 }
 
 std::ostream&	operator<<(std::ostream& o, const HandleRequest& i)
