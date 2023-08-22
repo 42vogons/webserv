@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/21 16:27:05 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/22 10:26:23 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,8 @@ void	Socket::acceptConnection(void)
 	std::string header = receiveInformation();
 	//if (this->findField(header, "GET") == "")
 	//	this->_body = receiveInformation();
+
+	std::cout <<" receive----------" << header << " receive----------" << std::endl;
 	
 	std::string response ;
 	HandleRequest HandleRequest;
@@ -325,14 +327,37 @@ void	Socket::process(std::string& response)
 	return ;
 }
 
+void Socket::receiveFile(){
+
+	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
+	std::string upload_dir = ".";
+	
+	std::string fileName = locationServer.getField("upload_path") + "/pages/site1/uploads/aa.jpeg"; // + findField(_header, "filename=");
+	
+	std::cout << "fileName" << fileName << std::endl;
+	return;
+	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
+	if (file.is_open()) {
+		file.write(this->_HandleRequest.getBody().data(), this->_HandleRequest.getBody().size());
+		file.close(); 
+		std::ifstream infile(fileName.c_str());
+		std::string file_contents((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
+		
+		
+		if (file_contents == this->_HandleRequest.getBody()) {
+			std::cout << "Arquivo salvo corretamente!" << std::endl;
+		} else {
+			std::cout << "Erro ao salvar o arquivo!" << std::endl;
+		}
+	} else {
+		std::cout << "Erro ao abrir o arquivo para escrita!" << std::endl;
+	}
+}
+
 
 void	Socket::executePost(){
 
-	std::cout <<" inicio" << std::endl;
-
 	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
-
-	std::cout << "cgi" << locationServer.getField("cgi") << std::endl;
 
 	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
 
@@ -345,7 +370,7 @@ void	Socket::executePost(){
 	std::cout << "body ="<< body << std::endl;
 	locationServer.getAllCgiParm();
 	
-	const char *args[] = { "python", cgiPath.c_str(), body.c_str(), "num3=3", NULL };
+	const char *args[] = { "python", cgiPath.c_str(), body.c_str(), NULL, NULL };
 	const char *env[] = { NULL };
 
 	pid_t child_pid = fork();
@@ -358,43 +383,14 @@ void	Socket::executePost(){
     else if (child_pid == 0)  // Processo filho
     {
         if (execve("/usr/bin/python3", const_cast<char* const*>(args), const_cast<char* const*>(env)) == -1)
-    {
-        perror("execve");
-    }
+		{
+			perror("execve");
+		}
     }
     else  // Processo pai
     {
         // Código para o processo pai, se necessário
     }
-
-
-
-	////
-	
-	/*
-	std::string upload_dir = ".";
-	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
-	
-	std::string fileName = locationServer.getField("upload_path") + "/" + findField(_header, "filename=");
-	
-	std::cout << "fileName" << fileName << std::endl;
-	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
-	if (file.is_open()) {
-		file.write(_body.data(), _body.size());
-		file.close(); 
-		std::ifstream infile(fileName.c_str());
-		std::string file_contents((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
-		if (file_contents == _body) {
-			std::cout << "Arquivo salvo corretamente!" << std::endl;
-		} else {
-			std::cout << "Erro ao salvar o arquivo!" << std::endl;
-		}
-	} else {
-		std::cout << "Erro ao abrir o arquivo para escrita!" << std::endl;
-	}
-	std::string endpoint = locationServer.getField("root") + "/sucess.html";
-	readPage(endpoint, 200, "Ok", response);*/
-	
 }
 
 void	Socket::autoIndex(std::string path)

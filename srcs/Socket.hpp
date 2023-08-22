@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/21 14:01:56 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/22 10:21:03 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ class Socket
 		void		autoIndex(std::string path);
 		void		executeGet(std::string& response);
 		void		executePost();
+		void		receiveFile();
 
 		std::string	receiveInformation(void);
 		std::string	findField(std::string src, std::string field);
