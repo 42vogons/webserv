@@ -9,20 +9,10 @@ def sum_numbers(num1, num2):
         return "Erro: Entradas inválidas"
 
 form = cgi.FieldStorage()
-
-print("Content-type: text/html\n")
-print("<html>")
-print("<head><title>Soma de Números</title></head>")
-print("<body>")
-print("<h1>Soma de Números via CGI</h1>")
-
 if "num1" in form and "num2" in form:
     num1 = form["num1"].value
     num2 = form["num2"].value
     result = sum_numbers(num1, num2)
-    print(f"<p>Resultado: {result}</p>")
+    print(f"Resultado: {result}")
 else:
     print("<p>Por favor, preencha ambos os números.</p>")
-
-print("</body>")
-print("</html>")

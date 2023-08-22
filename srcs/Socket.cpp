@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/22 10:26:23 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/22 15:03:27 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,8 +240,12 @@ void	Socket::readPage(std::string filename, int code, std::string status, std::s
 	response << "HTTP/1.1 " << code << " " << status << "\nContent-Type: text/html\nContent-Length: ";
 	response << fileContent.length() << "\n\n" << fileContent;	
 	content = response.str();
+
+	std::cout << "content:::" << content << std::endl;
 	file.close();
 }
+
+
 
 void	Socket::executeGet(std::string& response){
 
@@ -254,13 +258,16 @@ void	Socket::executeGet(std::string& response){
 		return ;
 	}
 		
-	if (locationServer.getField(this->_HandleRequest.getField("Method")) != "true")
+	
+	if (locationServer.getAllowedMethods("GET") != true)
 	{
 		readPage(_server.getErrorPages(403), 403, "Refused", response);
 		return ;
 	}
 
-	if (this->_HandleRequest.getField("Endpoint") == "")
+	std::string endpoint2 = this->_HandleRequest.getField("Endpoint");
+
+	if (this->_HandleRequest.getField("Endpoint") == "/")
 	{
 		std::set<std::string> pages = locationServer.getPagesIndex();
 		for (std::set<std::string>::iterator it = pages.begin(); it != pages.end(); ++it) 
@@ -317,7 +324,7 @@ void	Socket::process(std::string& response)
 	// melhorar o context de resposta
 	// se methodo == post
 	if (method == "POST")
-		executePost();
+		executePost(response);
 	
 	if (method == "GET")
 	{
@@ -354,14 +361,32 @@ void Socket::receiveFile(){
 	}
 }
 
+void Socket::createPage(std::string newPage, int code, std::string status, std::string& content) {
+		
+		std::stringstream buffer;
+		std::stringstream response;
+		std::string fileContent;
 
-void	Socket::executePost(){
+		fileContent = newPage;
+
+		response << "HTTP/1.1 " << code << " " << status << "\nContent-Type: text/html\nContent-Length: ";
+		response << fileContent.length() << "\n\n" << fileContent;	
+		content = response.str();
+
+		std::cout << "content:::" << content << std::endl;
+
+		
+	}
+
+
+
+void	Socket::executePost(std::string& response){
 
 	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
+    // ... Código para inicializar locationServer ...
 
-	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
-
-	std::string body = this->_HandleRequest.getBody();
+    std::string cgiPath = "cgi/" + locationServer.getField("cgi");
+    std::string body = this->_HandleRequest.getBody();
 
 	if (body.empty())
 		body = locationServer.getAllCgiParm().c_str();
@@ -369,29 +394,70 @@ void	Socket::executePost(){
 
 	std::cout << "body ="<< body << std::endl;
 	locationServer.getAllCgiParm();
-	
-	const char *args[] = { "python", cgiPath.c_str(), body.c_str(), NULL, NULL };
-	const char *env[] = { NULL };
 
-	pid_t child_pid = fork();
+    // Cria um pipe para capturar a saída do processo filho
+    int pipefd[2];
+    if (pipe(pipefd) == -1) {
+        perror("pipe");
+        return ; //1
+    }
 
-    if (child_pid == -1)
-    {
+    pid_t child_pid = fork();
+
+    if (child_pid == -1) {
         perror("fork");
-
     }
     else if (child_pid == 0)  // Processo filho
     {
-        if (execve("/usr/bin/python3", const_cast<char* const*>(args), const_cast<char* const*>(env)) == -1)
-		{
-			perror("execve");
-		}
+        // Fecha o descritor de leitura do pipe, pois o filho irá escrever nele
+        close(pipefd[0]);
+
+        // Redireciona a saída padrão para o descritor de escrita do pipe
+        dup2(pipefd[1], STDOUT_FILENO);
+        close(pipefd[1]);
+
+        // Executa o script Python
+        const char *args[] = { "python", cgiPath.c_str(), body.c_str(), NULL, NULL };
+        const char *env[] = { NULL };
+
+        execve("/usr/bin/python3", const_cast<char* const*>(args), const_cast<char* const*>(env));
+
+        // Se execve() falhar, o erro será exibido na saída padrão (que agora é o pipe)
+        perror("execve");
+        _exit(1);
     }
     else  // Processo pai
     {
+        // Fecha o descritor de escrita do pipe, pois o pai irá ler dele
+        close(pipefd[1]);
+
+        // Lê e exibe a saída do processo filho a partir do pipe
+        char buffer[4096];
+        ssize_t bytesRead;
+        while ((bytesRead = read(pipefd[0], buffer, sizeof(buffer))) > 0) {
+            // Escreve os dados lidos na saída padrão (ou faça o que quiser)
+            write(STDOUT_FILENO, buffer, bytesRead);
+        }
+
+        // Aguarda o término do processo filho
+        int status;
+        waitpid(child_pid, &status, 0);
+		std::cout << "Pagina --------" << std::endl;
+		std::cout << buffer << std::endl;
+		std::cout << "Pagina --------" << std::endl;
+
+		createPage(buffer, 200 ,"OK", response);
+
+		//readPage(buffer, 200, "OK", response);
+        // Fecha o descritor de leitura do pipe
+        close(pipefd[0]);
+
         // Código para o processo pai, se necessário
     }
+
 }
+
+
 
 void	Socket::autoIndex(std::string path)
 {

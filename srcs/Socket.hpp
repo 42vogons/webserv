@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/22 10:21:03 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/22 11:18:10 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@
 #include <netinet/in.h>
 #include <unistd.h>
 
+#include <iostream>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
 class Socket
 {
 	public:
@@ -55,9 +60,11 @@ class Socket
 		void		setHandleRequest(HandleRequest HandleRequest);
 		void		process(std::string& response);
 		void		readPage(std::string filename, int code, std::string status, std::string& content);
+		void		createPage(std::string newPage, int code, std::string status, std::string& content);
 		void		autoIndex(std::string path);
+	
 		void		executeGet(std::string& response);
-		void		executePost();
+		void		executePost(std::string& response);
 		void		receiveFile();
 
 		std::string	receiveInformation(void);
