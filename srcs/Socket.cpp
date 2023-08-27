@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/22 15:03:27 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/27 17:07:15 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,10 +133,10 @@ std::string Socket::receiveInformation(void){
 			break;
 	}
 
-	if (bytes_received == -1) {
-		close(this->_client_fd);
-		return "";
-	}
+	//if (bytes_received == -1) {
+//		close(this->_client_fd);
+//		return "";
+//	}
 	return received;
 }
 
@@ -148,14 +148,19 @@ void	Socket::acceptConnection(void)
 	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;
 
 	std::string header = receiveInformation();
-	//if (this->findField(header, "GET") == "")
-	//	this->_body = receiveInformation();
+	
 
 	std::cout <<" receive----------" << header << " receive----------" << std::endl;
-	
+	//return;
 	std::string response ;
 	HandleRequest HandleRequest;
 	HandleRequest.readBuffer(header);
+	/*if (this->findField(header, "GET") == ""){
+		HandleRequest.setBody(receiveInformation());
+		std::cout << "new body ----------------" << std::endl;
+		std::cout << HandleRequest.getBody();
+		std::cout << "fim new body ----------------" << std::endl;
+	}*/
 	setHandleRequest(HandleRequest);
 	process(response);
 
@@ -323,6 +328,7 @@ void	Socket::process(std::string& response)
 
 	// melhorar o context de resposta
 	// se methodo == post
+	
 	if (method == "POST")
 		executePost(response);
 	
@@ -339,23 +345,31 @@ void Socket::receiveFile(){
 	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
 	std::string upload_dir = ".";
 	
-	std::string fileName = locationServer.getField("upload_path") + "/pages/site1/uploads/aa.jpeg"; // + findField(_header, "filename=");
+	std::string path = locationServer.getField("upload_path") + "pages/site1/uploads/";
 	
-	std::cout << "fileName" << fileName << std::endl;
-	return;
+	this->_HandleRequest.setBody(receiveInformation());
+
+	std::string body = this->_HandleRequest.getBody();
+
+	std::string contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\"";
+    size_t fileNameStart = body.find(contentDisposition);
+	fileNameStart += contentDisposition.length();
+    size_t fileNameEnd = body.find("\"", fileNameStart);
+    std::string fileName = path + body.substr(fileNameStart, fileNameEnd - fileNameStart);
+
+
+	std::string delimiter = "\r\n\r\n";
+    size_t start = body.find(delimiter) + delimiter.length();
+    std::string imageData = body.substr(start);
+	
+
 	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
 	if (file.is_open()) {
-		file.write(this->_HandleRequest.getBody().data(), this->_HandleRequest.getBody().size());
+		file.write(imageData.data(), imageData.size());
 		file.close(); 
 		std::ifstream infile(fileName.c_str());
 		std::string file_contents((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
-		
-		
-		if (file_contents == this->_HandleRequest.getBody()) {
-			std::cout << "Arquivo salvo corretamente!" << std::endl;
-		} else {
-			std::cout << "Erro ao salvar o arquivo!" << std::endl;
-		}
+		std::cout << "Arquivo salvo corretamente!" << std::endl;
 	} else {
 		std::cout << "Erro ao abrir o arquivo para escrita!" << std::endl;
 	}
@@ -383,14 +397,19 @@ void Socket::createPage(std::string newPage, int code, std::string status, std::
 void	Socket::executePost(std::string& response){
 
 	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
-    // ... Código para inicializar locationServer ...
+
+	
 
     std::string cgiPath = "cgi/" + locationServer.getField("cgi");
     std::string body = this->_HandleRequest.getBody();
 
 	if (body.empty())
 		body = locationServer.getAllCgiParm().c_str();
+
 	
+	receiveFile();
+	
+	//return;
 
 	std::cout << "body ="<< body << std::endl;
 	locationServer.getAllCgiParm();

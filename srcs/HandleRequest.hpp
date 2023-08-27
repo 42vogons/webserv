@@ -30,10 +30,13 @@ class HandleRequest
 		HandleRequest&	operator=(const HandleRequest& obj);
 
 		void	readBuffer(std::string buffer);
+		void	readBody(std::string buffer);
 
 		std::string		getField(std::string field);
 		std::string		getBody(void);
 		std::map<std::string, std::string> getHeaders(void);
+
+		void	setBody(std::string body);
 
 	private:
 		std::map<std::string, std::string> _headers;

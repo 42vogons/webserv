@@ -38,6 +38,48 @@ HandleRequest& HandleRequest::operator=(const HandleRequest& obj)
 	return (*this);
 }
 
+void HandleRequest::readBody(std::string body){
+
+	bool isBody = false;
+
+	std::string::size_type start = 0;
+	std::string::size_type end = 0;
+	std::string line;
+	std::string key;
+	std::string value;
+	std::stringstream file(body);
+	while (std::getline(file, line))
+	{
+		if (isBody == true){
+			//if (line.find("------WebKitFormBoundary") == std::string::npos) {
+            	_body += line;
+				continue;
+        	//}
+			
+		}
+		
+		start = 0;
+		end = line.find(':');
+		key = line.substr(start, end - start);
+		start = end + 1;
+		end = line.size() - start - 1;
+		// remove os espaços iniciais
+		while (end > 0 && line[start] == ' ') {
+            ++start;
+            --end;
+        }
+		value = line.substr(start, end);
+
+		std::cout << "key = *"<< key <<"* value=*"<< value << "*" << std::endl;
+		if (value == "")
+			isBody = true;
+		else
+			_headers[key] = value;
+	}
+
+
+}
+
 void HandleRequest::readBuffer(std::string buffer)
 {
 	bool isBody = false;
@@ -78,12 +120,13 @@ void HandleRequest::readBuffer(std::string buffer)
 		_headers["Endpoint"] = protocol;
 	}
 	
-
 	while (std::getline(file, line))
 	{
 		if (isBody == true){
-			_body += line;
-			continue;
+			//if (line.compare(0, sizeof("------WebKitFormBoundary") - 1, "------WebKitFormBoundary") != 0) {
+            	_body += line;
+				continue;
+			//}
 		}
 		
 		start = 0;
@@ -105,10 +148,11 @@ void HandleRequest::readBuffer(std::string buffer)
 			_headers[key] = value;
 	}
 	
-	
+	//_body += "lines = " +qtd_lines ;
 	std::cout << "Body ----------------" << std::endl;
 	std::cout << _body << std::endl;
 	std::cout << "Body ----------------" << std::endl;
+
 
 	start = 0;
 	line = _headers["Host"];
@@ -118,6 +162,10 @@ void HandleRequest::readBuffer(std::string buffer)
 	end = line.size() - start - 1;
 	_headers["Port"] = line.substr(start, end);
 	return ;
+}
+
+void	HandleRequest::setBody(std::string body){
+	_body = body;
 }
 
 std::string HandleRequest::getField(std::string field)
