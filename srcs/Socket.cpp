@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/27 17:07:15 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/27 20:45:12 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,22 +68,6 @@ HandleRequest	Socket::getHandleRequest(void)
 	return (this->_HandleRequest);
 }
 
-
-/*std::map<std::string, std::string>	Socket::getVariables(void)
-{
-	std::istringstream iss(this->getBody());
-    std::string pair;
-
-    while (std::getline(iss, pair, '&')) {
-        size_t equalPos = pair.find('=');
-        if (equalPos != std::string::npos) {
-            std::string key = pair.substr(0, equalPos);
-            std::string value = pair.substr(equalPos + 1);
-            _variables[key] = value;
-        }
-    }
-}*/
-
 void	Socket::createSocketTCP(void)
 {
 	int opt = 1;
@@ -125,18 +109,17 @@ std::string Socket::receiveInformation(void){
 	char buffer[BUFFER_SIZE];
 	int bytes_received = 0;
 	std::string received;
-
 	while ((bytes_received = recv(_client_fd, buffer, sizeof(buffer), 0)) > 0) 
 	{
 		received.append(buffer, bytes_received);
 		if (bytes_received < BUFFER_SIZE)
 			break;
 	}
-
-	//if (bytes_received == -1) {
-//		close(this->_client_fd);
-//		return "";
-//	}
+	/*if (bytes_received == -1)
+	{
+		close(this->_client_fd);
+		return "";
+	} */
 	return received;
 }
 
@@ -146,12 +129,8 @@ void	Socket::acceptConnection(void)
 	if (this->_client_fd == -1)
 		throw (AcceptConnectionError()); 
 	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;
-
 	std::string header = receiveInformation();
-	
-
 	std::cout <<" receive----------" << header << " receive----------" << std::endl;
-	//return;
 	std::string response ;
 	HandleRequest HandleRequest;
 	HandleRequest.readBuffer(header);
@@ -163,33 +142,30 @@ void	Socket::acceptConnection(void)
 	}*/
 	setHandleRequest(HandleRequest);
 	process(response);
-
 	send(_client_fd, response.c_str(), response.size(), 0);
-
 	close(_client_fd);
-	std::cout << "Conexão fechada" << std::endl;
+	std::cout << "Closed connection" << std::endl;
 }
 
-std::string	Socket::findField(std::string src, std::string field){
-	
+std::string	Socket::findField(std::string src, std::string field)
+{
 	size_t pos = src.find(field);
-    if (pos == std::string::npos) {
-        return "";
-    }
-    pos += field.length();
-    size_t end_pos = src.find("\r\n", pos);
-    if (end_pos == std::string::npos) {
-        end_pos = src.find(";", pos);
-        if (end_pos == std::string::npos) {
-            return "";
-        }
-    }
+	if (pos == std::string::npos)
+		return "";
+	pos += field.length();
+	size_t end_pos = src.find("\r\n", pos);
+	if (end_pos == std::string::npos)
+	{
+		end_pos = src.find(";", pos);
+		if (end_pos == std::string::npos)
+			return "";
+	}
 	if (src[pos] == '"')
 		return src.substr(pos + 1, end_pos - pos - 2);
 	return src.substr(pos, end_pos - pos);
 }
 
-bool fdIsValid(int fd)
+bool	fdIsValid(int fd)
 {
 	return (fcntl(fd, F_GETFD) != -1 || errno != EBADF);
 }
@@ -211,10 +187,6 @@ std::ostream&	operator<<(std::ostream& o, const Socket& i)
 	o << "Socket: " << i.getServerFd();
 	return o;
 }
-
-/*
-** cpereira things
-*/
 
 void	Socket::readPage(std::string filename, int code, std::string status, std::string& content)
 {
@@ -242,18 +214,19 @@ void	Socket::readPage(std::string filename, int code, std::string status, std::s
 			status = "Not Found";
 		}
 	}
-	response << "HTTP/1.1 " << code << " " << status << "\nContent-Type: text/html\nContent-Length: ";
-	response << fileContent.length() << "\n\n" << fileContent;	
+	response
+		<< "HTTP/1.1 " << code << " " << status << std::endl
+		<< "Content-Type: text/html" << std::endl
+		<< "Content-Length: " << fileContent.length() << std::endl
+		<< std::endl
+		<< fileContent;
 	content = response.str();
-
 	std::cout << "content:::" << content << std::endl;
 	file.close();
 }
 
-
-
-void	Socket::executeGet(std::string& response){
-
+void	Socket::executeGet(std::string& response)
+{
 	LocationServer locationServer;
 	locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
 	std::string redirect = locationServer.getField("redirection");
@@ -262,16 +235,12 @@ void	Socket::executeGet(std::string& response){
 		response = "HTTP/1.1 301 Found\r\nLocation: http://" + redirect + "\r\n\r\n";
 		return ;
 	}
-		
-	
 	if (locationServer.getAllowedMethods("GET") != true)
 	{
 		readPage(_server.getErrorPages(403), 403, "Refused", response);
 		return ;
 	}
-
 	std::string endpoint2 = this->_HandleRequest.getField("Endpoint");
-
 	if (this->_HandleRequest.getField("Endpoint") == "/")
 	{
 		std::set<std::string> pages = locationServer.getPagesIndex();
@@ -286,7 +255,6 @@ void	Socket::executeGet(std::string& response){
 				return ;
 			}
 		}
-		
 		if (locationServer.getField("autoindex") == "true")
 		{
 			autoIndex(locationServer.getField("root"));
@@ -310,173 +278,129 @@ void	Socket::executeGet(std::string& response){
 		std::ifstream file(endpoint.c_str());
 		readPage(endpoint, 200, "Ok", response);
 		file.close();	
-	}	
-
+	}
 }
 
 void	Socket::process(std::string& response)
 {
-	
 	LocationServer locationServer;
 	locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
 	std::string method = this->_HandleRequest.getField("Method");
-
 	std::cout << "base" << this->_HandleRequest.getField("BaseUrl") << std::endl;
 	std::cout << "locationServer***" << locationServer.getField("GET") << "**" << std::endl;
 	std::cout << "base*"<< this->_HandleRequest.getField("BaseUrl") << "*" << std::endl;
 	std::cout << "method*"<< method << "*" << std::endl;
-
-	// melhorar o context de resposta
-	// se methodo == post
-	
+	// TODO: melhorar o context de resposta se methodo == post
 	if (method == "POST")
 		executePost(response);
-	
 	if (method == "GET")
-	{
 		executeGet(response);
-		
-	}
 	return ;
 }
 
-void Socket::receiveFile(){
-
+void Socket::receiveFile()
+{
 	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
 	std::string upload_dir = ".";
-	
 	std::string path = locationServer.getField("upload_path") + "pages/site1/uploads/";
-	
 	this->_HandleRequest.setBody(receiveInformation());
-
 	std::string body = this->_HandleRequest.getBody();
-
 	std::string contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\"";
-    size_t fileNameStart = body.find(contentDisposition);
+	size_t fileNameStart = body.find(contentDisposition);
 	fileNameStart += contentDisposition.length();
-    size_t fileNameEnd = body.find("\"", fileNameStart);
-    std::string fileName = path + body.substr(fileNameStart, fileNameEnd - fileNameStart);
-
-
+	size_t fileNameEnd = body.find("\"", fileNameStart);
+	std::string fileName = path + body.substr(fileNameStart, fileNameEnd - fileNameStart);
 	std::string delimiter = "\r\n\r\n";
-    size_t start = body.find(delimiter) + delimiter.length();
-    std::string imageData = body.substr(start);
-	
-
+	size_t start = body.find(delimiter) + delimiter.length();
+	std::string imageData = body.substr(start);
 	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
 	if (file.is_open()) {
 		file.write(imageData.data(), imageData.size());
 		file.close(); 
 		std::ifstream infile(fileName.c_str());
 		std::string file_contents((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
-		std::cout << "Arquivo salvo corretamente!" << std::endl;
-	} else {
-		std::cout << "Erro ao abrir o arquivo para escrita!" << std::endl;
+		std::cout << "AFile saved successfully!" << std::endl;
 	}
+	else
+		std::cout << "Error opening the file for writing!" << std::endl;
 }
 
-void Socket::createPage(std::string newPage, int code, std::string status, std::string& content) {
-		
-		std::stringstream buffer;
-		std::stringstream response;
-		std::string fileContent;
+void Socket::createPage(std::string newPage, int code, std::string status, std::string& content)
+{
+	std::stringstream buffer;
+	std::stringstream response;
+	std::string fileContent;
+	fileContent = newPage;
+	response
+		<< "HTTP/1.1 " << code << " " << status << std::endl
+		<< "Content-Type: text/html" << std::endl
+		<< "Content-Length: " << fileContent.length() << std::endl
+		<< std::endl
+		<< fileContent;
+	content = response.str();
+	std::cout << "content:::" << content << std::endl;
+}
 
-		fileContent = newPage;
-
-		response << "HTTP/1.1 " << code << " " << status << "\nContent-Type: text/html\nContent-Length: ";
-		response << fileContent.length() << "\n\n" << fileContent;	
-		content = response.str();
-
-		std::cout << "content:::" << content << std::endl;
-
-		
-	}
-
-
-
-void	Socket::executePost(std::string& response){
-
+void	Socket::executePost(std::string& response)
+{
 	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
-
-	
-
-    std::string cgiPath = "cgi/" + locationServer.getField("cgi");
-    std::string body = this->_HandleRequest.getBody();
-
+	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
+	std::string body = this->_HandleRequest.getBody();
 	if (body.empty())
 		body = locationServer.getAllCgiParm().c_str();
-
-	
 	receiveFile();
-	
-	//return;
-
 	std::cout << "body ="<< body << std::endl;
 	locationServer.getAllCgiParm();
-
-    // Cria um pipe para capturar a saída do processo filho
-    int pipefd[2];
-    if (pipe(pipefd) == -1) {
-        perror("pipe");
-        return ; //1
-    }
-
-    pid_t child_pid = fork();
-
-    if (child_pid == -1) {
-        perror("fork");
-    }
-    else if (child_pid == 0)  // Processo filho
-    {
-        // Fecha o descritor de leitura do pipe, pois o filho irá escrever nele
-        close(pipefd[0]);
-
-        // Redireciona a saída padrão para o descritor de escrita do pipe
-        dup2(pipefd[1], STDOUT_FILENO);
-        close(pipefd[1]);
-
-        // Executa o script Python
-        const char *args[] = { "python", cgiPath.c_str(), body.c_str(), NULL, NULL };
-        const char *env[] = { NULL };
-
-        execve("/usr/bin/python3", const_cast<char* const*>(args), const_cast<char* const*>(env));
-
-        // Se execve() falhar, o erro será exibido na saída padrão (que agora é o pipe)
-        perror("execve");
-        _exit(1);
-    }
-    else  // Processo pai
-    {
-        // Fecha o descritor de escrita do pipe, pois o pai irá ler dele
-        close(pipefd[1]);
-
-        // Lê e exibe a saída do processo filho a partir do pipe
-        char buffer[4096];
-        ssize_t bytesRead;
-        while ((bytesRead = read(pipefd[0], buffer, sizeof(buffer))) > 0) {
-            // Escreve os dados lidos na saída padrão (ou faça o que quiser)
-            write(STDOUT_FILENO, buffer, bytesRead);
-        }
-
-        // Aguarda o término do processo filho
-        int status;
-        waitpid(child_pid, &status, 0);
-		std::cout << "Pagina --------" << std::endl;
+	// Cria um pipe para capturar a saída do processo filho
+	int pipe_fd[2];
+	if (pipe(pipe_fd) == -1) {
+		perror("pipe");
+		return ; //1
+	}
+	pid_t child_pid = fork();
+	if (child_pid == -1)
+	{
+		perror("fork");
+	}
+	else if (child_pid == 0) // Processo filho
+	{
+		// Fecha o descritor de leitura do pipe, pois o filho irá escrever nele
+		close(pipe_fd[0]);
+		// Redireciona a saída padrão para o descritor de escrita do pipe
+		dup2(pipe_fd[1], STDOUT_FILENO);
+		close(pipe_fd[1]);
+		// Executa o script Python
+		const char *args[] = { "python", cgiPath.c_str(), body.c_str(), NULL, NULL };
+		const char *env[] = { NULL };
+		execve("/usr/bin/python3", const_cast<char* const*>(args), const_cast<char* const*>(env));
+		// Se execve() falhar, o erro será exibido na saída padrão (que agora é o pipe)
+		perror("execve");
+		_exit(1);
+	}
+	else // Processo pai
+	{
+		// Fecha o descritor de escrita do pipe, pois o pai irá ler dele
+		close(pipe_fd[1]);
+		// Lê e exibe a saída do processo filho a partir do pipe
+		char buffer[4096];
+		ssize_t bytesRead;
+		while ((bytesRead = read(pipe_fd[0], buffer, sizeof(buffer))) > 0) {
+			// Escreve os dados lidos na saída padrão (ou faça o que quiser)
+			write(STDOUT_FILENO, buffer, bytesRead);
+		}
+		// Aguarda o término do processo filho
+		int status;
+		waitpid(child_pid, &status, 0);
+		std::cout << "Page --------" << std::endl;
 		std::cout << buffer << std::endl;
-		std::cout << "Pagina --------" << std::endl;
-
+		std::cout << "Page --------" << std::endl;
 		createPage(buffer, 200 ,"OK", response);
-
 		//readPage(buffer, 200, "OK", response);
-        // Fecha o descritor de leitura do pipe
-        close(pipefd[0]);
-
-        // Código para o processo pai, se necessário
-    }
-
+		// Fecha o descritor de leitura do pipe
+		close(pipe_fd[0]);
+		// Código para o processo pai, se necessário
+	}
 }
-
-
 
 void	Socket::autoIndex(std::string path)
 {
@@ -484,26 +408,23 @@ void	Socket::autoIndex(std::string path)
 	os.open((path + "/autoIndex.html").c_str());
 	DIR *dir;
 	struct dirent *ent;
-	os << "<html><head><title>Autoindex</title></head><body>" << std::endl;
-	os << "<h1>Autoindex</h1>" << std::endl;
+	os
+		<< "<html><head><title>Autoindex</title></head><body>" << std::endl
+		<< "<h1>Autoindex</h1>" << std::endl;
 	if ((dir = opendir(path.c_str())) != NULL)
 	{
 		os << "<ul>" << std::endl;
 		while ((ent = readdir(dir)) != NULL)
 		{
 			if (std::string(ent->d_name) == "autoIndex.html")
-			{
 				continue;
-			}
 			os << "<li><a href=\"" << ent->d_name << "\">" << ent->d_name << "</a></li>" << std::endl;
 		}
 		os << "</ul>" << std::endl;
 		closedir(dir);
 	}
 	else
-	{
-		os << "<p>Erro ao abrir o diretório.</p>" << std::endl;
-	}
+		os << "<p>Error opening the directory.</p>" << std::endl;
 	os << "</body></html>" << std::endl;
 	os.close();
 }
