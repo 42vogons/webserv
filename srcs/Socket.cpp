@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/27 20:45:12 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/08/27 20:56:50 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,6 @@ void	Socket::readPage(std::string filename, int code, std::string status, std::s
 	std::ifstream file(filename.c_str());
 	std::ifstream fileError(_server.getErrorPages(404).c_str());
 	std::stringstream buffer;
-	std::stringstream response;
 	std::string fileContent;
 	if (file.good())
 	{
@@ -214,13 +213,7 @@ void	Socket::readPage(std::string filename, int code, std::string status, std::s
 			status = "Not Found";
 		}
 	}
-	response
-		<< "HTTP/1.1 " << code << " " << status << std::endl
-		<< "Content-Type: text/html" << std::endl
-		<< "Content-Length: " << fileContent.length() << std::endl
-		<< std::endl
-		<< fileContent;
-	content = response.str();
+	content = createResponse(code, status, fileContent);
 	std::cout << "content:::" << content << std::endl;
 	file.close();
 }
@@ -328,16 +321,9 @@ void Socket::receiveFile()
 void Socket::createPage(std::string newPage, int code, std::string status, std::string& content)
 {
 	std::stringstream buffer;
-	std::stringstream response;
 	std::string fileContent;
 	fileContent = newPage;
-	response
-		<< "HTTP/1.1 " << code << " " << status << std::endl
-		<< "Content-Type: text/html" << std::endl
-		<< "Content-Length: " << fileContent.length() << std::endl
-		<< std::endl
-		<< fileContent;
-	content = response.str();
+	content = createResponse(code, status, fileContent);
 	std::cout << "content:::" << content << std::endl;
 }
 
@@ -427,4 +413,16 @@ void	Socket::autoIndex(std::string path)
 		os << "<p>Error opening the directory.</p>" << std::endl;
 	os << "</body></html>" << std::endl;
 	os.close();
+}
+
+std::string createResponse(int code, std::string status, std::string fileContent)
+{
+	std::stringstream response;
+	response
+		<< "HTTP/1.1 " << code << " " << status << std::endl
+		<< "Content-Type: text/html" << std::endl
+		<< "Content-Length: " << fileContent.length() << std::endl
+		<< std::endl
+		<< fileContent;
+	return response.str();
 }
