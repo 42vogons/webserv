@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/27 20:56:50 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/08/28 00:01:16 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,43 +104,27 @@ int	Socket::getServerFd(void) const
 	return (this->_server_fd);
 }
 
-std::string Socket::receiveInformation(void){
-	const int BUFFER_SIZE = 1024;
-	char buffer[BUFFER_SIZE];
-	int bytes_received = 0;
-	std::string received;
-	while ((bytes_received = recv(_client_fd, buffer, sizeof(buffer), 0)) > 0) 
-	{
-		received.append(buffer, bytes_received);
-		if (bytes_received < BUFFER_SIZE)
-			break;
-	}
-	/*if (bytes_received == -1)
-	{
-		close(this->_client_fd);
-		return "";
-	} */
-	return received;
-}
-
 void	Socket::acceptConnection(void)
 {
 	this->_client_fd = accept(this->_server_fd, (struct sockaddr *)&this->_address, (socklen_t*)&this->_addrlen);
 	if (this->_client_fd == -1)
 		throw (AcceptConnectionError()); 
 	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;
-	std::string header = receiveInformation();
-	std::cout <<" receive----------" << header << " receive----------" << std::endl;
+	
 	std::string response ;
-	HandleRequest HandleRequest;
-	HandleRequest.readBuffer(header);
+	HandleRequest handleRequest;
+	std::string header = handleRequest.receiveInformation(this->_client_fd);
+	std::cout <<" receive----------" << header << " receive----------" << std::endl;
+	handleRequest.readBuffer(header, this->_client_fd);
+	//handleRequest.receiveInformation(this->_client_fd);
+	
 	/*if (this->findField(header, "GET") == ""){
 		HandleRequest.setBody(receiveInformation());
 		std::cout << "new body ----------------" << std::endl;
 		std::cout << HandleRequest.getBody();
 		std::cout << "fim new body ----------------" << std::endl;
 	}*/
-	setHandleRequest(HandleRequest);
+	setHandleRequest(handleRequest);
 	process(response);
 	send(_client_fd, response.c_str(), response.size(), 0);
 	close(_client_fd);
@@ -186,6 +170,18 @@ std::ostream&	operator<<(std::ostream& o, const Socket& i)
 {
 	o << "Socket: " << i.getServerFd();
 	return o;
+}
+
+std::string createResponse(int code, std::string status, std::string fileContent)
+{
+	std::stringstream response;
+	response
+		<< "HTTP/1.1 " << code << " " << status << std::endl
+		<< "Content-Type: text/html" << std::endl
+		<< "Content-Length: " << fileContent.length() << std::endl
+		<< std::endl
+		<< fileContent;
+	return response.str();
 }
 
 void	Socket::readPage(std::string filename, int code, std::string status, std::string& content)
@@ -291,32 +287,7 @@ void	Socket::process(std::string& response)
 	return ;
 }
 
-void Socket::receiveFile()
-{
-	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
-	std::string upload_dir = ".";
-	std::string path = locationServer.getField("upload_path") + "pages/site1/uploads/";
-	this->_HandleRequest.setBody(receiveInformation());
-	std::string body = this->_HandleRequest.getBody();
-	std::string contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\"";
-	size_t fileNameStart = body.find(contentDisposition);
-	fileNameStart += contentDisposition.length();
-	size_t fileNameEnd = body.find("\"", fileNameStart);
-	std::string fileName = path + body.substr(fileNameStart, fileNameEnd - fileNameStart);
-	std::string delimiter = "\r\n\r\n";
-	size_t start = body.find(delimiter) + delimiter.length();
-	std::string imageData = body.substr(start);
-	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
-	if (file.is_open()) {
-		file.write(imageData.data(), imageData.size());
-		file.close(); 
-		std::ifstream infile(fileName.c_str());
-		std::string file_contents((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
-		std::cout << "AFile saved successfully!" << std::endl;
-	}
-	else
-		std::cout << "Error opening the file for writing!" << std::endl;
-}
+
 
 void Socket::createPage(std::string newPage, int code, std::string status, std::string& content)
 {
@@ -327,14 +298,43 @@ void Socket::createPage(std::string newPage, int code, std::string status, std::
 	std::cout << "content:::" << content << std::endl;
 }
 
+void	Socket::saveFile()
+{
+	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
+	std::string upload_dir = ".";
+	std::string path = locationServer.getField("upload_path") + "pages/site1/uploads/";
+	std::string body = this->_HandleRequest.getBody();
+	std::string fileName = path + this->_HandleRequest.getField("fileName");
+	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
+	if (file.is_open()) {
+		file.write(body.data(), body.size());
+		file.close(); 
+		std::ifstream infile(fileName.c_str());
+		std::string file_contents((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
+		std::cout << "AFile saved successfully!" << std::endl;
+	}
+	else
+		std::cout << "Error opening the file for writing!" << std::endl;
+}
+
 void	Socket::executePost(std::string& response)
 {
 	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
+
+	HandleRequest handleRequest = this->_HandleRequest;
+	std::cout << "content type = " << handleRequest.getField("Content-Type") << std::endl;
+
+	
 	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
 	std::string body = this->_HandleRequest.getBody();
 	if (body.empty())
 		body = locationServer.getAllCgiParm().c_str();
-	receiveFile();
+	
+	if (handleRequest.getTypePost() == "File"){
+		saveFile();
+		// colocar que foi salvo com sucesso!!
+	}
+		
 	std::cout << "body ="<< body << std::endl;
 	locationServer.getAllCgiParm();
 	// Cria um pipe para capturar a saída do processo filho
@@ -415,14 +415,3 @@ void	Socket::autoIndex(std::string path)
 	os.close();
 }
 
-std::string createResponse(int code, std::string status, std::string fileContent)
-{
-	std::stringstream response;
-	response
-		<< "HTTP/1.1 " << code << " " << status << std::endl
-		<< "Content-Type: text/html" << std::endl
-		<< "Content-Length: " << fileContent.length() << std::endl
-		<< std::endl
-		<< fileContent;
-	return response.str();
-}

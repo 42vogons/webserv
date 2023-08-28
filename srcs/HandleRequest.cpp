@@ -34,6 +34,7 @@ HandleRequest& HandleRequest::operator=(const HandleRequest& obj)
 	{
 		this->_headers = obj._headers;
 		this->_body = obj._body;
+		this->_typePost = obj._typePost;
 	}
 	return (*this);
 }
@@ -80,7 +81,7 @@ void HandleRequest::readBody(std::string body){
 
 }
 
-void HandleRequest::readBuffer(std::string buffer)
+void HandleRequest::readBuffer(std::string buffer, int client_fd)
 {
 	bool isBody = false;
 
@@ -119,14 +120,12 @@ void HandleRequest::readBuffer(std::string buffer)
 		_headers["BaseUrl"] = "/";
 		_headers["Endpoint"] = protocol;
 	}
-	
+
 	while (std::getline(file, line))
 	{
 		if (isBody == true){
-			//if (line.compare(0, sizeof("------WebKitFormBoundary") - 1, "------WebKitFormBoundary") != 0) {
-            	_body += line;
+				_body += line;
 				continue;
-			//}
 		}
 		
 		start = 0;
@@ -146,6 +145,15 @@ void HandleRequest::readBuffer(std::string buffer)
 			isBody = true;
 		else
 			_headers[key] = value;
+
+	}
+	
+	if(_headers["Content-Type"].find("multipart/form-data")!= std::string::npos)
+	{
+		receiveFile(client_fd);
+		_typePost = "File";
+
+		// colocar o receiveFile aqui
 	}
 	
 	//_body += "lines = " +qtd_lines ;
@@ -162,6 +170,46 @@ void HandleRequest::readBuffer(std::string buffer)
 	end = line.size() - start - 1;
 	_headers["Port"] = line.substr(start, end);
 	return ;
+}
+
+std::string HandleRequest::getTypePost(void){
+	return _typePost;
+}
+
+std::string HandleRequest::receiveInformation(int client_fd){
+
+	const int BUFFER_SIZE = 1024;
+	char buffer[BUFFER_SIZE];
+	int bytes_received = 0;
+	std::string received;
+	while ((bytes_received = recv(client_fd, buffer, sizeof(buffer), 0)) > 0) 
+	{
+		received.append(buffer, bytes_received);
+		if (bytes_received < BUFFER_SIZE)
+			break;
+	}
+	/*if (bytes_received == -1)
+	{
+		close(this->_client_fd);
+		return "";
+	} */
+	return received;
+}
+
+void HandleRequest::receiveFile(int client_fd)
+{
+	
+	std::string buffer;
+	buffer = receiveInformation(client_fd);
+
+	std::string contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\"";
+	size_t fileNameStart = buffer.find(contentDisposition);
+	fileNameStart += contentDisposition.length();
+	size_t fileNameEnd = buffer.find("\"", fileNameStart);
+	this->_headers["fileName"] = buffer.substr(fileNameStart, fileNameEnd - fileNameStart); 
+	std::string delimiter = "\r\n\r\n";
+	size_t start = buffer.find(delimiter) + delimiter.length();
+	this->setBody(buffer.substr(start));
 }
 
 void	HandleRequest::setBody(std::string body){
