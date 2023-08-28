@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/28 00:01:16 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/28 00:04:29 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,6 +332,8 @@ void	Socket::executePost(std::string& response)
 	
 	if (handleRequest.getTypePost() == "File"){
 		saveFile();
+		createPage("Salvo com sucesso", 200 ,"OK", response);
+		return;
 		// colocar que foi salvo com sucesso!!
 	}
 		
