@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/29 21:34:25 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/29 21:58:46 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -373,20 +373,15 @@ void Socket::executeDelete(std::string& response){
 	std::cout << "Vamos deletar" << std::endl;
 	LocationServer locationServer;
 	locationServer = _server.getLocationServer("/");
-	if (locationServer.getField("root").find(this->_HandleRequest.getField("Endpoint")) == std::string::npos)
-	{
-		std::cout << "Nao permitido" << std::endl;
-		createPage("Não permitido",403, "Refused",response);
-		return;// nao permitido
-	}
 	
-	//std::string endpoint = locationServer.getField("root") + "/uploads/" + this->_HandleRequest.getField("Endpoint");
+
+	std::string endpoint = locationServer.getField("root") + "/uploads/" + this->_HandleRequest.getField("Endpoint");
 	
 	//if ()
 
 	std::cout << "nome*" << this->_HandleRequest.getField("Endpoint") << std::endl;
  	//const char *filename = this->_HandleRequest.getField("Endpoint").c_str();
-	const char *filename = this->_HandleRequest.getField("Endpoint").c_str();
+	const char *filename = endpoint.c_str();
 
 	if (std::remove(filename) == 0) {
 		createPage("Arquivo excluído com sucesso",200, "Ok",response);
