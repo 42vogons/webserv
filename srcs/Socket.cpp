@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/28 00:04:29 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/29 21:34:25 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,16 +172,80 @@ std::ostream&	operator<<(std::ostream& o, const Socket& i)
 	return o;
 }
 
-std::string createResponse(int code, std::string status, std::string fileContent)
+std::string createResponse(int code, std::string status, std::string fileContent, std::string type)
 {
 	std::stringstream response;
 	response
 		<< "HTTP/1.1 " << code << " " << status << std::endl
-		<< "Content-Type: text/html" << std::endl
+		<< "Content-Type: " << type << std::endl
 		<< "Content-Length: " << fileContent.length() << std::endl
 		<< std::endl
 		<< fileContent;
 	return response.str();
+}
+
+void	Socket::readImage(std::string filename, int code, std::string status, std::string& content)
+{
+	std::stringstream buffer;
+	std::string fileContent;
+	std::string extension;
+	std::string errorPath;
+	std::string type;
+
+
+	// função para pegar extensão
+	size_t dotPosition = filename.find_last_of(".");
+    if (dotPosition != std::string::npos) {
+        extension = filename.substr(dotPosition + 1);
+    }
+	else
+	{
+		extension = "";
+	}
+
+	
+	
+	if (extension == "png" || extension == "bmp" || extension == "jpeg" || extension == "tiff")
+	{
+		errorPath = "images/noPhoto.png";
+		type = "image/"+ extension;
+	}
+	else if (this->_HandleRequest.getField("Accept").find("text/html") != std::string::npos)
+	{
+		
+		type = "text/html";
+		errorPath= _server.getErrorPages(404).c_str();
+	}
+	else
+		filename = "images/desconhecido.jpg";
+		//errorPath = 
+
+
+	std::ifstream fileError(errorPath.c_str());
+	std::ifstream file(filename.c_str());
+	// verificar se o tipo de arquivo é imagem se 
+	if (file.good())
+	{
+		buffer << file.rdbuf();
+		fileContent = buffer.str();
+	}
+	else
+	{
+		if (fileError.good())
+		{
+			buffer << fileError.rdbuf();
+			fileContent = buffer.str();
+		}
+		else
+		{
+			fileContent = "Page not Found";
+			code = 404;
+			status = "Not Found";
+		}
+	}
+	content = createResponse(code, status, fileContent, type);
+	std::cout << "content:::" << content << std::endl;
+	file.close();
 }
 
 void	Socket::readPage(std::string filename, int code, std::string status, std::string& content)
@@ -209,7 +273,7 @@ void	Socket::readPage(std::string filename, int code, std::string status, std::s
 			status = "Not Found";
 		}
 	}
-	content = createResponse(code, status, fileContent);
+	content = createResponse(code, status, fileContent, "text/html");
 	std::cout << "content:::" << content << std::endl;
 	file.close();
 }
@@ -261,13 +325,29 @@ void	Socket::executeGet(std::string& response)
 		std::cout << "ko" << std::endl;
 		return ;
 	}
-	if (this->_HandleRequest.getField("Endpoint").find(".png") == std::string::npos)
+	
+	std::string endpoint = locationServer.getField("root") + "/" + this->_HandleRequest.getField("Endpoint");
+	std::ifstream file(endpoint.c_str());
+	readImage(endpoint, 200, "Ok", response);
+	file.close();
+	
+	/*if (this->_HandleRequest.getField("Accept").find("text/html") != std::string::npos)
 	{
 		std::string endpoint = locationServer.getField("root") + "/" + this->_HandleRequest.getField("Endpoint");
 		std::ifstream file(endpoint.c_str());
 		readPage(endpoint, 200, "Ok", response);
 		file.close();	
-	}
+	} 
+	else
+	{
+		std::cout << "vamos abrir imagem" << std::endl;
+		std::string endpoint = locationServer.getField("root") + "/" + this->_HandleRequest.getField("Endpoint");
+		std::ifstream file(endpoint.c_str());
+		readImage(endpoint, 200, "Ok", response);
+		file.close();	
+	}*/
+	
+	
 }
 
 void	Socket::process(std::string& response)
@@ -284,7 +364,40 @@ void	Socket::process(std::string& response)
 		executePost(response);
 	if (method == "GET")
 		executeGet(response);
+	if (method == "DELETE")
+		executeDelete(response);
 	return ;
+}
+
+void Socket::executeDelete(std::string& response){
+	std::cout << "Vamos deletar" << std::endl;
+	LocationServer locationServer;
+	locationServer = _server.getLocationServer("/");
+	if (locationServer.getField("root").find(this->_HandleRequest.getField("Endpoint")) == std::string::npos)
+	{
+		std::cout << "Nao permitido" << std::endl;
+		createPage("Não permitido",403, "Refused",response);
+		return;// nao permitido
+	}
+	
+	//std::string endpoint = locationServer.getField("root") + "/uploads/" + this->_HandleRequest.getField("Endpoint");
+	
+	//if ()
+
+	std::cout << "nome*" << this->_HandleRequest.getField("Endpoint") << std::endl;
+ 	//const char *filename = this->_HandleRequest.getField("Endpoint").c_str();
+	const char *filename = this->_HandleRequest.getField("Endpoint").c_str();
+
+	if (std::remove(filename) == 0) {
+		createPage("Arquivo excluído com sucesso",200, "Ok",response);
+        std::printf("Arquivo excluído com sucesso.\n");
+    } else {
+		createPage("Erro ao excluir o arquivo",500, "Internal Server Error",response);
+        std::perror("Erro ao excluir o arquivo");
+    }
+
+	std::cout << "Deletamos" << std::endl;
+	//response = 1;
 }
 
 
@@ -294,7 +407,7 @@ void Socket::createPage(std::string newPage, int code, std::string status, std::
 	std::stringstream buffer;
 	std::string fileContent;
 	fileContent = newPage;
-	content = createResponse(code, status, fileContent);
+	content = createResponse(code, status, fileContent, "text/html");
 	std::cout << "content:::" << content << std::endl;
 }
 

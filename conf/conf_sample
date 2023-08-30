@@ -58,7 +58,13 @@ sample_server_Z1 {
 		cgi_param num2 6
 	}
 
-	location /uploads/ {
+	location /images/ {
+		root images
+		autoindex	true
+		allowed_methods	GET		true
+	}
+
+	location /pages/site1/uploads/ {
 		root pages/site1/uploads
 		autoindex	true
 		allowed_methods	GET		true
