@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/29 21:58:46 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/31 00:42:32 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,7 +293,15 @@ void	Socket::executeGet(std::string& response)
 		readPage(_server.getErrorPages(403), 403, "Refused", response);
 		return ;
 	}
-	std::string endpoint2 = this->_HandleRequest.getField("Endpoint");
+	//std::string endpoint2 = this->_HandleRequest.getField("Endpoint");
+
+
+	if (this->_HandleRequest.getField("Endpoint") == "files.html")
+	{
+		createPage(generatePageFiles("pages/site1/uploads"),200, "OK", response);
+		return;	
+	}
+	
 	if (this->_HandleRequest.getField("Endpoint") == "/")
 	{
 		std::set<std::string> pages = locationServer.getPagesIndex();
@@ -359,6 +367,7 @@ void	Socket::process(std::string& response)
 	std::cout << "locationServer***" << locationServer.getField("GET") << "**" << std::endl;
 	std::cout << "base*"<< this->_HandleRequest.getField("BaseUrl") << "*" << std::endl;
 	std::cout << "method*"<< method << "*" << std::endl;
+
 	// TODO: melhorar o context de resposta se methodo == post
 	if (method == "POST")
 		executePost(response);
@@ -523,5 +532,91 @@ void	Socket::autoIndex(std::string path)
 		os << "<p>Error opening the directory.</p>" << std::endl;
 	os << "</body></html>" << std::endl;
 	os.close();
+}
+
+std::string	Socket::generatePageFiles(std::string path)
+{
+	DIR *dir;
+	struct dirent *ent;
+	int col = 0;
+	
+
+	std::string html;
+	//html = "<html><head><title>Files</title></head><body>";
+
+	html = "<!DOCTYPE html><html> <head><title>Exemplo de Exclusão de Imagem</title><style>";
+	html += ".image-container {display: inline-block; text-align: center; margin: 10px; } </style> </head> <body>";
+	
+	html += "<h1>Files</h1>" ;
+	html += "<table border = 1><tr><td colspan=5>Files</td></tr><tr>";
+
+	
+
+		
+	if ((dir = opendir(path.c_str())) != NULL)
+	{
+		
+		
+		
+		while ((ent = readdir(dir)) != NULL)
+		{
+			
+				
+			
+			
+			std::string fileName = ent->d_name;
+			std::string filePath = path +"/" +fileName;
+			
+			if (fileName == (".") || fileName == (".."))
+				continue;
+
+			if (col == 4)
+			{
+				html += "</tr><tr>";
+				col = -1;
+			}
+			col ++;
+			
+			html += "<td>";
+			html += "<div class='image-container'>";
+			html += "<a href='" + filePath+"' target='_blank'>";
+			html += "<img src='" + filePath + "' alt='"+ fileName+"' height='100' width='100'></a><br>";
+			html += "<span class='delete-icon' onclick='deleteImage("+filePath+")'><img src='images/lixeira.png' height='20' width='20'></span></div></td>";
+			
+			
+		}
+		closedir(dir);
+	}
+	else
+		html +="<p>Error opening the directory.</p>";
+	html += "</tr></table>";
+	// colocar esse script abaixo no html
+	/*
+	<script>
+function deleteImage(imageName) {
+    if (confirm("Tem certeza de que deseja excluir esta imagem?")) {
+        fetch('delete/' + encodeURIComponent(imageName), {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Imagem excluída com sucesso.');
+                // Remova a div de image-container após excluir
+                var imageContainer = document.querySelector(`[onclick="deleteImage('${imageName}')"]`).parentNode;
+                imageContainer.parentNode.removeChild(imageContainer);
+            } else {
+                console.error('Erro ao excluir a imagem.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao excluir a imagem:', error);
+        });
+    }
+}
+</script>
+	*/
+
+	html += "</body></html>";
+	return html;
 }
 
