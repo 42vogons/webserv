@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/31 00:42:32 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/31 22:26:40 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,7 +298,8 @@ void	Socket::executeGet(std::string& response)
 
 	if (this->_HandleRequest.getField("Endpoint") == "files.html")
 	{
-		createPage(generatePageFiles("pages/site1/uploads"),200, "OK", response);
+		generatePageFiles("pages/site1/uploads", response);
+		//createPage(generatePageFiles("pages/site1/uploads"),200, "OK", response);
 		return;	
 	}
 	
@@ -428,7 +429,7 @@ void	Socket::saveFile()
 		file.close(); 
 		std::ifstream infile(fileName.c_str());
 		std::string file_contents((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
-		std::cout << "AFile saved successfully!" << std::endl;
+		std::cout << "File saved successfully!" << std::endl;
 	}
 	else
 		std::cout << "Error opening the file for writing!" << std::endl;
@@ -534,36 +535,28 @@ void	Socket::autoIndex(std::string path)
 	os.close();
 }
 
-std::string	Socket::generatePageFiles(std::string path)
+void	Socket::generatePageFiles(std::string path, std::string& content)
 {
+	///
+	std::string filePage =  "pages/site1/files.html";
+	std::ifstream file(filePage.c_str());
+	std::ifstream fileError(_server.getErrorPages(404).c_str());
+	std::stringstream buffer;
+	std::string fileContent;
+	int code = 200;
+	std::string status = "Ok";
+
+
 	DIR *dir;
 	struct dirent *ent;
 	int col = 0;
-	
-
 	std::string html;
-	//html = "<html><head><title>Files</title></head><body>";
-
-	html = "<!DOCTYPE html><html> <head><title>Exemplo de Exclusão de Imagem</title><style>";
-	html += ".image-container {display: inline-block; text-align: center; margin: 10px; } </style> </head> <body>";
-	
-	html += "<h1>Files</h1>" ;
-	html += "<table border = 1><tr><td colspan=5>Files</td></tr><tr>";
-
-	
-
+	html = "<table border = 1><tr><td colspan=5>Files</td></tr><tr>";
 		
 	if ((dir = opendir(path.c_str())) != NULL)
 	{
-		
-		
-		
 		while ((ent = readdir(dir)) != NULL)
 		{
-			
-				
-			
-			
 			std::string fileName = ent->d_name;
 			std::string filePath = path +"/" +fileName;
 			
@@ -581,42 +574,46 @@ std::string	Socket::generatePageFiles(std::string path)
 			html += "<div class='image-container'>";
 			html += "<a href='" + filePath+"' target='_blank'>";
 			html += "<img src='" + filePath + "' alt='"+ fileName+"' height='100' width='100'></a><br>";
-			html += "<span class='delete-icon' onclick='deleteImage("+filePath+")'><img src='images/lixeira.png' height='20' width='20'></span></div></td>";
-			
-			
+			html += " <span class=\"delete-icon\" onclick=\"deleteImage('"+fileName+"')\"><img src=\"images/lixeira.png\" height=\"20\" width=\"20\"></span></div></td>";
 		}
 		closedir(dir);
 	}
 	else
 		html +="<p>Error opening the directory.</p>";
 	html += "</tr></table>";
-	// colocar esse script abaixo no html
-	/*
-	<script>
-function deleteImage(imageName) {
-    if (confirm("Tem certeza de que deseja excluir esta imagem?")) {
-        fetch('delete/' + encodeURIComponent(imageName), {
-            method: 'DELETE'
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('Imagem excluída com sucesso.');
-                // Remova a div de image-container após excluir
-                var imageContainer = document.querySelector(`[onclick="deleteImage('${imageName}')"]`).parentNode;
-                imageContainer.parentNode.removeChild(imageContainer);
-            } else {
-                console.error('Erro ao excluir a imagem.');
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao excluir a imagem:', error);
-        });
-    }
-}
-</script>
-	*/
 
-	html += "</body></html>";
-	return html;
+
+	
+
+	if (file.good())
+	{
+		buffer << file.rdbuf();
+		fileContent = buffer.str();
+	}
+	else
+	{
+		if (fileError.good())
+		{
+			buffer << fileError.rdbuf();
+			fileContent = buffer.str();
+		}
+		else
+		{
+			fileContent = "Page not Found";
+			code = 404;
+			status = "Not Found";
+		}
+	}
+	std::string text = "{{pages}}";
+	size_t pos = fileContent.find(text);
+	
+	fileContent.replace(pos, text.length(), html);
+	
+	content = createResponse(code, status, fileContent, "text/html");
+	std::cout << "content:::" << content << std::endl;
+	file.close();
+	///
+	//html += "</body></html>";
+	//return html;
 }
 

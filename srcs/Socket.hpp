@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/31 00:10:40 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/31 22:03:28 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ class Socket
 		void		readImage(std::string filename, int code, std::string status, std::string& content);
 		void		createPage(std::string newPage, int code, std::string status, std::string& content);
 		void		autoIndex(std::string path);
-		
+		void		generatePageFiles(std::string path, std::string& content);
 	
 		void		executeGet(std::string& response);
 		void		executePost(std::string& response);
@@ -75,7 +75,7 @@ class Socket
 
 		//std::string	receiveInformation(void);
 		std::string	findField(std::string src, std::string field);
-		std::string	generatePageFiles(std::string path);
+		
 
 		int			getServerFd(void) const;
 		HandleRequest	getHandleRequest(void);
