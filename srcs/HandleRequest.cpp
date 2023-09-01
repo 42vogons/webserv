@@ -156,11 +156,12 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 		// colocar o receiveFile aqui
 	}
 	
-	//_body += "lines = " +qtd_lines ;
-	std::cout << "Body ----------------" << std::endl;
-	std::cout << _body << std::endl;
-	std::cout << "Body ----------------" << std::endl;
 
+	//_body += "lines = " +qtd_lines ;
+	/*std::cout << "Body ----------------" << std::endl;
+	std::cout << _body << std::endl;
+	std::cout << "Body ----------------" << std::endl;*/
+	
 
 	start = 0;
 	line = _headers["Host"];

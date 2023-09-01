@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/31 22:26:40 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/08/31 22:59:09 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -368,8 +368,16 @@ void	Socket::process(std::string& response)
 	std::cout << "locationServer***" << locationServer.getField("GET") << "**" << std::endl;
 	std::cout << "base*"<< this->_HandleRequest.getField("BaseUrl") << "*" << std::endl;
 	std::cout << "method*"<< method << "*" << std::endl;
+	std::cout << "client_max_body_size" << _server.getClientMaxBodySize() << std::endl;
+	
 
+	int bodySize = std::atoi(this->_HandleRequest.getField("Content-Length").c_str());
 	// TODO: melhorar o context de resposta se methodo == post
+	if ( bodySize > _server.getClientMaxBodySize())
+	{
+		createPage("Body max size error",400,"Bad Request",response);
+		return;
+	}
 	if (method == "POST")
 		executePost(response);
 	if (method == "GET")
@@ -445,6 +453,9 @@ void	Socket::executePost(std::string& response)
 	
 	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
 	std::string body = this->_HandleRequest.getBody();
+
+	// aqui client_max_body_size 
+	
 	if (body.empty())
 		body = locationServer.getAllCgiParm().c_str();
 	
