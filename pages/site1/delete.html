@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exemplo de Exclusão de Imagem</title>
+    <style>
+        .image-container {
+            display: inline-block;
+            text-align: center;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+
+
+<div id="imageList">
+    <div class="image-container">
+		<a href="pages/site1/uploads/12345.png" target="_blank">
+        <img src="pages/site1/uploads/12345.png" alt="Imagem 5" height="100" width="100"></a>
+        <br>
+        <span class="delete-icon" onclick="deleteImage('12345.png')"><img src="images/lixeira.png" height="20" width="20"></span>
+    </div>
+    <div class="image-container">
+		<a href="pages/site1/uploads/12343.png" target="_blank">
+        <img src="pages/site1/uploads/12343.png" alt="Imagem 2" height="100" width="100"></a>
+        <br>
+        <span class="delete-icon" onclick="deleteImage('12343.png')"><img src="images/lixeira.png" height="20" width="20"></span>
+    </div>
+	<div class="image-container">
+        <img src="pages/site1/uploads/texto.txt" alt="Texto" height="100" width="100">
+        <br>
+        <span class="delete-icon" onclick="deleteImage('texto.txt')"><img src="images/lixeira.png" height="20" width="20"></span>
+    </div>
+    <!-- Adicione mais divs de image-container conforme necessário -->
+</div>
+
+<script>
+function deleteImage(imageName) {
+    if (confirm("Tem certeza de que deseja excluir esta imagem?")) {
+        fetch('delete/' + encodeURIComponent(imageName), {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Imagem excluída com sucesso.');
+                // Remova a div de image-container após excluir
+                var imageContainer = document.querySelector(`[onclick="deleteImage('${imageName}')"]`).parentNode;
+                imageContainer.parentNode.removeChild(imageContainer);
+            } else {
+                console.error('Erro ao excluir a imagem.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao excluir a imagem:', error);
+        });
+    }
+}
+</script>
+
+</body>
+</html>

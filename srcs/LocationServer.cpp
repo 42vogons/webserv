@@ -32,43 +32,13 @@ LocationServer& LocationServer::operator=(const LocationServer& obj)
 {
 	if (this != &obj)
 	{
-		//this->_autoIndex = obj._autoIndex;
-		//this->_root = obj._root;
 		this->_allowedMethods = obj._allowedMethods;
 		this->_pagesIndex = obj._pagesIndex;
-		//this->_cgiPass = obj._cgiPass;
-		//this->_redirect = obj._redirect;
-		//this->_updatePath = obj._updatePath;
 		this->_cgiParam = obj._cgiParam;
 		this->_variables = obj._variables;
 	}
 	return (*this);
 }
-
-/*void	LocationServer::setAutoIndex(bool autoIndex)
-{
-	_autoIndex = autoIndex;
-}
-
-void	LocationServer::setRoot(std::string root)
-{
-	_root = root;
-}
-
-void	LocationServer::setCgiPass(std::string cgiPass)
-{
-	_cgiPass= cgiPass;
-}
-
-void	LocationServer::setRedirect(std::string redirect)
-{
-	_redirect= redirect;
-}
-
-void	LocationServer::setUpdatePath(std::string updatePath)
-{
-	_updatePath= updatePath;
-}*/
 
 void	LocationServer::setCgiParam(std::string key, std::string value)
 {
@@ -86,17 +56,6 @@ void	LocationServer::setPagesIndex(std::string page)
 		_pagesIndex.insert(page);
 }
 
-/*
-bool	LocationServer::getAutoIndex(void)
-{
-	return _autoIndex;
-}
-
-std::string	LocationServer::getRoot(void)
-{
-	return _root;
-}*/
-
 bool	LocationServer::getAllowedMethods(std::string methods)
 {
 
@@ -111,29 +70,23 @@ std::set<std::string>	LocationServer::getPagesIndex(void)
 	return _pagesIndex;
 }
 
-/*
-
-
-std::string	LocationServer::getCgiPass(void)
-{
-	return _cgiPass;
-}
-
-std::string	LocationServer::getRedirect(void)
-{
-	return _redirect;
-}
-
-std::string	LocationServer::getUpdatePath(void)
-{
-	return _updatePath;
-}*/
-
 std::string	LocationServer::getCgiParm(std::string param)
 {
 	if (_cgiParam.find(param) != _cgiParam.end())
 		return _cgiParam.find(param)->second;
 	return NULL;
+}
+
+std::string LocationServer::getAllCgiParm(void){
+	std::string concatenatedArguments;
+    
+    for (std::map<std::string, std::string>::iterator it = _cgiParam.begin(); it != _cgiParam.end(); ++it)
+		concatenatedArguments += it->first + "=" + it->second + "&";
+	    	
+    if (!concatenatedArguments.empty())
+        concatenatedArguments.erase(concatenatedArguments.size() - 1);
+    return concatenatedArguments;
+
 }
 
 std::string	LocationServer::getField(std::string field)
@@ -143,31 +96,41 @@ std::string	LocationServer::getField(std::string field)
 
 void	LocationServer::readLine(std::string line)
 {
-	std::string key, valueString, valueString2, value ;
+	std::string key, valueString;//, valueString2, value, value2;
 	std::istringstream iss(line);
-	iss >> key >> value ;
+	iss >> key >> valueString;
 	if (key.empty() || key.substr(0, 1) == "#")
 		return;
 
 	if (key.find("allowed_methods") == 0)
 	{
-		key = value;
-		iss >> value ;
+		key = valueString;
+		iss >> valueString;
+		if (valueString == "true")
+			this->setAllowedMethods(key, true);
+		else
+			this->setAllowedMethods(key, false);
+		return;
 	}	
 
-	_variables[key] = value;
 	if (key.find("cgi_param") == 0)
 	{
-		iss >> valueString >> valueString2;
-		this->setCgiParam(valueString, valueString2);
+		key = valueString;
+		iss >> valueString;
+		this->setCgiParam(key, valueString);
+		return;
 	}
 	if (key.find("index") == 0)
 	{
+		this->setPagesIndex(valueString);
 		while (iss >> valueString)
 			this->setPagesIndex(valueString);
+		return;
 	}
+	iss >> valueString;
+	_variables[key] = valueString;
 
-	
+
 
 	
 
