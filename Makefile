@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+         #
+#    By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/27 00:08:05 by cpereira          #+#    #+#              #
-#    Updated: 2023/04/24 23:56:48 by anolivei         ###   ########.fr        #
+#    Updated: 2023/09/03 22:37:49 by cpereira         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,9 @@ SRC =	$(SRC_DIR)/main.cpp \
 		$(SRC_DIR)/Server.cpp \
 		$(SRC_DIR)/ServersMap.cpp \
 		$(SRC_DIR)/LocationServer.cpp \
-		$(SRC_DIR)/HandleRequest.cpp
+		$(SRC_DIR)/HandleRequest.cpp \
+		$(SRC_DIR)/Pages.cpp \
+		$(SRC_DIR)/Process.cpp
 
 OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.opp, $(SRC))
 
