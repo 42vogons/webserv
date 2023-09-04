@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/09/03 22:37:24 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/09/04 19:03:35 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,8 @@ void	Socket::acceptConnection(void)
 		std::cout << "fim new body ----------------" << std::endl;
 	}*/
 	setHandleRequest(handleRequest);
-	process(response);
+
+	process(response, handleRequest, _server);
 	send(_client_fd, response.c_str(), response.size(), 0);
 	close(_client_fd);
 	std::cout << "Closed connection" << std::endl;

@@ -11,14 +11,19 @@
 /* ************************************************************************** */
 
 #include "Process.hpp"
+#include "Pages.cpp"
 
-void	Process::readImage(std::string filename, int code, std::string status, std::string& content)
+void	readImage(std::string filename, int code, std::string status, std::string& content, std::string errorPath)
 {
 	std::stringstream buffer;
 	std::string fileContent;
 	std::string extension;
-	std::string errorPath;
 	std::string type;
+
+	// Handler, accept
+	// server, error pages
+
+	//accept = this->_HandleRequest.getField("Accept")
 
 
 	// função para pegar extensão
@@ -33,14 +38,7 @@ void	Process::readImage(std::string filename, int code, std::string status, std:
 
 	if (extension == "png" || extension == "bmp" || extension == "jpeg" || extension == "tiff")
 	{
-		errorPath = "images/noPhoto.png";
 		type = "image/"+ extension;
-	}
-	else if (this->_HandleRequest.getField("Accept").find("text/html") != std::string::npos)
-	{
-		
-		type = "text/html";
-		errorPath= _server.getErrorPages(404).c_str();
 	}
 	else
 		filename = "images/desconhecido.jpg";
@@ -74,10 +72,10 @@ void	Process::readImage(std::string filename, int code, std::string status, std:
 	file.close();
 }
 
-void	Process::readPage(std::string filename, int code, std::string status, std::string& content)
+void	readPage(std::string filename, int code, std::string status, std::string& content, std::string errorPath)
 {
 	std::ifstream file(filename.c_str());
-	std::ifstream fileError(_server.getErrorPages(404).c_str());
+	std::ifstream fileError(errorPath.c_str());
 	std::stringstream buffer;
 	std::string fileContent;
 	if (file.good())
@@ -104,10 +102,11 @@ void	Process::readPage(std::string filename, int code, std::string status, std::
 	file.close();
 }
 
-void	Process::executeGet(std::string& response)
+void	executeGet(std::string& response, Server server, HandleRequest handleRequest)
 {
 	LocationServer locationServer;
-	locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
+
+	locationServer = server.getLocationServer(handleRequest.getField("BaseUrl"));
 	std::string redirect = locationServer.getField("redirection");
 	if (!redirect.empty())
 	{
@@ -116,20 +115,21 @@ void	Process::executeGet(std::string& response)
 	}
 	if (locationServer.getAllowedMethods("GET") != true)
 	{
-		readPage(_server.getErrorPages(403), 403, "Refused", response);
+		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
 		return ;
 	}
 	//std::string endpoint2 = this->_HandleRequest.getField("Endpoint");
 
 
-	if (this->_HandleRequest.getField("Endpoint") == "files.html")
+	if (handleRequest.getField("Endpoint") == "files.html")
 	{
-		generatePageFiles("pages/site1/uploads", response);
+		std::string filePage =  "pages/site1/files.html";
+		generatePageFiles("pages/site1/uploads", response, filePage, server.getErrorPages(404));
 		//createPage(generatePageFiles("pages/site1/uploads"),200, "OK", response);
 		return;	
 	}
 	
-	if (this->_HandleRequest.getField("Endpoint") == "/")
+	if (handleRequest.getField("Endpoint") == "/")
 	{
 		std::set<std::string> pages = locationServer.getPagesIndex();
 		for (std::set<std::string>::iterator it = pages.begin(); it != pages.end(); ++it) 
@@ -138,7 +138,7 @@ void	Process::executeGet(std::string& response)
 			std::string endpoint = locationServer.getField("root") + "/" + page;
 			std::ifstream file(endpoint.c_str());
 			if (file.good()){
-				readPage(endpoint, 200, "Ok", response);
+				readPage(endpoint, 200, "Ok", response,server.getErrorPages(404));
 				file.close();
 				return ;
 			}
@@ -147,83 +147,50 @@ void	Process::executeGet(std::string& response)
 		{
 			autoIndex(locationServer.getField("root"));
 			std::string endpoint = locationServer.getField("root") + "/autoIndex.html" ;
-			readPage(endpoint, 200, "Ok", response);
+			readPage(endpoint, 200, "Ok", response,server.getErrorPages(404));
 			remove(endpoint.c_str());
 			return ;
 		}
 		else
-			readPage(_server.getErrorPages(404), 404, "Not Found", response);
+			readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(404));
 		return ;
 	}
-	if (this->_server.getServerName() != this->_HandleRequest.getField("Host"))
+	if (server.getServerName() != handleRequest.getField("Host"))
 	{
 		std::cout << "ko" << std::endl;
 		return ;
 	}
 	
-	std::string endpoint = locationServer.getField("root") + "/" + this->_HandleRequest.getField("Endpoint");
-	std::ifstream file(endpoint.c_str());
-	readImage(endpoint, 200, "Ok", response);
-	file.close();
+	std::string endpoint = locationServer.getField("root") + "/" + handleRequest.getField("Endpoint");
 	
-	/*if (this->_HandleRequest.getField("Accept").find("text/html") != std::string::npos)
+	if (handleRequest.getField("Accept").find("text/html") != std::string::npos)
 	{
-		std::string endpoint = locationServer.getField("root") + "/" + this->_HandleRequest.getField("Endpoint");
-		std::ifstream file(endpoint.c_str());
-		readPage(endpoint, 200, "Ok", response);
-		file.close();	
+		std:: string pathError = server.getErrorPages(404).c_str();
+		readPage(endpoint, 200, "Ok", response, pathError);
 	} 
 	else
 	{
 		std::cout << "vamos abrir imagem" << std::endl;
-		std::string endpoint = locationServer.getField("root") + "/" + this->_HandleRequest.getField("Endpoint");
-		std::ifstream file(endpoint.c_str());
-		readImage(endpoint, 200, "Ok", response);
-		file.close();	
-	}*/
-	
-	
-}
-
-void	Process::process(std::string& response)
-{
-	LocationServer locationServer;
-	locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
-	std::string method = this->_HandleRequest.getField("Method");
-	std::cout << "base" << this->_HandleRequest.getField("BaseUrl") << std::endl;
-	std::cout << "locationServer***" << locationServer.getField("GET") << "**" << std::endl;
-	std::cout << "base*"<< this->_HandleRequest.getField("BaseUrl") << "*" << std::endl;
-	std::cout << "method*"<< method << "*" << std::endl;
-	std::cout << "client_max_body_size" << _server.getClientMaxBodySize() << std::endl;
-	
-
-	int bodySize = std::atoi(this->_HandleRequest.getField("Content-Length").c_str());
-	// TODO: melhorar o context de resposta se methodo == post
-	if ( bodySize > _server.getClientMaxBodySize())
-	{
-		createPage("Body max size error",400,"Bad Request",response);
-		return;
+		readImage(endpoint, 200, "Ok", response, "images/noPhoto.png");
+		
 	}
-	if (method == "POST")
-		executePost(response);
-	if (method == "GET")
-		executeGet(response);
-	if (method == "DELETE")
-		executeDelete(response);
-	return ;
+	
+	
 }
 
-void Process::executeDelete(std::string& response){
+
+void executeDelete(std::string& response, LocationServer locationServer, HandleRequest handleRequest){
 	std::cout << "Vamos deletar" << std::endl;
-	LocationServer locationServer;
-	locationServer = _server.getLocationServer("/");
+	//LocationServer locationServer;
+	
+	//locationServer = _server.getLocationServer("/");
 	
 
-	std::string endpoint = locationServer.getField("root") + "/uploads/" + this->_HandleRequest.getField("Endpoint");
+	std::string endpoint = locationServer.getField("root") + "/uploads/" + handleRequest.getField("Endpoint");
 	
 	//if ()
 
-	std::cout << "nome*" << this->_HandleRequest.getField("Endpoint") << std::endl;
+	std::cout << "nome*" << handleRequest.getField("Endpoint") << std::endl;
  	//const char *filename = this->_HandleRequest.getField("Endpoint").c_str();
 	const char *filename = endpoint.c_str();
 
@@ -239,17 +206,13 @@ void Process::executeDelete(std::string& response){
 	//response = 1;
 }
 
-
-
-
-
-void	Process::saveFile()
+void	saveFile(Server server, HandleRequest handlerRequest)
 {
-	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
+	LocationServer locationServer = server.getLocationServer(handlerRequest.getField("BaseUrl"));
 	std::string upload_dir = ".";
 	std::string path = locationServer.getField("upload_path") + "pages/site1/uploads/";
-	std::string body = this->_HandleRequest.getBody();
-	std::string fileName = path + this->_HandleRequest.getField("fileName");
+	std::string body = handlerRequest.getBody();
+	std::string fileName = path + handlerRequest.getField("fileName");
 	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
 	if (file.is_open()) {
 		file.write(body.data(), body.size());
@@ -262,16 +225,16 @@ void	Process::saveFile()
 		std::cout << "Error opening the file for writing!" << std::endl;
 }
 
-void	Process::executePost(std::string& response)
+void	executePost(std::string& response, Server server, HandleRequest handleRequest)
 {
-	LocationServer locationServer = _server.getLocationServer(this->_HandleRequest.getField("BaseUrl"));
+	LocationServer locationServer = server.getLocationServer(handleRequest.getField("BaseUrl"));
 
-	HandleRequest handleRequest = this->_HandleRequest;
+	//HandleRequest handleRequest = this->_HandleRequest;
 	std::cout << "content type = " << handleRequest.getField("Content-Type") << std::endl;
 
 	
 	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
-	std::string body = this->_HandleRequest.getBody();
+	std::string body = handleRequest.getBody();
 
 	// aqui client_max_body_size 
 	
@@ -279,7 +242,7 @@ void	Process::executePost(std::string& response)
 		body = locationServer.getAllCgiParm().c_str();
 	
 	if (handleRequest.getTypePost() == "File"){
-		saveFile();
+		saveFile(server, handleRequest);
 		createPage("Salvo com sucesso", 200 ,"OK", response);
 		return;
 		// colocar que foi salvo com sucesso!!
@@ -336,4 +299,34 @@ void	Process::executePost(std::string& response)
 		close(pipe_fd[0]);
 		// Código para o processo pai, se necessário
 	}
+}
+
+void	process(std::string& response, HandleRequest handlerRequest, Server server)
+{
+	LocationServer locationServer;
+
+	locationServer = server.getLocationServer(handlerRequest.getField("BaseUrl"));
+
+	std::string method = handlerRequest.getField("Method");
+	std::cout << "base" << handlerRequest.getField("BaseUrl") << std::endl;
+	std::cout << "locationServer***" << locationServer.getField("GET") << "**" << std::endl;
+	std::cout << "base*"<< handlerRequest.getField("BaseUrl") << "*" << std::endl;
+	std::cout << "method*"<< method << "*" << std::endl;
+	std::cout << "client_max_body_size" << server.getClientMaxBodySize() << std::endl;
+	
+
+	int bodySize = std::atoi(handlerRequest.getField("Content-Length").c_str());
+	// TODO: melhorar o context de resposta se methodo == post
+	if ( bodySize > server.getClientMaxBodySize())
+	{
+		createPage("Body max size error",400,"Bad Request",response);
+		return;
+	}
+	if (method == "POST")
+		executePost(response, server, handlerRequest);
+	if (method == "GET")
+		executeGet(response, server, handlerRequest);
+	if (method == "DELETE")
+		executeDelete(response, server.getLocationServer("/"), handlerRequest);
+	return ;
 }

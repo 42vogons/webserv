@@ -6,11 +6,12 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/09/03 22:42:33 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/09/04 18:50:02 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Pages.hpp"
+
 
 std::string createResponse(int code, std::string status, std::string fileContent, std::string type)
 {
@@ -24,7 +25,7 @@ std::string createResponse(int code, std::string status, std::string fileContent
 	return response.str();
 }
 
-void Pages::createPage(std::string newPage, int code, std::string status, std::string& content)
+void createPage(std::string newPage, int code, std::string status, std::string& content)
 {
 	std::stringstream buffer;
 	std::string fileContent;
@@ -33,7 +34,7 @@ void Pages::createPage(std::string newPage, int code, std::string status, std::s
 	std::cout << "content:::" << content << std::endl;
 }
 
-void	Pages::autoIndex(std::string path)
+void autoIndex(std::string path)
 {
 	std::ofstream os;
 	os.open((path + "/autoIndex.html").c_str());
@@ -60,12 +61,14 @@ void	Pages::autoIndex(std::string path)
 	os.close();
 }
 
-void	Pages::generatePageFiles(std::string path, std::string& content)
+void generatePageFiles(std::string path, std::string& content, std::string pathFilePage, std::string pathFileError)
 {
 	///
-	std::string filePage =  "pages/site1/files.html";
-	std::ifstream file(filePage.c_str());
-	std::ifstream fileError(_server.getErrorPages(404).c_str());
+	//std::string filePage =  "pages/site1/files.html";
+	std::ifstream file(pathFilePage.c_str());
+	std::ifstream fileError(pathFileError.c_str());
+	//std::ifstream fileError(_server.getErrorPages(404).c_str());
+	
 	std::stringstream buffer;
 	std::string fileContent;
 	int code = 200;

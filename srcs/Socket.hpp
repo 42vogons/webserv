@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/09/03 22:15:41 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/09/04 19:02:13 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include "Server.hpp"
 #include "HandleRequest.hpp"
+#include "Process.cpp"
+
 #include <iostream>
 #include <unistd.h> //read write and close
 #include <sys/socket.h>
@@ -60,19 +62,7 @@ class Socket
 		void		closeClientFd(void);
 		
 		void		setHandleRequest(HandleRequest HandleRequest);
-		void		process(std::string& response);
-		
-		void		readPage(std::string filename, int code, std::string status, std::string& content);
-		void		readImage(std::string filename, int code, std::string status, std::string& content);
-		void		createPage(std::string newPage, int code, std::string status, std::string& content);
-		void		autoIndex(std::string path);
-		void		generatePageFiles(std::string path, std::string& content);
-	
-		void		executeGet(std::string& response);
-		void		executePost(std::string& response);
-		void		executeDelete(std::string& response);
-		
-		void		saveFile(void);
+
 
 		//std::string	receiveInformation(void);
 		std::string	findField(std::string src, std::string field);
