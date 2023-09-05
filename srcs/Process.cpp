@@ -36,7 +36,7 @@ void	readImage(std::string filename, int code, std::string status, std::string& 
 		extension = "";
 	}
 
-	if (extension == "png" || extension == "bmp" || extension == "jpeg" || extension == "tiff")
+	if (extension == "png" || extension == "bmp" || extension == "jpeg" || extension == "tiff" || extension == "jpg")
 	{
 		type = "image/"+ extension;
 	}
@@ -124,7 +124,7 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 	if (handleRequest.getField("Endpoint") == "files.html")
 	{
 		std::string filePage =  "pages/site1/files.html";
-		////generatePageFiles("pages/site1/uploads", response, filePage, server.getErrorPages(404));
+		generatePageFiles("pages/site1/uploads", response, filePage, server.getErrorPages(404));
 		//createPage(generatePageFiles("pages/site1/uploads"),200, "OK", response);
 		return;	
 	}
@@ -316,6 +316,9 @@ void	process(std::string& response, HandleRequest handlerRequest, Server server)
 	
 
 	int bodySize = std::atoi(handlerRequest.getField("Content-Length").c_str());
+
+	std::cout << "bodySize" << bodySize << std::endl;
+
 	// TODO: melhorar o context de resposta se methodo == post
 	if ( bodySize > server.getClientMaxBodySize())
 	{

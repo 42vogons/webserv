@@ -2,7 +2,7 @@ server1 {
 
 	listen 8087 8082
 	server_name localhost
-	client_max_body_size 8000
+	client_max_body_size 9000000
 
 	error_page 301 ./www/errors/301.html
 	error_page 400 ./www/errors/400.html
