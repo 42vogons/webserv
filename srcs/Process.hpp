@@ -27,7 +27,7 @@
 #include <sys/wait.h>
 
 
-	void readImage(std::string filename, int code, std::string status, std::string& content, std::string errorPath);
+	void readImage(std::string filename, int code, std::string status, std::string& content, std::string errorPath, std::string extension);
 	void readPage(std::string filename, int code, std::string status, std::string& content, std::string errorPath);
 	void saveFile(Server server, HandleRequest handlerRequest);
 	
@@ -35,7 +35,6 @@
 	void executeGet(std::string& response, Server server, HandleRequest handleRequest);
 	void executeDelete(std::string& response, LocationServer locationServer, HandleRequest handleRequest);
 	void executePost(std::string& response, Server server, HandleRequest handleRequest);
-
 
 	void process(std::string& response, HandleRequest handlerRequest, Server server);
 

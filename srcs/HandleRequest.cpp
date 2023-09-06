@@ -113,6 +113,10 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 			_headers["BaseUrl"] = protocol.substr(0, lastSlashPos);
 			_headers["Endpoint"] = protocol.substr(lastSlashPos + 1);
 		}
+		_headers["BaseUrl"] = protocol.substr(0, lastSlashPos);
+		_headers["Endpoint"] = protocol.substr(lastSlashPos + 1);
+
+
 		
 	}
 	if (_headers["BaseUrl"] == "")

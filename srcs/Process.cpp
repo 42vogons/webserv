@@ -13,35 +13,24 @@
 #include "Process.hpp"
 
 
-void	readImage(std::string filename, int code, std::string status, std::string& content, std::string errorPath)
+void	readImage(std::string filename, int code, std::string status, std::string& content, std::string errorPath, std::string extension)
 {
 	std::stringstream buffer;
 	std::string fileContent;
-	std::string extension;
 	std::string type;
-
-	// Handler, accept
-	// server, error pages
-
-	//accept = this->_HandleRequest.getField("Accept")
-
-
-	// função para pegar extensão
-	size_t dotPosition = filename.find_last_of(".");
-    if (dotPosition != std::string::npos) {
-        extension = filename.substr(dotPosition + 1);
-    }
-	else
-	{
-		extension = "";
-	}
 
 	if (extension == "png" || extension == "bmp" || extension == "jpeg" || extension == "tiff" || extension == "jpg")
 	{
 		type = "image/"+ extension;
 	}
+	else if (extension == "mpeg" || extension == "wav")
+		type = "audio/"+extension;
+	else if (extension == "pdf") {
+		type = "application/"+extension;
+	}
 	else
-		filename = "images/desconhecido.jpg";
+		type = "text/html";
+		//filename = "images/desconhecido.jpg";
 		//errorPath = 
 
 
@@ -68,7 +57,7 @@ void	readImage(std::string filename, int code, std::string status, std::string& 
 		}
 	}
 	content = createResponse(code, status, fileContent, type);
-	std::cout << "content:::" << content << std::endl;
+	///std::cout << "content:::" << content << std::endl;
 	file.close();
 }
 
@@ -78,6 +67,7 @@ void	readPage(std::string filename, int code, std::string status, std::string& c
 	std::ifstream fileError(errorPath.c_str());
 	std::stringstream buffer;
 	std::string fileContent;
+	
 	if (file.good())
 	{
 		buffer << file.rdbuf();
@@ -97,8 +87,9 @@ void	readPage(std::string filename, int code, std::string status, std::string& c
 			status = "Not Found";
 		}
 	}
+
 	content = createResponse(code, status, fileContent, "text/html");
-	std::cout << "content:::" << content << std::endl;
+	////std::cout << "content:::" << content << std::endl;
 	file.close();
 }
 
@@ -121,13 +112,13 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 	//std::string endpoint2 = this->_HandleRequest.getField("Endpoint");
 
 
-	if (handleRequest.getField("Endpoint") == "files.html")
+	if (handleRequest.getField("Endpoint") == "/files.html" || handleRequest.getField("Endpoint") == "files.html")
 	{
 
 		std::string filePage = locationServer.getField("root") + "/files.html";
 		//std::string path = locationServer.getField("root") + "/uploads";
 
-		std::string path = locationServer.getField("root") + "/" + locationServer.getField("upload_path");
+		std::string path = locationServer.getField("root") + locationServer.getField("upload_path");
 
 		generatePageFiles(path, response, filePage, server.getErrorPages(404));
 		return;	
@@ -166,8 +157,21 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 	}
 	
 	std::string endpoint = locationServer.getField("root") + "/" + handleRequest.getField("Endpoint");
+
+
+	std::string extension;
+	// função para pegar extensão
+	size_t dotPosition = endpoint.find_last_of(".");
+    if (dotPosition != std::string::npos) {
+        extension = endpoint.substr(dotPosition + 1);
+    }
+	else
+	{
+		extension = "";
+	}
+
 	
-	if (handleRequest.getField("Accept").find("text/html") != std::string::npos)
+	if (handleRequest.getField("Accept").find("text/html") != std::string::npos && extension == "html" ) 
 	{
 		std:: string pathError = server.getErrorPages(404).c_str();
 		readPage(endpoint, 200, "Ok", response, pathError);
@@ -175,7 +179,7 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 	else
 	{
 		std::cout << "vamos abrir imagem" << std::endl;
-		readImage(endpoint, 200, "Ok", response, "images/noPhoto.png");
+		readImage(endpoint, 200, "Ok", response, "images/noPhoto.png", extension);
 		
 	}
 	
@@ -216,15 +220,15 @@ void	saveFile(Server server, HandleRequest handlerRequest)
 	std::string upload_dir = ".";
 	
 	std::string filePage = locationServer.getField("root") + "/files.html";
-	std::string path = locationServer.getField("root") + "/uploads";
+	//std::string path = locationServer.getField("root") + "/uploads";
 
 	// analisar essa linha, está estranha alias está errada.
 	// 
 	//std::string path = locationServer.getField("upload_path") + "pages/site1/uploads/";
-	std::string path = locationServer.getField("root") + "/" + locationServer.getField("upload_path");
+	std::string path = locationServer.getField("root") + locationServer.getField("upload_path");
 
 	std::string body = handlerRequest.getBody();
-	std::string fileName = path + handlerRequest.getField("fileName");
+	std::string fileName = path + "/" + handlerRequest.getField("fileName");
 	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
 	if (file.is_open()) {
 		file.write(body.data(), body.size());
