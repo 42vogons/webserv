@@ -123,9 +123,13 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 
 	if (handleRequest.getField("Endpoint") == "files.html")
 	{
-		std::string filePage =  "pages/site1/files.html";
-		generatePageFiles("pages/site1/uploads", response, filePage, server.getErrorPages(404));
-		//createPage(generatePageFiles("pages/site1/uploads"),200, "OK", response);
+
+		std::string filePage = locationServer.getField("root") + "/files.html";
+		//std::string path = locationServer.getField("root") + "/uploads";
+
+		std::string path = locationServer.getField("root") + "/" + locationServer.getField("upload_path");
+
+		generatePageFiles(path, response, filePage, server.getErrorPages(404));
 		return;	
 	}
 	
@@ -210,7 +214,15 @@ void	saveFile(Server server, HandleRequest handlerRequest)
 {
 	LocationServer locationServer = server.getLocationServer(handlerRequest.getField("BaseUrl"));
 	std::string upload_dir = ".";
-	std::string path = locationServer.getField("upload_path") + "pages/site1/uploads/";
+	
+	std::string filePage = locationServer.getField("root") + "/files.html";
+	std::string path = locationServer.getField("root") + "/uploads";
+
+	// analisar essa linha, está estranha alias está errada.
+	// 
+	//std::string path = locationServer.getField("upload_path") + "pages/site1/uploads/";
+	std::string path = locationServer.getField("root") + "/" + locationServer.getField("upload_path");
+
 	std::string body = handlerRequest.getBody();
 	std::string fileName = path + handlerRequest.getField("fileName");
 	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
