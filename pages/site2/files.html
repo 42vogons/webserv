@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exemplo de Exclusão de Imagem</title>
+    <style>
+        .image-container {
+            display: inline-block;
+            text-align: center;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+
+{{pages}}
+
+<script>
+function deleteImage(imageName) {
+    if (confirm("Tem certeza de que deseja excluir esta arquivo : "+imageName+" ?")) {
+        fetch('delete/' + encodeURIComponent(imageName), {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Imagem excluída com sucesso.');
+                // Remova a div de image-container após excluir
+                var imageContainer = document.querySelector(`[onclick="deleteImage('${imageName}')"]`).parentNode;
+                imageContainer.parentNode.removeChild(imageContainer);
+            } else {
+                console.error('Erro ao excluir a imagem.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao excluir a imagem:', error);
+        });
+    }
+}
+</script>
+
+</body>
+</html>

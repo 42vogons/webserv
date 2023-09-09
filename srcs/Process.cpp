@@ -28,6 +28,11 @@ void	readImage(std::string filename, int code, std::string status, std::string& 
 	else if (extension == "pdf") {
 		type = "application/"+extension;
 	}
+	else if (extension == "ico")
+	{
+		type = "image/png";
+		filename = "images/icon.png";
+	}
 	else
 		type = "text/html";
 		//filename = "images/desconhecido.jpg";
@@ -96,8 +101,17 @@ void	readPage(std::string filename, int code, std::string status, std::string& c
 void	executeGet(std::string& response, Server server, HandleRequest handleRequest)
 {
 	LocationServer locationServer;
+	std::string fullPath;
 
 	locationServer = server.getLocationServer(handleRequest.getField("BaseUrl"));
+
+	//essa função abaixo deve ir para a checagem dos config
+	std::string root = locationServer.getField("root");
+	if (root[0] == '/')
+		root.erase(0, 1);  
+
+
+	
 	std::string redirect = locationServer.getField("redirection");
 	if (!redirect.empty())
 	{
@@ -109,28 +123,40 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
 		return ;
 	}
-	//std::string endpoint2 = this->_HandleRequest.getField("Endpoint");
 
+	fullPath = root + handleRequest.getField("Endpoint");
 
-	if (handleRequest.getField("Endpoint") == "/files.html" || handleRequest.getField("Endpoint") == "files.html")
+	
+	if (handleRequest.getField("LastPath") == "files.html")
 	{
 
-		std::string filePage = locationServer.getField("root") + "/files.html";
+		////std::string filePage =root + "/files.html";
 		//std::string path = locationServer.getField("root") + "/uploads";
 
-		std::string path = locationServer.getField("root") + locationServer.getField("upload_path");
+		std::string path = root + locationServer.getField("upload_path");
 
-		generatePageFiles(path, response, filePage, server.getErrorPages(404));
+		generatePageFiles(path, response, fullPath, server.getErrorPages(404));
 		return;	
 	}
+
+	std::string extension;
+	// função para pegar extensão
+	size_t dotPosition = fullPath.find_last_of(".");
+    if (dotPosition != std::string::npos) {
+        extension = fullPath.substr(dotPosition + 1);
+    }
+	else
+	{
+		extension = "";
+	}
 	
-	if (handleRequest.getField("Endpoint") == "/")
+	if (extension == "") /*handleRequest.getField("Endpoint") == "/")*/
 	{
 		std::set<std::string> pages = locationServer.getPagesIndex();
 		for (std::set<std::string>::iterator it = pages.begin(); it != pages.end(); ++it) 
 		{
 			std::string page = *it;
-			std::string endpoint = locationServer.getField("root") + "/" + page;
+			std::string endpoint = fullPath + "/" + page;
 			std::ifstream file(endpoint.c_str());
 			if (file.good()){
 				readPage(endpoint, 200, "Ok", response,server.getErrorPages(404));
@@ -140,8 +166,8 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 		}
 		if (locationServer.getField("autoindex") == "true")
 		{
-			autoIndex(locationServer.getField("root"));
-			std::string endpoint = locationServer.getField("root") + "/autoIndex.html" ;
+			autoIndex(fullPath);
+			std::string endpoint = fullPath + "/autoIndex.html" ;
 			readPage(endpoint, 200, "Ok", response,server.getErrorPages(404));
 			remove(endpoint.c_str());
 			return ;
@@ -156,8 +182,7 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 		return ;
 	}
 	
-	std::string endpoint = locationServer.getField("root") + "/" + handleRequest.getField("Endpoint");
-
+	/*std::string endpoint = locationServer.getField("root") + "/" + handleRequest.getField("Endpoint");
 
 	std::string extension;
 	// função para pegar extensão
@@ -168,18 +193,18 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 	else
 	{
 		extension = "";
-	}
+	}*/
 
 	
-	if (handleRequest.getField("Accept").find("text/html") != std::string::npos && extension == "html" ) 
+	if (handleRequest.getField("Accept").find("text/html") != std::string::npos && (extension == "html" || extension == "") ) 
 	{
 		std:: string pathError = server.getErrorPages(404).c_str();
-		readPage(endpoint, 200, "Ok", response, pathError);
+		readPage(fullPath, 200, "Ok", response, pathError);
 	} 
 	else
 	{
 		std::cout << "vamos abrir imagem" << std::endl;
-		readImage(endpoint, 200, "Ok", response, "images/noPhoto.png", extension);
+		readImage(fullPath, 200, "Ok", response, "images/noPhoto.png", extension);
 		
 	}
 	

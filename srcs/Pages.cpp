@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/09/06 18:28:55 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/09/09 00:05:06 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,9 @@ void generatePageFiles(std::string path, std::string& content, std::string pathF
 			
 			html += "<td>";
 			html += "<div class='image-container'>";
-			html += "<a href='" + filePath+"' >" + fileName + "</a>";
+			html += "<a href='/" + filePath+"' >" + fileName + "</a>";
 			//html += "<img src='" + filePath + "' alt='"+ fileName+"' height='100' width='100'></a><br>";
-			html += " <span class=\"delete-icon\" onclick=\"deleteImage('"+fileName+"')\"><img src=\"images/lixeira.png\" height=\"20\" width=\"20\"></span></div></td>";
+			html += " <span class=\"delete-icon\" onclick=\"deleteImage('"+fileName+"')\"><img src=\"/images/lixeira.png\" height=\"20\" width=\"20\"></span></div></td>";
 		}
 		closedir(dir);
 	}

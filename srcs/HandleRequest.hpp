@@ -19,6 +19,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <map>
+#include <vector>
 #include <sys/types.h>
 #include <sys/socket.h>
 

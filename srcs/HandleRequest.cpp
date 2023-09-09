@@ -81,6 +81,19 @@ void HandleRequest::readBody(std::string body){
 
 }
 
+std::vector<std::string> split(const std::string &s, char delimiter) {
+    std::vector<std::string> tokens;
+    std::string token;
+    std::istringstream tokenStream(s);
+
+    while (std::getline(tokenStream, token, delimiter)) {
+        tokens.push_back(token);
+    }
+
+    return tokens;
+}
+
+
 void HandleRequest::readBuffer(std::string buffer, int client_fd)
 {
 	bool isBody = false;
@@ -99,9 +112,26 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	std::istringstream iss(line);
 	std::string protocol;
 	iss >> _headers["Method"] >> protocol >> _headers["Version"];
-	std::size_t lastSlashPos = protocol.find_last_of("/");
-	std::cout << "last" << protocol.size();
-	if (lastSlashPos != std::string::npos)
+	
+	std::string endpoint;
+	std::string baseUrl;
+	std::vector<std::string> result = split(protocol, '/');
+	size_t i;
+    for (i = 1; i < result.size(); ++i) {
+		if (i > 1)
+			endpoint += "/" + result[i];
+		else
+			baseUrl += "/" + result[i];
+			
+    }
+	_headers["BaseUrl"] = baseUrl;
+	_headers["Endpoint"] = endpoint;
+	_headers["LastPath"] = result[i - 1];
+	
+	
+
+	//std::cout << "last" << protocol.size();
+	/*if (lastSlashPos != std::string::npos)
 	{
 		if (protocol.size() - 1 != lastSlashPos)
 		{
@@ -115,10 +145,7 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 		}
 		_headers["BaseUrl"] = protocol.substr(0, lastSlashPos);
 		_headers["Endpoint"] = protocol.substr(lastSlashPos + 1);
-
-
-		
-	}
+	}*/
 	if (_headers["BaseUrl"] == "")
 	{
 		_headers["BaseUrl"] = "/";
