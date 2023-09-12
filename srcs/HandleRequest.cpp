@@ -117,7 +117,7 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	std::string baseUrl;
 	std::vector<std::string> result = split(protocol, '/');
 	size_t i;
-    for (i = 1; i < result.size(); ++i) {
+    for (i = 1; i < result.size() -1 ; ++i) {
 		if (i > 1)
 			endpoint += "/" + result[i];
 		else
@@ -126,7 +126,7 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
     }
 	_headers["BaseUrl"] = baseUrl;
 	_headers["Endpoint"] = endpoint;
-	_headers["LastPath"] = result[i - 1];
+	_headers["LastPath"] = result[i];
 	
 	
 

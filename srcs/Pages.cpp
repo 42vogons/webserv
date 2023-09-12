@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/09/09 00:05:06 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/09/11 23:51:53 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,16 @@ void autoIndex(std::string path)
 	os.close();
 }
 
-void generatePageFiles(std::string path, std::string& content, std::string pathFilePage, std::string pathFileError)
+void generatePageFiles(std::string path, std::string& content, std::string pathDir, std::string pathFileError, std::string baseUrl)
 {
 	///
-	//std::string filePage =  "pages/site1/files.html";
+	std::string pathFilePage = pathDir + "/files.html" ;
+	
 	std::ifstream file(pathFilePage.c_str());
 	std::ifstream fileError(pathFileError.c_str());
 	//std::ifstream fileError(_server.getErrorPages(404).c_str());
+
+	path = "tmp/www/uploads";
 	
 	std::stringstream buffer;
 	std::string fileContent;
@@ -86,7 +89,7 @@ void generatePageFiles(std::string path, std::string& content, std::string pathF
 		while ((ent = readdir(dir)) != NULL)
 		{
 			std::string fileName = ent->d_name;
-			std::string filePath = path +"/" +fileName;
+			std::string filePath = baseUrl +"/" +fileName;
 			
 			if (fileName == (".") || fileName == (".."))
 				continue;

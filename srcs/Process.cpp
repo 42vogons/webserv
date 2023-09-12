@@ -124,26 +124,30 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 		return ;
 	}
 
-	fullPath = root + handleRequest.getField("Endpoint");
+	//
+
+	// ajustar essa parte do codigo, pois a imagem nao esta sendo encontrada;git
+	fullPath = handleRequest.getField("BaseUrl") + handleRequest.getField("Endpoint");
 
 	
 	if (handleRequest.getField("LastPath") == "files.html")
 	{
 
 		////std::string filePage =root + "/files.html";
-		//std::string path = locationServer.getField("root") + "/uploads";
+		std::string pathUpload = locationServer.getField("root") + locationServer.getField("upload_path");
+		fullPath = root + handleRequest.getField("Endpoint");
+		std::string baseUrl = handleRequest.getField("BaseUrl") + handleRequest.getField("Endpoint");
+		//std::string path = root + locationServer.getField("upload_path");
 
-		std::string path = root + locationServer.getField("upload_path");
-
-		generatePageFiles(path, response, fullPath, server.getErrorPages(404));
+		generatePageFiles(pathUpload, response, fullPath, server.getErrorPages(404), baseUrl);
 		return;	
 	}
 
 	std::string extension;
 	// função para pegar extensão
-	size_t dotPosition = fullPath.find_last_of(".");
+	size_t dotPosition = handleRequest.getField("LastPath").find_last_of(".");
     if (dotPosition != std::string::npos) {
-        extension = fullPath.substr(dotPosition + 1);
+        extension = handleRequest.getField("LastPath").substr(dotPosition + 1);
     }
 	else
 	{

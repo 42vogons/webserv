@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/09/05 18:25:35 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/09/11 23:52:17 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 	void		createPage(std::string newPage, int code, std::string status, std::string& content);
 	void		autoIndex(std::string path);
-	void		generatePageFiles(std::string path, std::string& content, std::string pathFilePage, std::string pathFileErro);
+	void		generatePageFiles(std::string path, std::string& content, std::string pathDir, std::string pathFileErro, std::string baseUrl);
 	std::string createResponse(int code, std::string status, std::string fileContent, std::string type);
 
 
