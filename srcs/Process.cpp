@@ -101,17 +101,22 @@ void	readPage(std::string filename, int code, std::string status, std::string& c
 void	executeGet(std::string& response, Server server, HandleRequest handleRequest)
 {
 	LocationServer locationServer;
-	std::string fullPath;
+	
+	
 
 	locationServer = server.getLocationServer(handleRequest.getField("BaseUrl"));
 
-	//essa função abaixo deve ir para a checagem dos config
-	std::string root = locationServer.getField("root");
-	if (root[0] == '/')
-		root.erase(0, 1);  
+	std::string basePath = handleRequest.getField("BaseUrl") + handleRequest.getField("Endpoint");
+	std::string rootPath = locationServer.getField("root") + handleRequest.getField("Endpoint");
+	std::string uploadPath = locationServer.getField("root") + locationServer.getField("upload_path");
 
-
+	if (rootPath[0] == '/'){
+		rootPath.erase(0, 1);
+		uploadPath.erase(0, 1);
+	}
+		  
 	
+
 	std::string redirect = locationServer.getField("redirection");
 	if (!redirect.empty())
 	{
@@ -124,22 +129,15 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 		return ;
 	}
 
-	//
-
-	// ajustar essa parte do codigo, pois a imagem nao esta sendo encontrada;git
-	fullPath = handleRequest.getField("BaseUrl") + handleRequest.getField("Endpoint");
-
 	
 	if (handleRequest.getField("LastPath") == "files.html")
 	{
 
 		////std::string filePage =root + "/files.html";
-		std::string pathUpload = locationServer.getField("root") + locationServer.getField("upload_path");
-		fullPath = root + handleRequest.getField("Endpoint");
-		std::string baseUrl = handleRequest.getField("BaseUrl") + handleRequest.getField("Endpoint");
+		
 		//std::string path = root + locationServer.getField("upload_path");
 
-		generatePageFiles(pathUpload, response, fullPath, server.getErrorPages(404), baseUrl);
+		generatePageFiles(uploadPath, response, rootPath, server.getErrorPages(404), basePath + locationServer.getField("upload_path")) ;
 		return;	
 	}
 
@@ -160,7 +158,7 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 		for (std::set<std::string>::iterator it = pages.begin(); it != pages.end(); ++it) 
 		{
 			std::string page = *it;
-			std::string endpoint = fullPath + "/" + page;
+			std::string endpoint = rootPath + "/" + handleRequest.getField("LastPath") + "/" + page;
 			std::ifstream file(endpoint.c_str());
 			if (file.good()){
 				readPage(endpoint, 200, "Ok", response,server.getErrorPages(404));
@@ -170,8 +168,8 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 		}
 		if (locationServer.getField("autoindex") == "true")
 		{
-			autoIndex(fullPath);
-			std::string endpoint = fullPath + "/autoIndex.html" ;
+			autoIndex(rootPath);
+			std::string endpoint = rootPath + "/autoIndex.html" ;
 			readPage(endpoint, 200, "Ok", response,server.getErrorPages(404));
 			remove(endpoint.c_str());
 			return ;
@@ -203,12 +201,12 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 	if (handleRequest.getField("Accept").find("text/html") != std::string::npos && (extension == "html" || extension == "") ) 
 	{
 		std:: string pathError = server.getErrorPages(404).c_str();
-		readPage(fullPath, 200, "Ok", response, pathError);
+		readPage(uploadPath, 200, "Ok", response, pathError);
 	} 
 	else
 	{
 		std::cout << "vamos abrir imagem" << std::endl;
-		readImage(fullPath, 200, "Ok", response, "images/noPhoto.png", extension);
+		readImage(uploadPath +"/"+ handleRequest.getField("LastPath"), 200, "Ok", response, "images/noPhoto.png", extension);
 		
 	}
 	

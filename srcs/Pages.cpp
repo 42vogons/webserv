@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/09/11 23:51:53 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/09/13 23:35:49 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,12 @@ void autoIndex(std::string path)
 
 void generatePageFiles(std::string path, std::string& content, std::string pathDir, std::string pathFileError, std::string baseUrl)
 {
-	///
+d
 	std::string pathFilePage = pathDir + "/files.html" ;
 	
 	std::ifstream file(pathFilePage.c_str());
 	std::ifstream fileError(pathFileError.c_str());
-	//std::ifstream fileError(_server.getErrorPages(404).c_str());
 
-	path = "tmp/www/uploads";
 	
 	std::stringstream buffer;
 	std::string fileContent;
@@ -103,7 +101,7 @@ void generatePageFiles(std::string path, std::string& content, std::string pathD
 			
 			html += "<td>";
 			html += "<div class='image-container'>";
-			html += "<a href='/" + filePath+"' >" + fileName + "</a>";
+			html += "<a href='" + filePath+"' >" + fileName + "</a>";
 			//html += "<img src='" + filePath + "' alt='"+ fileName+"' height='100' width='100'></a><br>";
 			html += " <span class=\"delete-icon\" onclick=\"deleteImage('"+fileName+"')\"><img src=\"/images/lixeira.png\" height=\"20\" width=\"20\"></span></div></td>";
 		}
