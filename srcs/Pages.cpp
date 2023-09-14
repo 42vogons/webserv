@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/09/13 23:35:49 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/09/13 23:36:19 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void autoIndex(std::string path)
 
 void generatePageFiles(std::string path, std::string& content, std::string pathDir, std::string pathFileError, std::string baseUrl)
 {
-d
+
 	std::string pathFilePage = pathDir + "/files.html" ;
 	
 	std::ifstream file(pathFilePage.c_str());
