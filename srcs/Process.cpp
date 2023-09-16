@@ -178,30 +178,19 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 			readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(404));
 		return ;
 	}
+
+
 	if (server.getServerName() != handleRequest.getField("Host"))
 	{
 		std::cout << "ko" << std::endl;
 		return ;
 	}
 	
-	/*std::string endpoint = locationServer.getField("root") + "/" + handleRequest.getField("Endpoint");
-
-	std::string extension;
-	// função para pegar extensão
-	size_t dotPosition = endpoint.find_last_of(".");
-    if (dotPosition != std::string::npos) {
-        extension = endpoint.substr(dotPosition + 1);
-    }
-	else
-	{
-		extension = "";
-	}*/
-
-	
 	if (handleRequest.getField("Accept").find("text/html") != std::string::npos && (extension == "html" || extension == "") ) 
 	{
 		std:: string pathError = server.getErrorPages(404).c_str();
-		readPage(uploadPath, 200, "Ok", response, pathError);
+		std::string endpoint = rootPath + "/" + handleRequest.getField("LastPath");
+		readPage(endpoint, 200, "Ok", response, pathError);
 	} 
 	else
 	{
@@ -219,15 +208,20 @@ void executeDelete(std::string& response, LocationServer locationServer, HandleR
 	//LocationServer locationServer;
 	
 	//locationServer = _server.getLocationServer("/");
+	std::string rootPath = locationServer.getField("root");
+	if (rootPath[0] == '/'){
+		rootPath.erase(0, 1);
+		//uploadPath.erase(0, 1);
+	}
 	
 
-	std::string endpoint = locationServer.getField("root") + "/uploads/" + handleRequest.getField("Endpoint");
-	
+	//std::string endpoint = locationServer.getField("root") + "/uploads/" + handleRequest.getField("Endpoint");
+	std::string pathFile = rootPath + locationServer.getField("upload_path") + handleRequest.getField("LastPath");
 	//if ()
 
 	std::cout << "nome*" << handleRequest.getField("Endpoint") << std::endl;
  	//const char *filename = this->_HandleRequest.getField("Endpoint").c_str();
-	const char *filename = endpoint.c_str();
+	const char *filename = pathFile.c_str();
 
 	if (std::remove(filename) == 0) {
 		createPage("Arquivo excluído com sucesso",200, "Ok",response);
@@ -245,14 +239,21 @@ void	saveFile(Server server, HandleRequest handlerRequest)
 {
 	LocationServer locationServer = server.getLocationServer(handlerRequest.getField("BaseUrl"));
 	std::string upload_dir = ".";
+
+	std::string rootPath = locationServer.getField("root");
+	if (rootPath[0] == '/'){
+		rootPath.erase(0, 1);
+		//uploadPath.erase(0, 1);
+	}
 	
-	std::string filePage = locationServer.getField("root") + "/files.html";
+	std::string filePage = rootPath + "/files.html";
+	
 	//std::string path = locationServer.getField("root") + "/uploads";
 
 	// analisar essa linha, está estranha alias está errada.
 	// 
 	//std::string path = locationServer.getField("upload_path") + "pages/site1/uploads/";
-	std::string path = locationServer.getField("root") + locationServer.getField("upload_path");
+	std::string path = rootPath + locationServer.getField("upload_path");
 
 	std::string body = handlerRequest.getBody();
 	std::string fileName = path + "/" + handlerRequest.getField("fileName");
