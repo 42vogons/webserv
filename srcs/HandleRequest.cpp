@@ -93,6 +93,18 @@ std::vector<std::string> split(const std::string &s, char delimiter) {
     return tokens;
 }
 
+std::string replaceAll(const std::string& str, const std::string& from, const std::string& to) {
+    std::string result = str;
+    std::string::size_type pos = 0;
+    
+    while ((pos = result.find(from, pos)) != std::string::npos) {
+        result.replace(pos, from.length(), to);
+        pos += to.length();
+    }
+
+    return result;
+}
+
 
 void HandleRequest::readBuffer(std::string buffer, int client_fd)
 {
@@ -115,7 +127,12 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	
 	std::string endpoint;
 	std::string baseUrl;
-	std::vector<std::string> result = split(protocol, '/');
+	std::string protocol2 = replaceAll(protocol, "%2F", "/");
+
+
+
+
+	std::vector<std::string> result = split(protocol2, '/');
 	size_t i;
     for (i = 1; i < result.size() -1 ; ++i) {
 		if (i > 1)
@@ -129,23 +146,6 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	_headers["LastPath"] = result[i];
 	
 	
-
-	//std::cout << "last" << protocol.size();
-	/*if (lastSlashPos != std::string::npos)
-	{
-		if (protocol.size() - 1 != lastSlashPos)
-		{
-			_headers["BaseUrl"] = protocol.substr(0, lastSlashPos + 1);
-			_headers["Endpoint"] = protocol.substr(lastSlashPos + 1);
-		}
-		else
-		{
-			_headers["BaseUrl"] = protocol.substr(0, lastSlashPos);
-			_headers["Endpoint"] = protocol.substr(lastSlashPos + 1);
-		}
-		_headers["BaseUrl"] = protocol.substr(0, lastSlashPos);
-		_headers["Endpoint"] = protocol.substr(lastSlashPos + 1);
-	}*/
 	if (_headers["BaseUrl"] == "")
 	{
 		_headers["BaseUrl"] = "/";

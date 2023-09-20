@@ -203,11 +203,11 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 }
 
 
-void executeDelete(std::string& response, LocationServer locationServer, HandleRequest handleRequest){
+void executeDelete(std::string& response, Server server, HandleRequest handleRequest){
 	std::cout << "Vamos deletar" << std::endl;
-	//LocationServer locationServer;
-	
-	//locationServer = _server.getLocationServer("/");
+	LocationServer locationServer;
+	std::string baseUrl = handleRequest.getField("BaseUrl");
+	locationServer = server.getLocationServer(baseUrl);
 	std::string rootPath = locationServer.getField("root");
 	if (rootPath[0] == '/'){
 		rootPath.erase(0, 1);
@@ -216,7 +216,7 @@ void executeDelete(std::string& response, LocationServer locationServer, HandleR
 	
 
 	//std::string endpoint = locationServer.getField("root") + "/uploads/" + handleRequest.getField("Endpoint");
-	std::string pathFile = rootPath + locationServer.getField("upload_path") + handleRequest.getField("LastPath");
+	std::string pathFile = rootPath + locationServer.getField("upload_path") + "/" + handleRequest.getField("LastPath");
 	//if ()
 
 	std::cout << "nome*" << handleRequest.getField("Endpoint") << std::endl;
@@ -374,6 +374,6 @@ void	process(std::string& response, HandleRequest handlerRequest, Server server)
 	if (method == "GET")
 		executeGet(response, server, handlerRequest);
 	if (method == "DELETE")
-		executeDelete(response, server.getLocationServer("/"), handlerRequest);
+		executeDelete(response, server, handlerRequest);
 	return ;
 }
