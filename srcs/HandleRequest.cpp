@@ -81,6 +81,7 @@ void HandleRequest::readBody(std::string body){
 
 }
 
+///////////////////////////////// FUNCOES UTEIS ///////////////////
 std::vector<std::string> split(const std::string &s, char delimiter) {
     std::vector<std::string> tokens;
     std::string token;
@@ -93,6 +94,7 @@ std::vector<std::string> split(const std::string &s, char delimiter) {
     return tokens;
 }
 
+///////////////////////////////// FUNCOES UTEIS ///////////////////
 std::string replaceAll(const std::string& str, const std::string& from, const std::string& to) {
     std::string result = str;
     std::string::size_type pos = 0;

@@ -180,11 +180,11 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 	}
 
 
-	if (server.getServerName() != handleRequest.getField("Host"))
+	/*if (server.getServerName() != handleRequest.getField("Host"))
 	{
 		std::cout << "ko" << std::endl;
 		return ;
-	}
+	}*/
 	
 	if (handleRequest.getField("Accept").find("text/html") != std::string::npos && (extension == "html" || extension == "") ) 
 	{
