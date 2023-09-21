@@ -50,6 +50,8 @@ class HandleRequest
 		std::map<std::string, std::string> _headers;
 		std::string _body;
 		std::string	_typePost;
+	
+
 	protected:
 };
 
