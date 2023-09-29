@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/09/05 18:12:45 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/09/28 22:38:09 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Socket::Socket(void) : _port(80), _server(NULL)
 	return ;
 }
 
-Socket::Socket(int port, Server server) : _port(port), _server(server)
+Socket::Socket(int port, Server server, std::set<int> portsAccept) : _port(port), _server(server), _portsAccept(portsAccept)
 {
 	createSocketTCP();
 	configSocketAddress();
@@ -54,6 +54,8 @@ Socket& Socket::operator=(const Socket& obj)
 		this->_address = obj._address;
 		this->_server = obj._server;
 		this->_HandleRequest = obj._HandleRequest;
+		this->_serversMap = obj._serversMap;
+		this->_portsAccept = obj._portsAccept;
 	}
 	return (*this);
 }
@@ -107,6 +109,14 @@ int	Socket::getServerFd(void) const
 void	Socket::acceptConnection(void)
 {
 	this->_client_fd = accept(this->_server_fd, (struct sockaddr *)&this->_address, (socklen_t*)&this->_addrlen);
+	 std::set<int>::iterator it = _portsAccept.find(this->_port);
+	if (it == _portsAccept.end()) {
+		close(_client_fd);
+		std::cout << "Invalid port" << std::endl;
+		return;	
+	}
+	
+		
 	if (this->_client_fd == -1)
 		throw (AcceptConnectionError()); 
 	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;

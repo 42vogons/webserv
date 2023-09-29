@@ -196,11 +196,6 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	/*std::cout << "Body ----------------" << std::endl;
 	std::cout << _body << std::endl;
 	std::cout << "Body ----------------" << std::endl;*/
-	
-	_headers["BasePath"] = _headers["BaseUrl"] + _headers["Endpoint"];
-	_headers["RootPath"] = _headers["root"] + _headers["Endpoint"];
-	_headers["UploadPath"] = _headers["root"] + _headers["upload_path"];
-	_headers["PathFile"] = _headers["UploadPath"] + "/" + _headers["LastPath"];
 
 	start = 0;
 	line = _headers["Host"];
@@ -208,7 +203,7 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	_headers["Host"] = line.substr(start, end - start);
 	start = end + 1;
 	end = line.size() - start - 1;
-	_headers["Port"] = line.substr(start, end);
+	_headers["Port"] = line.substr(start, end + 1);
 	return ;
 }
 

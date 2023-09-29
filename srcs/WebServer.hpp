@@ -33,6 +33,7 @@ class WebServer
 		void		handleSocketConnections(void);
 		void		createVecSocket(void);
 		void		loadFile(std::string file);
+		
 
 	private:
 		void	_checkEvent(Poll &poll, size_t index);
@@ -43,6 +44,7 @@ class WebServer
 		ServersMap						_servers;
 		std::map<std::string, Server>	_serversMap;
 		Poll							_poll;
+		std::set<int>			 		_portsAccepted;
 
 	protected:
 };

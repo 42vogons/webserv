@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/09/05 18:14:43 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/09/28 22:32:44 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define SOCKET_HPP
 
 #include "Server.hpp"
+#include "ServersMap.hpp"
 #include "Process.hpp"
 
 #include "HandleRequest.hpp"
@@ -48,7 +49,7 @@ class Socket
 {
 	public:
 		Socket(void);
-		Socket(int port, Server server);
+		Socket(int port, Server server,std::set<int> portsAccept);
 		Socket(const Socket& obj);
 		virtual ~Socket(void);
 
@@ -81,6 +82,8 @@ class Socket
 		struct sockaddr_in	_address;
 		Server				_server;
 		HandleRequest		_HandleRequest;
+		ServersMap			_serversMap;
+		std::set<int>		_portsAccept;
 		//std::map<std::string, std::string> _variables;
 
 	protected:

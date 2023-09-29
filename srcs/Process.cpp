@@ -110,10 +110,7 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 	std::string rootPath = locationServer.getField("root") + handleRequest.getField("Endpoint");
 	std::string uploadPath = locationServer.getField("root") + locationServer.getField("upload_path");
 
-	if (rootPath[0] == '/'){
-		rootPath.erase(0, 1);
-		uploadPath.erase(0, 1);
-	}
+	
 		  
 	
 
