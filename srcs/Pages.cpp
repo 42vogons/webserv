@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/09/19 23:56:17 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/10/03 14:03:08 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,10 @@ std::string replaceAll2(const std::string& str, const std::string& from, const s
 
 void generatePageFiles(std::string path, std::string& content, std::string pathDir, std::string pathFileError, std::string baseUrl)
 {
+	if (baseUrl != ""){
+		std::string a = "aa";
+	}
+		
 
 	std::string pathFilePage = pathDir + "/files.html" ;
 	
@@ -99,7 +103,9 @@ void generatePageFiles(std::string path, std::string& content, std::string pathD
 		while ((ent = readdir(dir)) != NULL)
 		{
 			std::string fileName = ent->d_name;
-			std::string filePath = baseUrl +"/" +fileName;
+			//std::string filePath = pathDir + baseUrl +"/" +fileName;
+			std::string filePath = "/" + path +"/" +fileName;
+			
 			
 			if (fileName == (".") || fileName == (".."))
 				continue;

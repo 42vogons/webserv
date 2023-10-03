@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/09/28 22:38:09 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/10/03 18:32:10 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,13 +119,19 @@ void	Socket::acceptConnection(void)
 		
 	if (this->_client_fd == -1)
 		throw (AcceptConnectionError()); 
-	std::cout << "\033[0;32m\n\n\nNew connection on " << this->_server_fd << "\033[0m" << std::endl;
 	
 	std::string response ;
 	HandleRequest handleRequest;
 	std::string header = handleRequest.receiveInformation(this->_client_fd);
 	std::cout <<" receive----------" << header << " receive----------" << std::endl;
+
+	
+
+	
+	
 	handleRequest.readBuffer(header, this->_client_fd);
+
+	std::cout << "headere" << header << std::endl;
 	//handleRequest.receiveInformation(this->_client_fd);
 	
 	/*if (this->findField(header, "GET") == ""){

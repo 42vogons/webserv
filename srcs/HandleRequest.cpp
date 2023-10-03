@@ -139,12 +139,18 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	std::vector<std::string> result = split(protocol2, '/');
 	size_t i;
     for (i = 1; i < result.size() -1 ; ++i) {
-		if (i > 1)
-			endpoint += "/" + result[i];
-		else
-			baseUrl += "/" + result[i];
-			
+
+		//if (i > 1)
+		//	endpoint += "/" + result[i];
+		//else
+		baseUrl += "/" + result[i];
     }
+	if (baseUrl[0] == '/' && baseUrl.size() > 1 && baseUrl[1] == '/' ){
+		baseUrl.erase(0, 1);
+	}
+		
+
+
 	_headers["BaseUrl"] = baseUrl;
 	_headers["Endpoint"] = endpoint;
 	_headers["LastPath"] = result[i];
@@ -153,7 +159,7 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	if (_headers["BaseUrl"] == "")
 	{
 		_headers["BaseUrl"] = "/";
-		_headers["Endpoint"] = protocol;
+		//_headers["Endpoint"] = protocol;
 	}
 
 	while (std::getline(file, line))
@@ -181,8 +187,9 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 		else
 			_headers[key] = value;
 
+
 	}
-	
+	//mudar para variável cgi
 	if(_headers["Content-Type"].find("multipart/form-data")!= std::string::npos)
 	{
 		receiveFile(client_fd);
@@ -215,25 +222,36 @@ std::string HandleRequest::getTypePost(void){
 	return _typePost;
 }
 
-std::string HandleRequest::receiveInformation(int client_fd){
+/*std::string HandleRequest::receiveInformation(int client_fd){
 
 	const int BUFFER_SIZE = 1024;
 	char buffer[BUFFER_SIZE];
 	int bytes_received = 0;
 	std::string received;
-	while ((bytes_received = recv(client_fd, buffer, sizeof(buffer), 0)) > 0) 
-	{
+	
+	bytes_received = recv(client_fd, buffer, sizeof(buffer), 0)) > 0) 
+	received.append(buffer, bytes_received);
+	return received;
+}*/
+
+std::string HandleRequest::receiveInformation(int client_fd){
+
+	const int BUFFER_SIZE = 1024;
+	char buffer[BUFFER_SIZE];
+	std::string received;
+
+	while(true) {
+		int bytes_received = recv(client_fd, buffer, sizeof(buffer), 0);
+		if (bytes_received <= 0)
+			return "";
 		received.append(buffer, bytes_received);
-		if (bytes_received < BUFFER_SIZE)
-			break;
+		if (bytes_received < BUFFER_SIZE) 
+            break;
+        
 	}
-	/*if (bytes_received == -1)
-	{
-		close(this->_client_fd);
-		return "";
-	} */
 	return received;
 }
+
 
 void HandleRequest::receiveFile(int client_fd)
 {

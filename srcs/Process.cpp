@@ -53,6 +53,7 @@ void	readImage(std::string filename, int code, std::string status, std::string& 
 		{
 			buffer << fileError.rdbuf();
 			fileContent = buffer.str();
+			type = "image/png";
 		}
 		else
 		{
@@ -106,12 +107,24 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 
 	locationServer = server.getLocationServer(handleRequest.getField("BaseUrl"));
 
+	
+
+	std::string rootPath2 = locationServer.getField("root");
+	if (rootPath2[0] == '/'){
+		rootPath2.erase(0, 1);
+		//uploadPath.erase(0, 1);
+	}
+
+
+
+
+
 	std::string basePath = handleRequest.getField("BaseUrl") + handleRequest.getField("Endpoint");
-	std::string rootPath = locationServer.getField("root") + handleRequest.getField("Endpoint");
-	std::string uploadPath = locationServer.getField("root") + locationServer.getField("upload_path");
+	std::string rootPath = rootPath2 ;//+ handleRequest.getField("Endpoint");
+	std::string uploadPath = rootPath2 + locationServer.getField("upload_path");
 
 	
-		  
+		  ///// http://localhost:8081/pages/site2/pag1.html o location server disso é pages/site2
 	
 
 	std::string redirect = locationServer.getField("redirection");
@@ -120,7 +133,7 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 		response = "HTTP/1.1 301 Found\r\nLocation: http://" + redirect + "\r\n\r\n";
 		return ;
 	}
-	if (locationServer.getAllowedMethods("GET") != true)
+	if (locationServer.getAllowedMethods("GET") != true ) 
 	{
 		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
 		return ;
@@ -199,26 +212,36 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 	
 }
 
+/// arrumar o delete a baseURl está vindo errado /pages/site2/delete//pages/site2/uploads
 
 void executeDelete(std::string& response, Server server, HandleRequest handleRequest){
-	std::cout << "Vamos deletar" << std::endl;
+	
 	LocationServer locationServer;
 	std::string baseUrl = handleRequest.getField("BaseUrl");
 	locationServer = server.getLocationServer(baseUrl);
-	std::string rootPath = locationServer.getField("root");
-	if (rootPath[0] == '/'){
-		rootPath.erase(0, 1);
+
+	if (locationServer.getAllowedMethods("DELETE") != true ) 
+	{
+		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
+		return ;
+	}
+
+	
+
+	//std::string rootPath = locationServer.getField("root");
+	if (baseUrl[0] == '/'){
+		baseUrl.erase(0, 1);
 		//uploadPath.erase(0, 1);
 	}
 	
 
 	//std::string endpoint = locationServer.getField("root") + "/uploads/" + handleRequest.getField("Endpoint");
-	std::string pathFile = rootPath + locationServer.getField("upload_path") + "/" + handleRequest.getField("LastPath");
-	//if ()
-
-	std::cout << "nome*" << handleRequest.getField("Endpoint") << std::endl;
- 	//const char *filename = this->_HandleRequest.getField("Endpoint").c_str();
+	std::string pathFile = baseUrl + "/" + handleRequest.getField("LastPath");
+	
 	const char *filename = pathFile.c_str();
+
+	std::cout << "Vamos deletar:" << filename << std::endl;
+	
 
 	if (std::remove(filename) == 0) {
 		createPage("Arquivo excluído com sucesso",200, "Ok",response);
@@ -232,7 +255,7 @@ void executeDelete(std::string& response, Server server, HandleRequest handleReq
 	//response = 1;
 }
 
-void	saveFile(Server server, HandleRequest handlerRequest)
+void	saveFile(Server server, HandleRequest handlerRequest, std::string& response)
 {
 	LocationServer locationServer = server.getLocationServer(handlerRequest.getField("BaseUrl"));
 	std::string upload_dir = ".";
@@ -264,11 +287,19 @@ void	saveFile(Server server, HandleRequest handlerRequest)
 	}
 	else
 		std::cout << "Error opening the file for writing!" << std::endl;
+
+	response = "HTTP/1.1 301 Found\r\nLocation: /" + filePage + "\r\n\r\n";
 }
 
 void	executePost(std::string& response, Server server, HandleRequest handleRequest)
 {
 	LocationServer locationServer = server.getLocationServer(handleRequest.getField("BaseUrl"));
+
+	if (locationServer.getAllowedMethods("POST") != true ) 
+	{
+		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
+		return ;
+	}
 
 	//HandleRequest handleRequest = this->_HandleRequest;
 	std::cout << "content type = " << handleRequest.getField("Content-Type") << std::endl;
@@ -283,8 +314,20 @@ void	executePost(std::string& response, Server server, HandleRequest handleReque
 		body = locationServer.getAllCgiParm().c_str();
 	
 	if (handleRequest.getTypePost() == "File"){
-		saveFile(server, handleRequest);
-		createPage("Salvo com sucesso", 200 ,"OK", response);
+		saveFile(server, handleRequest, response);
+		/*createPage("Salvo com sucesso", 200 ,"OK", response);
+
+
+		std::string rootPath = locationServer.getField("root");
+		if (rootPath[0] == '/'){
+		rootPath.erase(0, 1);
+		}
+
+		std::string uploadPath = rootPath + locationServer.getField("upload_path");
+		std::string pathError = locationServer.getField("upload_path");
+		std::string basePath = locationServer.getField("root");
+		generatePageFiles(uploadPath, response, rootPath, server.getErrorPages(404), basePath + locationServer.getField("upload_path")) ;*/
+
 		return;
 		// colocar que foi salvo com sucesso!!
 	}
@@ -366,11 +409,19 @@ void	process(std::string& response, HandleRequest handlerRequest, Server server)
 		createPage("Body max size error",400,"Bad Request",response);
 		return;
 	}
-	if (method == "POST")
+
+
+	// verifica se o server é o mesmo do server solicitado
+	std::set<int>::iterator it = server.getPorts().find(atoi(handlerRequest.getField("Ports").c_str()));
+	if (it == server.getPorts().end()){
+		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
+	} else {
+		if (method == "POST")
 		executePost(response, server, handlerRequest);
-	if (method == "GET")
+		if (method == "GET")
 		executeGet(response, server, handlerRequest);
-	if (method == "DELETE")
+		if (method == "DELETE")
 		executeDelete(response, server, handlerRequest);
+	}
 	return ;
 }

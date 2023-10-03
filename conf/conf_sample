@@ -14,7 +14,7 @@ sample_server_Z1 {
 
 	location / {
 		#redirection www.amazon.com
-		root pages/site1
+		root /pages/site1
 		upload_path /uploads
 		cgi_pass	pass
 		#index	index.htm index.html4 index.php
@@ -38,7 +38,7 @@ sample_server_Z1 {
 		allowed_methods	DELETE	true
 	}
 
-	location /pages {
+	location /pages/site1 {
 		root pages/site1
 		upload_path /uploads
 		cgi_pass	pass
@@ -75,9 +75,18 @@ sample_server_Z1 {
 	}
 
 	location /pages/site1/uploads {
-		root pages/site1/uploads
+		root /pages/site1
+		upload_path /uploads
+		cgi_pass	pass
+		#index	index.htm index.html4 index.php
+		index	index.htm index.html index.php
 		autoindex	true
 		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+		cgi sum.py
+		cgi_param num1 5
+		cgi_param num2 6
 	}
 
 
@@ -103,7 +112,7 @@ sample_server_Z2 {
 
 	listen 8081
 	server_name localhost
-	client_max_body_size 8000
+	client_max_body_size 8000000
 
 	error_page 301 pages/errors/301.html
 	error_page 400 pages/errors/400.html
@@ -115,7 +124,7 @@ sample_server_Z2 {
 
 	location / {
 		#redirection www.amazon.com
-		root pages/site2
+		root /pages/site2
 		upload_path /uploads
 		cgi_pass	pass
 		#index	index.htm index.html4 index.php
@@ -130,7 +139,28 @@ sample_server_Z2 {
 	}
 
 	location /pages/site2 {
-		root pages/site2
+		root /pages/site2
+		upload_path /uploads
+		cgi_pass	pass
+		#index	index.htm index.html4 index.php
+		index	index.htm index.html index.php
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+		cgi sum.py
+		cgi_param num1 5
+		cgi_param num2 6
+	}
+
+	location /images {
+		root images
+		autoindex	true
+		allowed_methods	GET		true
+	}
+
+	location /pages/site2/uploads {
+		root /pages/site2
 		upload_path /uploads
 		cgi_pass	pass
 		#index	index.htm index.html4 index.php
@@ -166,6 +196,7 @@ sample_server_Z2 {
 	}
 
 
+
 	location /mercadolivre {
 		redirection www.mercadolivre.com.br
 		root pages/site2
@@ -179,6 +210,21 @@ sample_server_Z2 {
 		allowed_methods	DELETE	true
 		cgi_param p1 um
 		cgi_param p2 dois
+	}
+
+	location /pages/site1/uploads {
+		root /pages/site1
+		upload_path /uploads
+		cgi_pass	pass
+		#index	index.htm index.html4 index.php
+		index	index.htm index.html index.php
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+		cgi sum.py
+		cgi_param num1 5
+		cgi_param num2 6
 	}
 }
 
