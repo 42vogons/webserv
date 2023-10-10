@@ -78,8 +78,37 @@ void HandleRequest::readBody(std::string body){
 			_headers[key] = value;
 	}
 
+	
+
 
 }
+
+///////////////////////////////// FUNCOES UTEIS ///////////////////
+std::vector<std::string> split(const std::string &s, char delimiter) {
+    std::vector<std::string> tokens;
+    std::string token;
+    std::istringstream tokenStream(s);
+
+    while (std::getline(tokenStream, token, delimiter)) {
+        tokens.push_back(token);
+    }
+
+    return tokens;
+}
+
+///////////////////////////////// FUNCOES UTEIS ///////////////////
+std::string replaceAll(const std::string& str, const std::string& from, const std::string& to) {
+    std::string result = str;
+    std::string::size_type pos = 0;
+    
+    while ((pos = result.find(from, pos)) != std::string::npos) {
+        result.replace(pos, from.length(), to);
+        pos += to.length();
+    }
+
+    return result;
+}
+
 
 void HandleRequest::readBuffer(std::string buffer, int client_fd)
 {
@@ -99,26 +128,38 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	std::istringstream iss(line);
 	std::string protocol;
 	iss >> _headers["Method"] >> protocol >> _headers["Version"];
-	std::size_t lastSlashPos = protocol.find_last_of("/");
-	std::cout << "last" << protocol.size();
-	if (lastSlashPos != std::string::npos)
-	{
-		if (protocol.size() - 1 != lastSlashPos)
-		{
-			_headers["BaseUrl"] = protocol.substr(0, lastSlashPos + 1);
-			_headers["Endpoint"] = protocol.substr(lastSlashPos + 1);
-		}
-		else
-		{
-			_headers["BaseUrl"] = protocol.substr(0, lastSlashPos);
-			_headers["Endpoint"] = protocol.substr(lastSlashPos + 1);
-		}
-		
+	
+	std::string endpoint;
+	std::string baseUrl;
+	std::string protocol2 = replaceAll(protocol, "%2F", "/");
+
+
+
+
+	std::vector<std::string> result = split(protocol2, '/');
+	size_t i;
+    for (i = 1; i < result.size() -1 ; ++i) {
+
+		//if (i > 1)
+		//	endpoint += "/" + result[i];
+		//else
+		baseUrl += "/" + result[i];
+    }
+	if (baseUrl[0] == '/' && baseUrl.size() > 1 && baseUrl[1] == '/' ){
+		baseUrl.erase(0, 1);
 	}
+		
+
+
+	_headers["BaseUrl"] = baseUrl;
+	_headers["Endpoint"] = endpoint;
+	_headers["LastPath"] = result[i];
+	
+	
 	if (_headers["BaseUrl"] == "")
 	{
 		_headers["BaseUrl"] = "/";
-		_headers["Endpoint"] = protocol;
+		//_headers["Endpoint"] = protocol;
 	}
 
 	while (std::getline(file, line))
@@ -146,8 +187,9 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 		else
 			_headers[key] = value;
 
+
 	}
-	
+	//mudar para variável cgi
 	if(_headers["Content-Type"].find("multipart/form-data")!= std::string::npos)
 	{
 		receiveFile(client_fd);
@@ -161,7 +203,6 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	/*std::cout << "Body ----------------" << std::endl;
 	std::cout << _body << std::endl;
 	std::cout << "Body ----------------" << std::endl;*/
-	
 
 	start = 0;
 	line = _headers["Host"];
@@ -169,33 +210,48 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	_headers["Host"] = line.substr(start, end - start);
 	start = end + 1;
 	end = line.size() - start - 1;
-	_headers["Port"] = line.substr(start, end);
+	_headers["Port"] = line.substr(start, end + 1);
 	return ;
+}
+
+bool checkHandler(void){
+	return true;
 }
 
 std::string HandleRequest::getTypePost(void){
 	return _typePost;
 }
 
-std::string HandleRequest::receiveInformation(int client_fd){
+/*std::string HandleRequest::receiveInformation(int client_fd){
 
 	const int BUFFER_SIZE = 1024;
 	char buffer[BUFFER_SIZE];
 	int bytes_received = 0;
 	std::string received;
-	while ((bytes_received = recv(client_fd, buffer, sizeof(buffer), 0)) > 0) 
-	{
+	
+	bytes_received = recv(client_fd, buffer, sizeof(buffer), 0)) > 0) 
+	received.append(buffer, bytes_received);
+	return received;
+}*/
+
+std::string HandleRequest::receiveInformation(int client_fd){
+
+	const int BUFFER_SIZE = 1024;
+	char buffer[BUFFER_SIZE];
+	std::string received;
+
+	while(true) {
+		int bytes_received = recv(client_fd, buffer, sizeof(buffer), 0);
+		if (bytes_received <= 0)
+			return "";
 		received.append(buffer, bytes_received);
-		if (bytes_received < BUFFER_SIZE)
-			break;
+		if (bytes_received < BUFFER_SIZE) 
+            break;
+        
 	}
-	/*if (bytes_received == -1)
-	{
-		close(this->_client_fd);
-		return "";
-	} */
 	return received;
 }
+
 
 void HandleRequest::receiveFile(int client_fd)
 {

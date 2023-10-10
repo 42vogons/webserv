@@ -16,16 +16,13 @@
 
 <script>
 function deleteImage(imageName) {
-    if (confirm("Tem certeza de que deseja excluir esta arquivo : "+imageName+" ?")) {
-        fetch('/' + encodeURIComponent(imageName), {
+    if (confirm("Tem certeza de que deseja excluir esta arquivowww : "+imageName+" ?")) {
+        fetch('deletert/' + encodeURIComponent(imageName), {
             method: 'DELETE'
         })
         .then(response => {
-
             if (response.ok) {
                 console.log('Imagem excluída com sucesso.');
-                
-
                 // Remova a div de image-container após excluir
                 var imageContainer = document.querySelector(`[onclick="deleteImage('${imageName}')"]`).parentNode;
                 imageContainer.parentNode.removeChild(imageContainer);

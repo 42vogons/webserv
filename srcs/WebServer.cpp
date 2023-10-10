@@ -47,6 +47,7 @@ WebServer& WebServer::operator=(const WebServer& obj)
 		this->_servers = obj._servers;
 		this->_serversMap = obj._serversMap;
 		this->_poll = obj._poll;
+		this->_portsAccepted = obj._portsAccepted;
 	}
 	return (*this);
 }
@@ -54,6 +55,7 @@ WebServer& WebServer::operator=(const WebServer& obj)
 void	WebServer::loadFile(std::string file){
 	this->_servers.readFile(file);
 	this->_serversMap = this->_servers.getServersMap();
+	this->_portsAccepted = this->_servers.checkServers();
 }
 
 void	WebServer::createVecSocket(void)
@@ -73,7 +75,7 @@ void	WebServer::createVecSocket(void)
 		--itSet;
 		while (itSet != iteSet)
 		{
-			Socket *socket = new Socket(*itSet, itMap->second);
+			Socket *socket = new Socket(*itSet, itMap->second, this->_portsAccepted);
 			this->_vecSocket.push_back(socket);
 			itSet++;
 		}
@@ -88,22 +90,6 @@ void	WebServer::handleSocketConnections(void)
 	while (true)
 	{
 		this->_poll.exec();
-		/*fd_set readfds;
-		FD_ZERO(&readfds);
-		for (std::vector<int>::size_type i = 0; i < this->_vecSocket.size(); i++)
-			FD_SET(this->_vecSocket[i]->getServerFd(), &readfds);
-		int max_fd = this->_vecSocket[0]->getServerFd();
-		for (std::vector<int>::size_type i = 1; i < this->_vecSocket.size(); ++i)
-		{
-			if (this->_vecSocket[i]->getServerFd() > max_fd)
-				max_fd = this->_vecSocket[i]->getServerFd();
-		}
-		int activity = select(max_fd + 1, &readfds, NULL, NULL, NULL);
-		if(activity < 0)
-		{
-			std::cerr << "Error waiting for events" << std::endl;
-			continue;
-		}*/
 		for (std::vector<int>::size_type i = 0; i < this->_vecSocket.size(); i++)
 		{
 			this->_checkEvent(this->_poll, i);

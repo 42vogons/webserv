@@ -19,6 +19,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <map>
+#include <vector>
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -49,6 +50,8 @@ class HandleRequest
 		std::map<std::string, std::string> _headers;
 		std::string _body;
 		std::string	_typePost;
+	
+
 	protected:
 };
 

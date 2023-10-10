@@ -30,8 +30,12 @@ ServersMap::~ServersMap(void)
 
 ServersMap& ServersMap::operator=(const ServersMap& obj)
 {
-	if (this != &obj)
+	if (this != &obj){
 		this->_serversMap = obj._serversMap;
+		this->_portsAccepted = obj._portsAccepted;
+	}
+		
+		
 	return (*this);
 }
 
@@ -39,6 +43,39 @@ void ServersMap::addServer(std::string serverName, Server server)
 {
 	this->_serversMap[serverName] = server;
 }
+
+std::set<int>	ServersMap::checkServers(void){
+
+	std::map<std::string, Server> servers = this->getServersMap();
+
+	
+
+	for (std::map<std::string, Server>::iterator it = servers.begin(); it != servers.end(); ++it) 
+	{
+		std::string errors = "";
+		std::cout << "Server: " << it->first;
+		Server server = it->second;
+		if (server.getClientMaxBodySize()  < 0)
+			errors += " Max body size is inválid ";
+		if (server.getPorts().empty())
+			errors += " Invalid ports ";
+		if (server.getSizeLocation() == 0)
+			errors += " No Locations registred ";
+		if (errors != ""){
+			server.setStatus(false);
+			std::cout << errors << "\r\n" << std::endl;
+		} else {
+			server.setStatus(true);
+			std::cout << "OK\r\n" << std::endl;
+		}
+		std::set<int> ports = server.getPorts();
+		for (std::set<int>::iterator pt = ports.begin(); pt != ports.end(); ++pt) {
+			this->_portsAccepted.insert(*pt);
+		}
+	}
+	return this->_portsAccepted;
+}
+
 
 void	ServersMap::readFile(std::string fileName)
 {

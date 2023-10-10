@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/08/31 22:03:28 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/09/28 22:32:44 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,11 @@
 #define SOCKET_HPP
 
 #include "Server.hpp"
+#include "ServersMap.hpp"
+#include "Process.hpp"
+
 #include "HandleRequest.hpp"
+
 #include <iostream>
 #include <unistd.h> //read write and close
 #include <sys/socket.h>
@@ -45,7 +49,7 @@ class Socket
 {
 	public:
 		Socket(void);
-		Socket(int port, Server server);
+		Socket(int port, Server server,std::set<int> portsAccept);
 		Socket(const Socket& obj);
 		virtual ~Socket(void);
 
@@ -60,18 +64,7 @@ class Socket
 		void		closeClientFd(void);
 		
 		void		setHandleRequest(HandleRequest HandleRequest);
-		void		process(std::string& response);
-		void		readPage(std::string filename, int code, std::string status, std::string& content);
-		void		readImage(std::string filename, int code, std::string status, std::string& content);
-		void		createPage(std::string newPage, int code, std::string status, std::string& content);
-		void		autoIndex(std::string path);
-		void		generatePageFiles(std::string path, std::string& content);
-	
-		void		executeGet(std::string& response);
-		void		executePost(std::string& response);
-		void		executeDelete(std::string& response);
 		
-		void		saveFile(void);
 
 		//std::string	receiveInformation(void);
 		std::string	findField(std::string src, std::string field);
@@ -89,6 +82,8 @@ class Socket
 		struct sockaddr_in	_address;
 		Server				_server;
 		HandleRequest		_HandleRequest;
+		ServersMap			_serversMap;
+		std::set<int>		_portsAccept;
 		//std::map<std::string, std::string> _variables;
 
 	protected:

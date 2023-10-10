@@ -2,7 +2,7 @@ sample_server_Z1 {
 
 	listen 8080
 	server_name localhost
-	client_max_body_size 8000
+	client_max_body_size 70000000
 
 	error_page 301 pages/errors/301.html
 	error_page 400 pages/errors/400.html
@@ -14,8 +14,8 @@ sample_server_Z1 {
 
 	location / {
 		#redirection www.amazon.com
-		root pages/site1
-		upload_path
+		root /pages/site1
+		upload_path /uploads
 		cgi_pass	pass
 		#index	index.htm index.html4 index.php
 		index	index.htm index.html index.php
@@ -28,9 +28,19 @@ sample_server_Z1 {
 		cgi_param num2 6
 	}
 
+	location /kapouet {
+		root /tmp/www
+		upload_path /uploads
+		index	index.htm index.html index.php
+		autoindex	false
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+	}
+
 	location /pages/site1 {
 		root pages/site1
-		upload_path pages/site1
+		upload_path /uploads
 		cgi_pass	pass
 		#index	index.htm index.html4 index.php
 		index	index.htm index.html index.php
@@ -43,7 +53,7 @@ sample_server_Z1 {
 		cgi_param num2 6
 	}
 
-	location /sum/ {
+	location /sum {
 		root pages/site1/sum.html
 		upload_path pages/site1
 		cgi_pass	pass
@@ -58,16 +68,25 @@ sample_server_Z1 {
 		cgi_param num2 6
 	}
 
-	location /images/ {
+	location /images {
 		root images
 		autoindex	true
 		allowed_methods	GET		true
 	}
 
-	location /pages/site1/uploads/ {
-		root pages/site1/uploads
+	location /pages/site1/uploads {
+		root /pages/site1
+		upload_path /uploads
+		cgi_pass	pass
+		#index	index.htm index.html4 index.php
+		index	index.htm index.html index.php
 		autoindex	true
 		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+		cgi sum.py
+		cgi_param num1 5
+		cgi_param num2 6
 	}
 
 
@@ -85,20 +104,6 @@ sample_server_Z1 {
 		cgi_param p1 um
 		cgi_param p2 dois
 	}
-	location /sounds {
-		#redirection www.amazon.com
-		root pages/site1
-		upload_path /uploads_sounds
-		cgi_pass	pass
-		autoindex	true
-		#index nada vazio vacuo 
-		index	index.htm index.html index.php
-		allowed_methods	GET		true
-		allowed_methods	POST	true
-		allowed_methods	DELETE	true
-		cgi_param p10 dez
-		cgi_param p20 vinte
-	}
 }
 
 
@@ -107,7 +112,7 @@ sample_server_Z2 {
 
 	listen 8081
 	server_name localhost
-	client_max_body_size 8000
+	client_max_body_size 8000000
 
 	error_page 301 pages/errors/301.html
 	error_page 400 pages/errors/400.html
@@ -119,23 +124,8 @@ sample_server_Z2 {
 
 	location / {
 		#redirection www.amazon.com
-		root pages/site1
-		upload_path
-		cgi_pass	pass
-		index	index.htm index.html4 index.php
-		#index	index.htm index.html index.php
-		autoindex	true
-		allowed_methods	GET		true
-		allowed_methods	POST	true
-		allowed_methods	DELETE	true
-		cgi sum.py
-		cgi_param num1 5
-		cgi_param num2 6
-	}
-
-	location /pages/site1 {
-		root pages/site1
-		upload_path pages/site1
+		root /pages/site2
+		upload_path /uploads
 		cgi_pass	pass
 		#index	index.htm index.html4 index.php
 		index	index.htm index.html index.php
@@ -148,9 +138,9 @@ sample_server_Z2 {
 		cgi_param num2 6
 	}
 
-	location /sum/ {
-		root pages/site1/sum.html
-		upload_path pages/site1
+	location /pages/site2 {
+		root /pages/site2
+		upload_path /uploads
 		cgi_pass	pass
 		#index	index.htm index.html4 index.php
 		index	index.htm index.html index.php
@@ -163,17 +153,54 @@ sample_server_Z2 {
 		cgi_param num2 6
 	}
 
-	location /uploads/ {
-		root pages/site1/uploads
+	location /images {
+		root images
 		autoindex	true
 		allowed_methods	GET		true
 	}
+
+	location /pages/site2/uploads {
+		root /pages/site2
+		upload_path /uploads
+		cgi_pass	pass
+		#index	index.htm index.html4 index.php
+		index	index.htm index.html index.php
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+		cgi sum.py
+		cgi_param num1 5
+		cgi_param num2 6
+	}
+
+	location /sum {
+		root pages/site2/sum.html
+		upload_path pages/site2
+		cgi_pass	pass
+		#index	index.htm index.html4 index.php
+		index	index.htm index.html index.php
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+		cgi sum.py
+		cgi_param num1 5
+		cgi_param num2 6
+	}
+
+	location /uploads {
+		root pages/site2/uploads
+		autoindex	true
+		allowed_methods	GET		false
+	}
+
 
 
 	location /mercadolivre {
 		redirection www.mercadolivre.com.br
-		root pages/site1
-		upload_path /www/site1/uploads
+		root pages/site2
+		upload_path /www/site2/uploads
 		cgi_pass	pass
 		#index	index.htm index.html4 index.php
 		index	index.htm index.htm index.php
@@ -184,19 +211,20 @@ sample_server_Z2 {
 		cgi_param p1 um
 		cgi_param p2 dois
 	}
-	location /sounds {
-		#redirection www.amazon.com
-		root pages/site1
-		upload_path /uploads_sounds
+
+	location /pages/site1/uploads {
+		root /pages/site1
+		upload_path /uploads
 		cgi_pass	pass
-		autoindex	true
-		#index nada vazio vacuo 
+		#index	index.htm index.html4 index.php
 		index	index.htm index.html index.php
+		autoindex	true
 		allowed_methods	GET		true
 		allowed_methods	POST	true
 		allowed_methods	DELETE	true
-		cgi_param p10 dez
-		cgi_param p20 vinte
+		cgi sum.py
+		cgi_param num1 5
+		cgi_param num2 6
 	}
 }
 

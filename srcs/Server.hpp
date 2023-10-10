@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:34:23 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/24 23:44:56 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/09/20 23:55:46 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ class Server
 		void			setClientMaxBodySize(int clientMaxBodySize);
 		void			setErrorPages(int code, std::string page);
 		void			setLocationServer(std::string name, LocationServer locationServer);
+		void			setStatus(bool status);
 
 		std::set<int>	getPorts(void) const;
 		std::string		getServerName(void) const;
@@ -47,6 +48,7 @@ class Server
 		std::string		getErrorPages(int code) const;
 		LocationServer	getLocationServer(std::string name) const;
 		std::string		getLastLocation(void) const;
+		int				getSizeLocation(void);
 
 	private:
 		std::set<int>							_ports;
@@ -55,6 +57,8 @@ class Server
 		std::map<int, std::string>				_errorPages;
 		std::map<std::string, LocationServer>	_locationServer;
 		std::string								_lastLocation;
+		int										_sizeLocation;
+		bool									_status;
 
 	protected:
 };

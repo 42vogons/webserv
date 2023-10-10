@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/25 23:04:53 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/09/21 00:00:05 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,15 @@
 
 Server::Server(void) : _serverName("default")
 {
-	_clientMaxBodySize = 8000;
+	_clientMaxBodySize = 0;
+	_sizeLocation = 0;
 	return ;
 }
 
 Server::Server(std::string name) : _serverName(name)
 {
-	_clientMaxBodySize = 8000;
+	_clientMaxBodySize = 0;
+	_sizeLocation = 0;
 	return ;
 }
 
@@ -45,6 +47,8 @@ Server& Server::operator=(const Server& obj)
 		this->_errorPages = obj._errorPages;
 		this->_locationServer = obj._locationServer;
 		this->_lastLocation = obj._lastLocation;
+		this->_sizeLocation = obj._sizeLocation;
+		this->_status = obj._status;
 	}
 	return (*this);
 }
@@ -112,6 +116,11 @@ void	Server::setErrorPages(int code, std::string page)
 void	Server::setLocationServer(std::string name, LocationServer locationServer)
 {
 	this->_locationServer[name] =  locationServer;
+	this->_sizeLocation += 1;
+}
+
+void	Server::setStatus(bool status){
+	this->_status = status;
 }
 
 std::set<int>	Server::getPorts(void) const
@@ -146,6 +155,10 @@ LocationServer	Server::getLocationServer(std::string name) const
 std::string	Server::getLastLocation(void) const
 {
 	return (this->_lastLocation);
+}
+
+int		Server::getSizeLocation(void) {
+	return this->_sizeLocation;
 }
 
 std::ostream&	operator<<(std::ostream& o, const Server& i)

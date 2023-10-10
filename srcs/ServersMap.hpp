@@ -25,9 +25,11 @@ class ServersMap
 
 		ServersMap&	operator=(const ServersMap& obj);
 
-		void	addServer(std::string serverName, Server server);
-		void	readFile(std::string fileName);
-		int		countTabs(std::string line);
+		void		addServer(std::string serverName, Server server);
+		void		readFile(std::string fileName);
+		int			countTabs(std::string line);
+		std::set<int>		checkServers(void);
+		
 
 		void							setServer(std::string serverName, Server server);
 		Server							getServer(std::string serverName);
@@ -35,6 +37,7 @@ class ServersMap
 
 	private:
 		std::map<std::string, Server>	_serversMap;
+		std::set<int>			 		_portsAccepted;
 
 	protected:
 };

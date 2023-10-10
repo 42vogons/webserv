@@ -11,8 +11,10 @@
     </style>
 </head>
 <body>
+    <div class="message" id="messageDiv">
+        {{pages}}
+    </div>
 
-{{pages}}
 
 <script>
 function deleteImage(imageName) {
@@ -21,20 +23,26 @@ function deleteImage(imageName) {
             method: 'DELETE'
         })
         .then(response => {
-
             if (response.ok) {
                 console.log('Imagem excluída com sucesso.');
-                
-
                 // Remova a div de image-container após excluir
                 var imageContainer = document.querySelector(`[onclick="deleteImage('${imageName}')"]`).parentNode;
                 imageContainer.parentNode.removeChild(imageContainer);
             } else {
-                console.error('Erro ao excluir a imagem.');
+                
+                response.text().then(
+                    responseText => {
+                        document.getElementById('messageDiv').innerHTML = responseText;
+                        console.error('Erro ao excluir a imagem.');
+                    }
+                ).catch(error => {
+                    console.error('Erro ao obter conteúdo da resposta:', error);
+                    });
+                
             }
         })
         .catch(error => {
-            console.error('Erro ao excluir a imagem:', error);
+            console.error('Erro ao excluir a ima--', error);
         });
     }
 }
