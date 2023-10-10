@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/10/03 18:32:10 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/10/05 19:29:33 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ void	Socket::acceptConnection(void)
 	
 	send(_client_fd, response.c_str(), response.size(), 0);
 	close(_client_fd);
-	std::cout << "Closed connection" << std::endl;
+	std::cout << "Closed connection" << _client_fd << std::endl;
 }
 
 std::string	Socket::findField(std::string src, std::string field)

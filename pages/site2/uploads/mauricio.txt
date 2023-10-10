@@ -1,0 +1,169 @@
+{
+  "code": "000",
+  "message": "Pesquisa feita com sucesso",
+  "date": "2021-10-10",
+  "hour": "23:38:31",
+  "revision": "",
+  "server": "75",
+  "saldo": "4,56",
+  "content": {
+    "nome": {
+      "existe_informacao": "SIM",
+      "conteudo": {
+        "documento": "08672039866",
+        "tipo_documento": "PF",
+        "nome": "MAURICIO JOSE SABINO",
+        "outras_grafias": [],
+        "data_nascimento": "19/07/1967",
+        "outras_datas_nascimento": [],
+        "idade": "54",
+        "signo": "Cancer",
+        "obito": "NAO",
+        "data_obito": "",
+        "sexo": "M",
+        "uf": "SP,",
+        "situacao_receita": "REGULAR",
+        "situacao_receita_data": "2021-06-29",
+        "situacao_receita_hora": "02:39:11",
+        "mae": "MARIA HEIDRICH SABINO",
+        "alerta_participacoes": "1",
+        "estrangeiro": {
+          "existe_informacao": "SIM",
+          "estrangeiro": "NAO",
+          "pais_origem": {
+            "codigo": "10",
+            "origem": "Brasileiro"
+          }
+        }
+      }
+    },
+    "contato_preferencial": {
+      "existe_informacao": "SIM",
+      "conteudo": {
+        "telefone_fixo": {},
+        "telefone_celular": {
+          "ddd": "11",
+          "telefone": "940679889",
+          "operadora": "Claro",
+          "operadoras_antigas": [],
+          "pontuacao": "1",
+          "id_endereco": "0"
+        },
+        "telefone_outros": {},
+        "contatos": {},
+        "parentes": {},
+        "email": "",
+        "endereco": {}
+      }
+    },
+    "pesquisa_enderecos": {
+      "existe_informacao": "SIM",
+      "conteudo": [
+        {
+          "logradouro": "AVENIDA",
+          "endereco": "CESAR MAGNANI",
+          "bairro": "PAULICEIA",
+          "cidade": "SAO BERNARDO DO CAMPO",
+          "numero": "996",
+          "cep": "09694000",
+          "bloco": "",
+          "apto": "",
+          "casa": "",
+          "quadra": "",
+          "lote": "",
+          "complemento": "",
+          "uf": "SP",
+          "latitude": "",
+          "longitude": "",
+          "pontuacao": "0"
+        },
+        {
+          "logradouro": "RUA",
+          "endereco": "DUQUE D ABRUZZO",
+          "bairro": "RUDGE RAMOS",
+          "cidade": "SAO BERNARDO DO CAMPO",
+          "numero": "293",
+          "cep": "09621000",
+          "bloco": "",
+          "apto": "",
+          "casa": "",
+          "quadra": "",
+          "lote": "",
+          "complemento": "12",
+          "uf": "SP",
+          "latitude": "",
+          "longitude": "",
+          "pontuacao": "0"
+        },
+        {
+          "logradouro": "RUA",
+          "endereco": "CORONEL XAVIER DE TOLEDO",
+          "bairro": "REPUBLICA",
+          "cidade": "SAO PAULO",
+          "numero": "877",
+          "cep": "01048000",
+          "bloco": "",
+          "apto": "",
+          "casa": "",
+          "quadra": "",
+          "lote": "",
+          "complemento": "A AP CJ 701",
+          "uf": "SP",
+          "latitude": "",
+          "longitude": "",
+          "pontuacao": "0"
+        },
+        {
+          "logradouro": "RUA",
+          "endereco": "ISABEL DE GOIS",
+          "bairro": "JARDIM BOTUCATU",
+          "cidade": "SAO PAULO",
+          "numero": "8",
+          "cep": "04173150",
+          "bloco": "",
+          "apto": "",
+          "casa": "",
+          "quadra": "",
+          "lote": "",
+          "complemento": "BL 9 72",
+          "uf": "SP",
+          "latitude": "",
+          "longitude": "",
+          "pontuacao": "0"
+        }
+      ]
+    },
+    "pesquisa_telefones": {
+      "existe_informacao": "SIM",
+      "conteudo": {
+        "celular": [
+          {
+            "ddd": "11",
+            "telefone": "940679889",
+            "operadora": "Claro",
+            "operadoras_antigas": [],
+            "pontuacao": "1",
+            "id_endereco": "0"
+          }
+        ]
+      }
+    },
+    "emails": {
+      "existe_informacao": "SIM",
+      "conteudo": [
+        {
+          "email": "sabinoaccept@hotmail.com",
+          "pontuacao": "0"
+        }
+      ]
+    },
+    "outros_documentos": {
+      "existe_informacao": "SIM"
+    },
+    "numero_beneficio": {
+      "existe_informacao": "NAO"
+    },
+    "protocolo": "163A3A728B26"
+  }
+}
+------WebKitFormBoundary6vEavGLnOWylBLNR--

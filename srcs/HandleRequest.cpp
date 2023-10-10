@@ -71,9 +71,10 @@ void HandleRequest::readBody(std::string body){
         }
 		value = line.substr(start, end);
 
-		std::cout << "key = *"<< key <<"* value=*"<< value << "*" << std::endl;
+		std::cout << "key = *"<< key <<"* value2=*"<< value << "*" << std::endl;
 		if (value == "")
-			isBody = true;
+			break;
+			//isBody = true;
 		else
 			_headers[key] = value;
 	}
@@ -137,9 +138,12 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 
 
 	std::vector<std::string> result = split(protocol2, '/');
+	if (result.size() == 0)
+		return;
 	size_t i;
     for (i = 1; i < result.size() -1 ; ++i) {
-
+		if (i > result.size())
+			std::cout<< "algum erro ocorreu" << protocol2 << "*" << result.size() << "*" << std::endl;
 		//if (i > 1)
 		//	endpoint += "/" + result[i];
 		//else
@@ -181,19 +185,31 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
         }
 		value = line.substr(start, end);
 
-		std::cout << "key = *"<< key <<"* value=*"<< value << "*" << std::endl;
-		if (value == "")
-			isBody = true;
+		std::cout << "key = *"<< key <<"* value3=*"<< value << "*" << std::endl;
+		std::string delimiter = "\r\n\r\n";
+		if (value == delimiter)
+			break;
+			//isBody = true;
 		else
 			_headers[key] = value;
 
 
 	}
-	//mudar para variável cgi
+	
 	if(_headers["Content-Type"].find("multipart/form-data")!= std::string::npos)
 	{
+		std::cout << "Saiu" << _headers["Content-Disposition"] <<std::endl;
+		std::string contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\"";
+		size_t fileNameStart = _headers["Content-Disposition"].find(contentDisposition);
+		fileNameStart += contentDisposition.length();
+		size_t fileNameEnd = _headers["Content-Disposition"].find("\"", fileNameStart);
+		this->_headers["fileName"] = _headers["Content-Disposition"].substr(fileNameStart, fileNameEnd - fileNameStart); 
+		//mudar para variável cgi
+		std::cout << "file=" << this->_headers["fileName"] << "*" << std::endl;
+		std::cout <<" recebendo file" <<std::endl; 
 		receiveFile(client_fd);
 		_typePost = "File";
+		std::cout <<" recebeu file" <<std::endl; 
 
 		// colocar o receiveFile aqui
 	}
@@ -222,23 +238,25 @@ std::string HandleRequest::getTypePost(void){
 	return _typePost;
 }
 
-/*std::string HandleRequest::receiveInformation(int client_fd){
+std::string HandleRequest::receiveInformation(int client_fd){
 
 	const int BUFFER_SIZE = 1024;
 	char buffer[BUFFER_SIZE];
 	int bytes_received = 0;
 	std::string received;
 	
-	bytes_received = recv(client_fd, buffer, sizeof(buffer), 0)) > 0) 
+	bytes_received = recv(client_fd, buffer, sizeof(buffer), 0);
 	received.append(buffer, bytes_received);
 	return received;
-}*/
+}
 
-std::string HandleRequest::receiveInformation(int client_fd){
+std::string HandleRequest::receiveBody(int client_fd){
 
 	const int BUFFER_SIZE = 1024;
 	char buffer[BUFFER_SIZE];
 	std::string received;
+	
+	
 
 	while(true) {
 		int bytes_received = recv(client_fd, buffer, sizeof(buffer), 0);
@@ -257,7 +275,7 @@ void HandleRequest::receiveFile(int client_fd)
 {
 	
 	std::string buffer;
-	buffer = receiveInformation(client_fd);
+	buffer = receiveBody(client_fd);
 
 	std::string contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\"";
 	size_t fileNameStart = buffer.find(contentDisposition);
@@ -267,6 +285,9 @@ void HandleRequest::receiveFile(int client_fd)
 	std::string delimiter = "\r\n\r\n";
 	size_t start = buffer.find(delimiter) + delimiter.length();
 	this->setBody(buffer.substr(start));
+	std::cout<<buffer<<std::endl;
+
+	std::cout << "filename=" <<  buffer.substr(fileNameStart, fileNameEnd - fileNameStart) << "**" << std::endl;
 }
 
 void	HandleRequest::setBody(std::string body){

@@ -276,6 +276,8 @@ void	saveFile(Server server, HandleRequest handlerRequest, std::string& response
 	std::string path = rootPath + locationServer.getField("upload_path");
 
 	std::string body = handlerRequest.getBody();
+	//std::cout << body <<std::endl;
+
 	std::string fileName = path + "/" + handlerRequest.getField("fileName");
 	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
 	if (file.is_open()) {

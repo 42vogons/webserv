@@ -41,6 +41,7 @@ class HandleRequest
 		std::string		getBody(void);
 		std::map<std::string, std::string> getHeaders(void);
 		std::string		receiveInformation(int client_fd);
+		std::string		receiveBody(int client_fd);
 		std::string		getTypePost(void);
 
 
