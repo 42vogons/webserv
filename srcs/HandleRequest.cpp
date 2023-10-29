@@ -199,27 +199,12 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	if(_headers["Content-Type"].find("multipart/form-data")!= std::string::npos)
 	{
 		std::cout << "Saiu" << _headers["Content-Disposition"] <<std::endl;
-		std::string contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\"";
-		size_t fileNameStart = _headers["Content-Disposition"].find(contentDisposition);
-		fileNameStart += contentDisposition.length();
-		size_t fileNameEnd = _headers["Content-Disposition"].find("\"", fileNameStart);
-		this->_headers["fileName"] = _headers["Content-Disposition"].substr(fileNameStart, fileNameEnd - fileNameStart); 
-		//mudar para variável cgi
-		std::cout << "file=" << this->_headers["fileName"] << "*" << std::endl;
 		std::cout <<" recebendo file" <<std::endl; 
 		receiveFile(client_fd);
 		_typePost = "File";
 		std::cout <<" recebeu file" <<std::endl; 
-
-		// colocar o receiveFile aqui
 	}
 	
-
-	//_body += "lines = " +qtd_lines ;
-	/*std::cout << "Body ----------------" << std::endl;
-	std::cout << _body << std::endl;
-	std::cout << "Body ----------------" << std::endl;*/
-
 	start = 0;
 	line = _headers["Host"];
 	end = line.find(':');
@@ -285,7 +270,7 @@ void HandleRequest::receiveFile(int client_fd)
 	std::string delimiter = "\r\n\r\n";
 	size_t start = buffer.find(delimiter) + delimiter.length();
 	this->setBody(buffer.substr(start));
-	std::cout<<buffer<<std::endl;
+	//std::cout<<buffer<<std::endl;
 
 	std::cout << "filename=" <<  buffer.substr(fileNameStart, fileNameEnd - fileNameStart) << "**" << std::endl;
 }

@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/10/05 19:29:33 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/10/29 11:08:28 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,10 +125,6 @@ void	Socket::acceptConnection(void)
 	std::string header = handleRequest.receiveInformation(this->_client_fd);
 	std::cout <<" receive----------" << header << " receive----------" << std::endl;
 
-	
-
-	
-	
 	handleRequest.readBuffer(header, this->_client_fd);
 
 	std::cout << "headere" << header << std::endl;
