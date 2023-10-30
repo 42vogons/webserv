@@ -113,7 +113,8 @@ std::string replaceAll(const std::string& str, const std::string& from, const st
 
 void HandleRequest::readBuffer(std::string buffer, int client_fd)
 {
-	bool isBody = false;
+	int isBody = 0;
+
 
 	std::string::size_type start = 0;
 	std::string::size_type end = 0;
@@ -168,11 +169,6 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 
 	while (std::getline(file, line))
 	{
-		if (isBody == true){
-				_body += line;
-				continue;
-		}
-		
 		start = 0;
 		end = line.find(':');
 		key = line.substr(start, end - start);
@@ -187,23 +183,68 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 
 		std::cout << "key = *"<< key <<"* value3=*"<< value << "*" << std::endl;
 		std::string delimiter = "\r\n\r\n";
-		if (value == delimiter)
+
+		if (key == "\r"){
+			//isBody += 1;
 			break;
-			//isBody = true;
+		}
 		else
 			_headers[key] = value;
+	}
 
+	std::cout << "bodyyy HTTP:\n" << isBody << std::endl;
 
+	//**************/////
+	/*
+	Fazer uma logica aqui que pega o que vai ver o tamanho do body e conferir se está de acordo com o lenght que3 está sendo enviado.
+	se for menor, vai fazer a leitura do restante dos dados, senão, ele segue o fluxo
+
+	o break está ruim na linha 195, está criando lixo na headers
+	*/
+
+//
+	std::string novo_body;
+
+	size_t header_end = buffer.find("\r\n\r\n");
+
+	std::string header2 = buffer.substr(0, header_end);
+
+	// O corpo da resposta HTTP é tudo após header_end
+	std::string body = buffer.substr(header_end + 4);
+
+	std::cout << "body HTTP:\n" << body.length() << std::endl;
+	std::cout << "Content-Length HTTP:\n" << _headers["Content-Length"] << std::endl;
+
+	
+	
+
+	//std::atoi(handlerRequest.getField("Content-Length").c_str()
+	while (static_cast<int>(body.length()) < std::atoi(_headers["Content-Length"].c_str())){
+		std::cout << "Continua lendo:\n"  << std::endl;
+		body += receiveBody(client_fd);
+	}
+
+	/*if (bodyLength < std::atoi(_headers["Content-Length"].c_str())){
+		std::cout << "Continua lendo:\n"  << std::endl;
+		body += receiveBody(client_fd);
+	} */
+	if (body.length()> 0){
+		std::cout << "Fim lendo:\n"  << std::endl;
+		size_t headerEndPos = body.find("\r\n\r\n");
+		std::string binaryContent = body.substr(headerEndPos + 4);
+		this->setBody(binaryContent);
+		std::string contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\"";
+		size_t fileNameStart = buffer.find(contentDisposition);
+		fileNameStart += contentDisposition.length();
+		size_t fileNameEnd = buffer.find("\"", fileNameStart);
+		this->_headers["fileName"] = buffer.substr(fileNameStart, fileNameEnd - fileNameStart); 
+		_typePost = "File";
+		
 	}
 	
-	if(_headers["Content-Type"].find("multipart/form-data")!= std::string::npos)
-	{
-		std::cout << "Saiu" << _headers["Content-Disposition"] <<std::endl;
-		std::cout <<" recebendo file" <<std::endl; 
-		receiveFile(client_fd);
-		_typePost = "File";
-		std::cout <<" recebeu file" <<std::endl; 
-	}
+
+	std::cout << "Cabeçalho HTTP:\n" << header2 << std::endl;
+
 	
 	start = 0;
 	line = _headers["Host"];
@@ -229,6 +270,7 @@ std::string HandleRequest::receiveInformation(int client_fd){
 	char buffer[BUFFER_SIZE];
 	int bytes_received = 0;
 	std::string received;
+	
 	
 	bytes_received = recv(client_fd, buffer, sizeof(buffer), 0);
 	received.append(buffer, bytes_received);

@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/10/29 11:08:28 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/10/29 18:45:11 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	Socket::bindSocketToAddress(void)
 
 void	Socket::waitConnection(void)
 {
-	int queue = 100;
+	int queue = 1000;
 	listen(this->_server_fd, queue);
 }
 
@@ -122,10 +122,11 @@ void	Socket::acceptConnection(void)
 	
 	std::string response ;
 	HandleRequest handleRequest;
-	std::string header = handleRequest.receiveInformation(this->_client_fd);
+	std::string header = handleRequest.receiveBody(this->_client_fd);
 	std::cout <<" receive----------" << header << " receive----------" << std::endl;
 
 	handleRequest.readBuffer(header, this->_client_fd);
+	
 
 	std::cout << "headere" << header << std::endl;
 	//handleRequest.receiveInformation(this->_client_fd);
