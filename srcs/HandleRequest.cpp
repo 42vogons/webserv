@@ -113,7 +113,7 @@ std::string replaceAll(const std::string& str, const std::string& from, const st
 
 void HandleRequest::readBuffer(std::string buffer, int client_fd)
 {
-	int isBody = 0;
+	//int isBody = 0;
 
 
 	std::string::size_type start = 0;
@@ -164,7 +164,6 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	if (_headers["BaseUrl"] == "")
 	{
 		_headers["BaseUrl"] = "/";
-		//_headers["Endpoint"] = protocol;
 	}
 
 	while (std::getline(file, line))
@@ -185,22 +184,12 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 		std::string delimiter = "\r\n\r\n";
 
 		if (key == "\r"){
-			//isBody += 1;
 			break;
 		}
 		else
 			_headers[key] = value;
 	}
 
-	std::cout << "bodyyy HTTP:\n" << isBody << std::endl;
-
-	//**************/////
-	/*
-	Fazer uma logica aqui que pega o que vai ver o tamanho do body e conferir se está de acordo com o lenght que3 está sendo enviado.
-	se for menor, vai fazer a leitura do restante dos dados, senão, ele segue o fluxo
-
-	o break está ruim na linha 195, está criando lixo na headers
-	*/
 
 //
 	std::string novo_body;
@@ -224,10 +213,6 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 		body += receiveBody(client_fd);
 	}
 
-	/*if (bodyLength < std::atoi(_headers["Content-Length"].c_str())){
-		std::cout << "Continua lendo:\n"  << std::endl;
-		body += receiveBody(client_fd);
-	} */
 	if (body.length()> 0){
 		std::cout << "Fim lendo:\n"  << std::endl;
 		size_t headerEndPos = body.find("\r\n\r\n");
