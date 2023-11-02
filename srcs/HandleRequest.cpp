@@ -72,18 +72,22 @@ void HandleRequest::readBody(std::string buffer, int client_fd){
 		//std::cout << "Continua lendo:\n"  << std::endl;
 		body += receiveBody(client_fd);
 	}
-
+	
 	if (body.length()> 0){
-		//std::cout << "Fim lendo:\n"  << std::endl;
-		size_t headerEndPos = body.find("\r\n\r\n");
-		std::string binaryContent = body.substr(headerEndPos + 4);
-		this->setBody(binaryContent);
-		std::string contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\"";
-		size_t fileNameStart = buffer.find(contentDisposition);
-		fileNameStart += contentDisposition.length();
-		size_t fileNameEnd = buffer.find("\"", fileNameStart);
-		this->_headers["fileName"] = buffer.substr(fileNameStart, fileNameEnd - fileNameStart); 
-		_typePost = "File";
+		
+		if (buffer.find("boundary") != std::string::npos) {
+			std::string contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\"";
+			size_t fileNameStart = buffer.find(contentDisposition);
+			fileNameStart += contentDisposition.length();
+			size_t fileNameEnd = buffer.find("\"", fileNameStart);
+			this->_headers["fileName"] = buffer.substr(fileNameStart, fileNameEnd - fileNameStart); 
+			_typePost = "File";
+			size_t headerEndPos = body.find("\r\n\r\n");
+			std::string binaryContent = body.substr(headerEndPos + 4);
+			this->setBody(binaryContent);
+		} else {
+			this->setBody(body);
+		}
 	}
 }
 

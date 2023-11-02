@@ -144,7 +144,6 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 		readPage(endpoint, 200, "Ok", response, pathError);
 	} 
 	else {
-		std::cout << "vamos abrir imagem" << std::endl;
 		readImage(uploadPath +"/"+ handleRequest.getField("LastPath"), 200, "Ok", response, "images/noPhoto.png", extension);
 	}
 }
@@ -270,11 +269,7 @@ void	process(std::string& response, HandleRequest handlerRequest, Server server)
 	LocationServer locationServer;
 	locationServer = server.getLocationServer(handlerRequest.getField("BaseUrl"));
 	std::string method = handlerRequest.getField("Method");
-	//std::cout << "base" << handlerRequest.getField("BaseUrl") << std::endl;
-	//std::cout << "locationServer***" << locationServer.getField("GET") << "**" << std::endl;
-	//std::cout << "base*"<< handlerRequest.getField("BaseUrl") << "*" << std::endl;
-	//std::cout << "method*"<< method << "*" << std::endl;
-	//std::cout << "client_max_body_size" << server.getClientMaxBodySize() << std::endl;
+
 	
 
 	int bodySize = std::atoi(handlerRequest.getField("Content-Length").c_str());
