@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Pages.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 15:35:19 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/02 16:57:54 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Pages.hpp"
-
 
 std::string createResponse(int code, std::string status, std::string fileContent, std::string type) {
 	std::stringstream response;
@@ -55,6 +54,17 @@ void autoIndex(std::string path) {
 	os.close();
 }
 
+std::string replaceAll2(const std::string& str, const std::string& from, const std::string& to) {
+	std::string result = str;
+	std::string::size_type pos = 0;
+	
+	while ((pos = result.find(from, pos)) != std::string::npos) {
+		result.replace(pos, from.length(), to);
+		pos += to.length();
+	}
+
+	return result;
+}
 
 
 void generatePageFiles(std::string path, std::string& content, std::string pathDir, std::string pathFileError)
@@ -88,8 +98,11 @@ void generatePageFiles(std::string path, std::string& content, std::string pathD
 		}
 		closedir(dir);
 	}
-	else
-		html +="<p>Error opening the directory.</p>";
+	else {
+		if (!directoryExists(path.c_str()))
+			if (!createDirectory(path.c_str()))
+				html +="<p>Error opening the directory.</p>";
+	}
 	html += "</tr></table>";
 
 	std::string form = "{{pages}}";
