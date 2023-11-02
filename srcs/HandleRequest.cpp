@@ -39,10 +39,7 @@ void HandleRequest::readBody(std::string buffer, int client_fd){
 	std::string header2 = buffer.substr(0, header_end);
 	std::string body = buffer.substr(header_end + 4);
 
-	//std::cout << "body HTTP:\n" << body.length() << std::endl;
-	//std::cout << "Content-Length HTTP:\n" << _headers["Content-Length"] << std::endl;
 	while (static_cast<int>(body.length()) < std::atoi(_headers["Content-Length"].c_str())){
-		//std::cout << "Continua lendo:\n"  << std::endl;
 		body += receiveBody(client_fd);
 	}
 	
@@ -73,8 +70,6 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	std::string key;
 	std::string value;
 	std::stringstream file(buffer);
-
-	//std::cout << "in" << buffer << std::endl;
 
 	std::getline(file, line);
 
@@ -144,17 +139,6 @@ std::string HandleRequest::getTypePost(void){
 	return _typePost;
 }
 
-std::string HandleRequest::receiveInformation(int client_fd){
-
-	const int BUFFER_SIZE = 1024;
-	char buffer[BUFFER_SIZE];
-	int bytes_received = 0;
-	std::string received;
-	
-	bytes_received = recv(client_fd, buffer, sizeof(buffer), 0);
-	received.append(buffer, bytes_received);
-	return received;
-}
 
 std::string HandleRequest::receiveBody(int client_fd){
 
@@ -172,24 +156,6 @@ std::string HandleRequest::receiveBody(int client_fd){
         
 	}
 	return received;
-}
-
-
-void HandleRequest::receiveFile(int client_fd) {
-	
-	std::string buffer;
-	buffer = receiveBody(client_fd);
-
-	std::string contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\"";
-	size_t fileNameStart = buffer.find(contentDisposition);
-	fileNameStart += contentDisposition.length();
-	size_t fileNameEnd = buffer.find("\"", fileNameStart);
-	this->_headers["fileName"] = buffer.substr(fileNameStart, fileNameEnd - fileNameStart); 
-	std::string delimiter = "\r\n\r\n";
-	size_t start = buffer.find(delimiter) + delimiter.length();
-	this->setBody(buffer.substr(start));
-
-	//std::cout << "filename=" <<  buffer.substr(fileNameStart, fileNameEnd - fileNameStart) << "**" << std::endl;
 }
 
 void	HandleRequest::setBody(std::string body){

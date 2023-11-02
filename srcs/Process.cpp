@@ -101,7 +101,7 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 	}
 
 	if (handleRequest.getField("LastPath") == "files.html") {
-		generatePageFiles(uploadPath, response, rootPath, server.getErrorPages(404), basePath + locationServer.getField("upload_path")) ;
+		generatePageFiles(uploadPath, response, rootPath, server.getErrorPages(404)) ;
 		return;	
 	}
 
