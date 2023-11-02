@@ -24,9 +24,7 @@ function deleteImage(imageName) {
 
             if (response.ok) {
                 console.log('Imagem excluída com sucesso.');
-                
 
-                // Remova a div de image-container após excluir
                 var imageContainer = document.querySelector(`[onclick="deleteImage('${imageName}')"]`).parentNode;
                 imageContainer.parentNode.removeChild(imageContainer);
             } else {
