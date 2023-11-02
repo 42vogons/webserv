@@ -165,17 +165,22 @@ void	executePost(std::string& response, Server server, HandleRequest handleReque
 		return ;
 	}
 	//std::cout << "content type = " << handleRequest.getField("Content-Type") << std::endl;
-	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
+	
 	std::string body = handleRequest.getBody();
 
-	// vai verificar se pode passar comando cgi?
-	// vai verificar se o cgi é valido?
-	
 	if (body.empty())
 		body = locationServer.getAllCgiParm().c_str();
 	
 	if (handleRequest.getTypePost() == "File"){
 		saveFile(server, handleRequest, response);
+		return;
+	}
+
+	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
+	std::string cgiPass = locationServer.getField("cgi_pass");
+	std::ifstream fileCGI(cgiPath.c_str());
+	if (!fileCGI.good() || cgiPass != "pass"){
+		createPage("CGI file not found or not allowed",200, "Ok",response);
 		return;
 	}
 		
@@ -222,7 +227,11 @@ void	process(std::string& response, HandleRequest handlerRequest, Server server)
 	std::string method = handlerRequest.getField("Method");
 	std::string version = handlerRequest.getField("Version");
 
-	// algum lugar eu checo a versão se é 1.1?
+	
+
+	
+	
+
 	
 	if (version.find("1.1") == std::string::npos){
 		createPage("Version is not HTTP 1.1",400,"Bad Request",response);
