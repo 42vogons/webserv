@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 17:02:09 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/02 17:16:02 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,13 +143,13 @@ void	saveFile(Server server, HandleRequest handlerRequest, std::string& response
 	
 	std::string filePage = rootPath + "/files.html";
 	std::string path = rootPath + locationServer.getField("upload_path");
-	std::string body = handlerRequest.getBody();
-	std::string fileName = path + "/" + handlerRequest.getField("fileName");
-	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
 	if (!directoryExists(path.c_str())) {
 		if (!createDirectory(path.c_str()))
 			std::cout << "Error creating directory" << std::endl;
 	}
+	std::string body = handlerRequest.getBody();
+	std::string fileName = path + "/" + handlerRequest.getField("fileName");
+	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
 	if (file.is_open()) {
 		file.write(body.data(), body.size());
 		file.close(); 
