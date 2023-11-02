@@ -164,7 +164,7 @@ void	executePost(std::string& response, Server server, HandleRequest handleReque
 		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
 		return ;
 	}
-	std::cout << "content type = " << handleRequest.getField("Content-Type") << std::endl;
+	//std::cout << "content type = " << handleRequest.getField("Content-Type") << std::endl;
 	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
 	std::string body = handleRequest.getBody();
 
@@ -220,9 +220,14 @@ void	process(std::string& response, HandleRequest handlerRequest, Server server)
 	LocationServer locationServer;
 	locationServer = server.getLocationServer(handlerRequest.getField("BaseUrl"));
 	std::string method = handlerRequest.getField("Method");
+	std::string version = handlerRequest.getField("Version");
 
 	// algum lugar eu checo a versão se é 1.1?
 	
+	if (version.find("1.1") == std::string::npos){
+		createPage("Version is not HTTP 1.1",400,"Bad Request",response);
+		return;
+	}
 
 	int bodySize = std::atoi(handlerRequest.getField("Content-Length").c_str());
 	if ( bodySize > server.getClientMaxBodySize())
