@@ -12,26 +12,21 @@
 
 #include "HandleRequest.hpp"
 
-HandleRequest::HandleRequest(void)
-{
+HandleRequest::HandleRequest(void) {
 	return ;
 }
 
-HandleRequest::HandleRequest(const HandleRequest& obj)
-{
+HandleRequest::HandleRequest(const HandleRequest& obj) {
 	*this = obj;
 	return ;
 }
 
-HandleRequest::~HandleRequest(void)
-{
+HandleRequest::~HandleRequest(void) {
 	return ;
 }
 
-HandleRequest& HandleRequest::operator=(const HandleRequest& obj)
-{
-	if (this != &obj)
-	{
+HandleRequest& HandleRequest::operator=(const HandleRequest& obj) {
+	if (this != &obj) {
 		this->_headers = obj._headers;
 		this->_body = obj._body;
 		this->_typePost = obj._typePost;
@@ -39,49 +34,6 @@ HandleRequest& HandleRequest::operator=(const HandleRequest& obj)
 	return (*this);
 }
 
-void HandleRequest::readBody(std::string body){
-
-	bool isBody = false;
-
-	std::string::size_type start = 0;
-	std::string::size_type end = 0;
-	std::string line;
-	std::string key;
-	std::string value;
-	std::stringstream file(body);
-	while (std::getline(file, line))
-	{
-		if (isBody == true){
-			//if (line.find("------WebKitFormBoundary") == std::string::npos) {
-            	_body += line;
-				continue;
-        	//}
-			
-		}
-		
-		start = 0;
-		end = line.find(':');
-		key = line.substr(start, end - start);
-		start = end + 1;
-		end = line.size() - start - 1;
-		// remove os espaços iniciais
-		while (end > 0 && line[start] == ' ') {
-            ++start;
-            --end;
-        }
-		value = line.substr(start, end);
-
-		std::cout << "key = *"<< key <<"* value=*"<< value << "*" << std::endl;
-		if (value == "")
-			isBody = true;
-		else
-			_headers[key] = value;
-	}
-
-	
-
-
-}
 
 ///////////////////////////////// FUNCOES UTEIS ///////////////////
 std::vector<std::string> split(const std::string &s, char delimiter) {
@@ -109,11 +61,35 @@ std::string replaceAll(const std::string& str, const std::string& from, const st
     return result;
 }
 
+void HandleRequest::readBody(std::string buffer, int client_fd){
+	size_t header_end = buffer.find("\r\n\r\n");
+	std::string header2 = buffer.substr(0, header_end);
+	std::string body = buffer.substr(header_end + 4);
+
+	//std::cout << "body HTTP:\n" << body.length() << std::endl;
+	//std::cout << "Content-Length HTTP:\n" << _headers["Content-Length"] << std::endl;
+	while (static_cast<int>(body.length()) < std::atoi(_headers["Content-Length"].c_str())){
+		//std::cout << "Continua lendo:\n"  << std::endl;
+		body += receiveBody(client_fd);
+	}
+
+	if (body.length()> 0){
+		//std::cout << "Fim lendo:\n"  << std::endl;
+		size_t headerEndPos = body.find("\r\n\r\n");
+		std::string binaryContent = body.substr(headerEndPos + 4);
+		this->setBody(binaryContent);
+		std::string contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\"";
+		size_t fileNameStart = buffer.find(contentDisposition);
+		fileNameStart += contentDisposition.length();
+		size_t fileNameEnd = buffer.find("\"", fileNameStart);
+		this->_headers["fileName"] = buffer.substr(fileNameStart, fileNameEnd - fileNameStart); 
+		_typePost = "File";
+	}
+}
+
 
 void HandleRequest::readBuffer(std::string buffer, int client_fd)
 {
-	bool isBody = false;
-
 	std::string::size_type start = 0;
 	std::string::size_type end = 0;
 	std::string line;
@@ -121,7 +97,7 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	std::string value;
 	std::stringstream file(buffer);
 
-	std::cout << "in" << buffer << std::endl;
+	//std::cout << "in" << buffer << std::endl;
 
 	std::getline(file, line);
 
@@ -129,46 +105,27 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	std::string protocol;
 	iss >> _headers["Method"] >> protocol >> _headers["Version"];
 	
-	std::string endpoint;
 	std::string baseUrl;
-	std::string protocol2 = replaceAll(protocol, "%2F", "/");
-
-
-
-
-	std::vector<std::string> result = split(protocol2, '/');
+	std::string protocolConverted = replaceAll(protocol, "%2F", "/");
+	std::vector<std::string> result = split(protocolConverted, '/');
+	if (result.size() == 0)
+		return;
 	size_t i;
     for (i = 1; i < result.size() -1 ; ++i) {
-
-		//if (i > 1)
-		//	endpoint += "/" + result[i];
-		//else
+		if (i > result.size())
+			std::cout<< "algum erro ocorreu" << protocolConverted << "*" << result.size() << "*" << std::endl;
 		baseUrl += "/" + result[i];
     }
-	if (baseUrl[0] == '/' && baseUrl.size() > 1 && baseUrl[1] == '/' ){
+	if (baseUrl[0] == '/' && baseUrl.size() > 1 && baseUrl[1] == '/' )
 		baseUrl.erase(0, 1);
-	}
-		
-
-
+	
 	_headers["BaseUrl"] = baseUrl;
-	_headers["Endpoint"] = endpoint;
 	_headers["LastPath"] = result[i];
 	
-	
 	if (_headers["BaseUrl"] == "")
-	{
 		_headers["BaseUrl"] = "/";
-		//_headers["Endpoint"] = protocol;
-	}
-
-	while (std::getline(file, line))
-	{
-		if (isBody == true){
-				_body += line;
-				continue;
-		}
-		
+	
+	while (std::getline(file, line)) {
 		start = 0;
 		end = line.find(':');
 		key = line.substr(start, end - start);
@@ -181,37 +138,27 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
         }
 		value = line.substr(start, end);
 
-		std::cout << "key = *"<< key <<"* value=*"<< value << "*" << std::endl;
-		if (value == "")
-			isBody = true;
+		//std::cout << "key = *"<< key <<"* value3=*"<< value << "*" << std::endl;
+		std::string delimiter = "\r\n\r\n";
+
+		if (key == "\r")
+			break;
 		else
 			_headers[key] = value;
-
-
 	}
-	//mudar para variável cgi
-	if(_headers["Content-Type"].find("multipart/form-data")!= std::string::npos)
-	{
-		receiveFile(client_fd);
-		_typePost = "File";
 
-		// colocar o receiveFile aqui
-	}
-	
+	readBody(buffer, client_fd);
+	getHostAndPort(_headers["Host"]);
+}
 
-	//_body += "lines = " +qtd_lines ;
-	/*std::cout << "Body ----------------" << std::endl;
-	std::cout << _body << std::endl;
-	std::cout << "Body ----------------" << std::endl;*/
+void HandleRequest::getHostAndPort(std::string protocol){
 
-	start = 0;
-	line = _headers["Host"];
-	end = line.find(':');
-	_headers["Host"] = line.substr(start, end - start);
+	int start = 0;
+	int end = protocol.find(':');
+	_headers["Host"] = protocol.substr(start, end - start);
 	start = end + 1;
-	end = line.size() - start - 1;
-	_headers["Port"] = line.substr(start, end + 1);
-	return ;
+	end = protocol.size() - start - 1;
+	_headers["Port"] = protocol.substr(start, end + 1);
 }
 
 bool checkHandler(void){
@@ -222,19 +169,19 @@ std::string HandleRequest::getTypePost(void){
 	return _typePost;
 }
 
-/*std::string HandleRequest::receiveInformation(int client_fd){
+std::string HandleRequest::receiveInformation(int client_fd){
 
 	const int BUFFER_SIZE = 1024;
 	char buffer[BUFFER_SIZE];
 	int bytes_received = 0;
 	std::string received;
 	
-	bytes_received = recv(client_fd, buffer, sizeof(buffer), 0)) > 0) 
+	bytes_received = recv(client_fd, buffer, sizeof(buffer), 0);
 	received.append(buffer, bytes_received);
 	return received;
-}*/
+}
 
-std::string HandleRequest::receiveInformation(int client_fd){
+std::string HandleRequest::receiveBody(int client_fd){
 
 	const int BUFFER_SIZE = 1024;
 	char buffer[BUFFER_SIZE];
@@ -253,11 +200,10 @@ std::string HandleRequest::receiveInformation(int client_fd){
 }
 
 
-void HandleRequest::receiveFile(int client_fd)
-{
+void HandleRequest::receiveFile(int client_fd) {
 	
 	std::string buffer;
-	buffer = receiveInformation(client_fd);
+	buffer = receiveBody(client_fd);
 
 	std::string contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\"";
 	size_t fileNameStart = buffer.find(contentDisposition);
@@ -267,14 +213,15 @@ void HandleRequest::receiveFile(int client_fd)
 	std::string delimiter = "\r\n\r\n";
 	size_t start = buffer.find(delimiter) + delimiter.length();
 	this->setBody(buffer.substr(start));
+
+	//std::cout << "filename=" <<  buffer.substr(fileNameStart, fileNameEnd - fileNameStart) << "**" << std::endl;
 }
 
 void	HandleRequest::setBody(std::string body){
 	_body = body;
 }
 
-std::string HandleRequest::getField(std::string field)
-{
+std::string HandleRequest::getField(std::string field) {
 	return _headers[field];
 }
 
@@ -282,8 +229,7 @@ std::string HandleRequest::getBody(void){
 	return _body;
 }
 
-std::ostream&	operator<<(std::ostream& o, const HandleRequest& i)
-{
+std::ostream&	operator<<(std::ostream& o, const HandleRequest& i) {
 	(void)i;
 	o << "something";
 	return o;

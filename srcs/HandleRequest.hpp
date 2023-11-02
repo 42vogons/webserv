@@ -34,13 +34,15 @@ class HandleRequest
 		HandleRequest&	operator=(const HandleRequest& obj);
 
 		void	readBuffer(std::string buffer, int client_fd);
-		void	readBody(std::string buffer);
+		void	readBody(std::string buffer, int client_fd);
+		void	getHostAndPort(std::string protocol);
 		void	receiveFile(int client_fd);
 
 		std::string		getField(std::string field);
 		std::string		getBody(void);
 		std::map<std::string, std::string> getHeaders(void);
 		std::string		receiveInformation(int client_fd);
+		std::string		receiveBody(int client_fd);
 		std::string		getTypePost(void);
 
 
