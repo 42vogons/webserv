@@ -38,14 +38,16 @@ void HandleRequest::readBody(std::string buffer, int client_fd){
 	size_t header_end = buffer.find("\r\n\r\n");
 	std::string body = buffer.substr(header_end + 4);
 
-	while (static_cast<int>(body.length()) < std::atoi(_headers["Content-Length"].c_str())){
+	std::cout << "exp=" << _headers["Expect"] << std::endl;
+
+	while (static_cast<int>(body.length()) < std::atoi(_headers["Content-Length"].c_str()) || _headers["Expect"] == "100"){
 		body += receiveBody(client_fd);
 	}
-	
-	if (body.length()> 0){
-		
+	buffer += body;
+
+	if (_headers["Method"] == "POST"){
 		if (buffer.find("boundary") != std::string::npos) {
-			std::string contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\"";
+			std::string contentDisposition = "filename=\"";
 			size_t fileNameStart = buffer.find(contentDisposition);
 			fileNameStart += contentDisposition.length();
 			size_t fileNameEnd = buffer.find("\"", fileNameStart);
