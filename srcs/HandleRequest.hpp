@@ -1,17 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   HandleRequest.hpp                                       :+:      :+:    :+:   */
+/*   HandleRequest.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/18 22:37:17 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/24 23:11:41 by cpereira         ###   ########.fr       */
+/*   Created: 2023/11/02 17:47:16 by anolivei          #+#    #+#             */
+/*   Updated: 2023/11/02 18:26:41 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HANDLE_REQUEST_HPP
 #define HANDLE_REQUEST_HPP
+
+#include "Utils.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -22,23 +24,17 @@
 #include <vector>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include "Utils.hpp"
 
-
-class HandleRequest
-{
+class HandleRequest {
 	public:
 		HandleRequest(void);
 		HandleRequest(const HandleRequest& obj);
 		virtual ~HandleRequest(void);
-
 		HandleRequest&	operator=(const HandleRequest& obj);
-
 		void	readBuffer(std::string buffer, int client_fd);
 		void	readBody(std::string buffer, int client_fd);
 		void	getHostAndPort(std::string protocol);
 		void	setBody(std::string body);
-
 		std::string		getField(std::string field);
 		std::string		getBody(void);
 		std::string		receiveBody(int client_fd);
@@ -48,7 +44,6 @@ class HandleRequest
 		std::map<std::string, std::string> _headers;
 		std::string _body;
 		std::string	_typePost;
-	
 
 	protected:
 };

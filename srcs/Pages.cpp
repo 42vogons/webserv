@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 16:57:54 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/02 17:52:43 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,29 +57,24 @@ void autoIndex(std::string path) {
 std::string replaceAll2(const std::string& str, const std::string& from, const std::string& to) {
 	std::string result = str;
 	std::string::size_type pos = 0;
-	
 	while ((pos = result.find(from, pos)) != std::string::npos) {
 		result.replace(pos, from.length(), to);
 		pos += to.length();
 	}
-
 	return result;
 }
 
 
-void generatePageFiles(std::string path, std::string& content, std::string pathDir, std::string pathFileError)
-{
-	std::string pathFilePage = pathDir + "/files.html" ;
+void generatePageFiles(std::string path, std::string& content, std::string pathDir, std::string pathFileError) {
+	std::string pathFilePage = pathDir + "/files.html";
 	std::string fileContent;
 	int code = 200;
 	std::string status = "Ok";
-
 	DIR *dir;
 	struct dirent *ent;
 	int col = 0;
 	std::string html;
 	html = "<table border = 1><tr><td colspan=5>Files</td></tr><tr>";
-		
 	if ((dir = opendir(path.c_str())) != NULL) {
 		while ((ent = readdir(dir)) != NULL) {
 			std::string fileName = ent->d_name;
@@ -104,7 +99,6 @@ void generatePageFiles(std::string path, std::string& content, std::string pathD
 				html +="<p>Error opening the directory.</p>";
 	}
 	html += "</tr></table>";
-
 	std::string form = "{{pages}}";
 	fileContent = getContent(pathFilePage, code, status, pathFileError);
 	std::string newContent = replaceAll(fileContent, form ,html);

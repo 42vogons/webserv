@@ -13,11 +13,11 @@
 #ifndef SERVERS_MAP_HPP
 #define SERVERS_MAP_HPP
 
-#include <map>
 #include "Server.hpp"
 
-class ServersMap
-{
+#include <map>
+
+class ServersMap {
 	public:
 		ServersMap(void);
 		ServersMap(const ServersMap& obj);
@@ -29,7 +29,6 @@ class ServersMap
 		void		readFile(std::string fileName);
 		int			countTabs(std::string line);
 		std::set<int>		checkServers(void);
-		
 
 		void							setServer(std::string serverName, Server server);
 		Server							getServer(std::string serverName);

@@ -13,33 +13,30 @@
 #ifndef WEBSERVER_HPP
 #define WEBSERVER_HPP
 
-#include <iostream>
-#include <vector>
-#include <set>
-#include <map>
 #include "ServersMap.hpp"
 #include "Server.hpp"
 #include "Socket.hpp"
 #include "Poll.hpp"
 
-class WebServer
-{
+#include <iostream>
+#include <vector>
+#include <set>
+#include <map>
+
+class WebServer {
 	public:
 		WebServer(void);
 		WebServer(const WebServer& obj);
 		virtual ~WebServer(void);
-
 		WebServer&	operator=(const WebServer& obj);
 		void		handleSocketConnections(void);
 		void		createVecSocket(void);
 		void		loadFile(std::string file);
-		
 
 	private:
 		void	_checkEvent(Poll &poll, size_t index);
 		bool	_checkEventMask(short revents);
 		void	_connect(Socket *socket);
-	
 		std::vector<Socket *>			_vecSocket;
 		ServersMap						_servers;
 		std::map<std::string, Server>	_serversMap;

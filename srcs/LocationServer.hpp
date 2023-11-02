@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   LocationServer.hpp                           :+:      :+:    :+:   */
+/*   LocationServer.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/09 17:30:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/09 18:46:24 by cpereira         ###   ########.fr       */
+/*   Created: 2023/11/02 17:49:53 by anolivei          #+#    #+#             */
+/*   Updated: 2023/11/02 18:27:40 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,22 @@
 #define LOCATION_CONFIG_SERVER_HPP
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <map>
 #include <set>
-#include <sstream>
 
-class LocationServer
-{
+class LocationServer {
 	public:
 		LocationServer(void);
 		LocationServer(const LocationServer& obj);
 		virtual ~LocationServer(void);
-
 		LocationServer&	operator=(const LocationServer& obj);
-
 		void	setAllowedMethods(std::string name, bool status);
 		void	setPagesIndex(std::string page);
 		void	setCgiParam(std::string key, std::string value);
 		std::string	getField(std::string field);
-
 		void	readLine(std::string line);
-
 		bool					getAllowedMethods(std::string methods);
 		std::set<std::string>	getPagesIndex(void);
 		std::string				getCgiParm(std::string param);
@@ -45,7 +40,6 @@ class LocationServer
 		std::set<std::string>				_pagesIndex;
 		std::map<std::string, std::string>	_cgiParam;
 		std::map<std::string, std::string>	_variables;
-		
 
 	protected:
 };

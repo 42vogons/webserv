@@ -3,45 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:34:23 by anolivei          #+#    #+#             */
-/*   Updated: 2023/09/20 23:55:46 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/02 18:30:07 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#include "LocationServer.hpp"
+
 #include <iostream>
+#include <sstream>
+#include <fstream>
 #include <string>
 #include <map>
 #include <set>
-#include "LocationServer.hpp"
-#include <fstream>
 #include <string>
-#include <sstream>
 #include <cstdlib>
 
-class Server
-{
+class Server {
 	public:
 		Server(void);
 		Server(std::string name);
 		Server(const Server& obj);
 		virtual ~Server(void);
-
 		Server&			operator=(const Server& obj);
-
 		void			readLine(std::string line);
-
 		void			setPorts(int port);
 		void			setServeName(std::string serverName);
 		void			setClientMaxBodySize(int clientMaxBodySize);
 		void			setErrorPages(int code, std::string page);
 		void			setLocationServer(std::string name, LocationServer locationServer);
 		void			setStatus(bool status);
-
 		std::set<int>	getPorts(void) const;
 		std::string		getServerName(void) const;
 		int				getClientMaxBodySize(void) const;
