@@ -6,12 +6,11 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 16:46:00 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/02 16:57:54 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Pages.hpp"
-#include "Utils.hpp"
 
 std::string createResponse(int code, std::string status, std::string fileContent, std::string type) {
 	std::stringstream response;

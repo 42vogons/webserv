@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Pages.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 14:53:03 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/02 16:59:32 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,14 @@
 
 #include <string>
 #include <sstream>
-#include <dirent.h> // para ler diretorios
+#include <dirent.h>
 #include <iostream>
 #include <fstream>
-#include "Util.hpp"
+#include "Utils.hpp"
 
-
-
-	void		createPage(std::string newPage, int code, std::string status, std::string& content);
-	void		autoIndex(std::string path);
-	void		generatePageFiles(std::string path, std::string& content, std::string pathDir, std::string pathFileErro);
-	std::string createResponse(int code, std::string status, std::string fileContent, std::string type);
-
+void		createPage(std::string newPage, int code, std::string status, std::string& content);
+void		autoIndex(std::string path);
+void		generatePageFiles(std::string path, std::string& content, std::string pathDir, std::string pathFileErro);
+std::string createResponse(int code, std::string status, std::string fileContent, std::string type);
 
 #endif

@@ -20,6 +20,7 @@
 #include <fstream>
 #include "LocationServer.hpp"
 #include "HandleRequest.hpp"
+#include "Utils.hpp"
 #include "Pages.hpp"
 #include "Server.hpp"
 #include <unistd.h>

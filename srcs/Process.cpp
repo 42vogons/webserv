@@ -6,12 +6,11 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 16:40:11 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/02 17:02:09 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Process.hpp"
-#include "Utils.hpp"
 
 
 void	readImage(std::string filename, int code, std::string status, std::string& content, std::string errorPath, std::string extension) {
@@ -148,8 +147,8 @@ void	saveFile(Server server, HandleRequest handlerRequest, std::string& response
 	std::string fileName = path + "/" + handlerRequest.getField("fileName");
 	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
 	if (!directoryExists(path.c_str())) {
-			if (!createDirectory(path.c_str()))
-				std::cout << "Error creating directory" << std::endl;
+		if (!createDirectory(path.c_str()))
+			std::cout << "Error creating directory" << std::endl;
 	}
 	if (file.is_open()) {
 		file.write(body.data(), body.size());
