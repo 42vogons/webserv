@@ -36,7 +36,6 @@ HandleRequest& HandleRequest::operator=(const HandleRequest& obj) {
 
 void HandleRequest::readBody(std::string buffer, int client_fd){
 	size_t header_end = buffer.find("\r\n\r\n");
-	std::string header2 = buffer.substr(0, header_end);
 	std::string body = buffer.substr(header_end + 4);
 
 	while (static_cast<int>(body.length()) < std::atoi(_headers["Content-Length"].c_str())){
