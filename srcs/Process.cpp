@@ -1,16 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Process.cpp                                          :+:      :+:    :+:   */
+/*   Process.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/09/03 22:24:21 by cpereira         ###   ########.fr       */
+/*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
+/*   Updated: 2023/11/02 16:40:11 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Process.hpp"
+#include "Utils.hpp"
 
 
 void	readImage(std::string filename, int code, std::string status, std::string& content, std::string errorPath, std::string extension) {
@@ -107,9 +108,9 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 
 	std::string extension;
 	size_t dotPosition = handleRequest.getField("LastPath").find_last_of(".");
-    if (dotPosition != std::string::npos) {
-        extension = handleRequest.getField("LastPath").substr(dotPosition + 1);
-    }
+	if (dotPosition != std::string::npos) {
+		extension = handleRequest.getField("LastPath").substr(dotPosition + 1);
+	}
 	else {
 		extension = "";
 	}
@@ -165,11 +166,11 @@ void executeDelete(std::string& response, Server server, HandleRequest handleReq
 	
 	if (std::remove(filename) == 0) {
 		createPage("Arquivo excluído com sucesso",200, "Ok",response);
-        std::printf("Arquivo excluído com sucesso.\n");
-    } else {
+		std::printf("Arquivo excluído com sucesso.\n");
+	} else {
 		createPage("Erro ao excluir o arquivo",500, "Internal Server Error",response);
-        std::perror("Erro ao excluir o arquivo");
-    }
+		std::perror("Erro ao excluir o arquivo");
+	}
 }
 
 void	saveFile(Server server, HandleRequest handlerRequest, std::string& response) {
@@ -186,6 +187,10 @@ void	saveFile(Server server, HandleRequest handlerRequest, std::string& response
 	std::string body = handlerRequest.getBody();
 	std::string fileName = path + "/" + handlerRequest.getField("fileName");
 	std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
+	if (!directoryExists(path.c_str())) {
+			if (!createDirectory(path.c_str()))
+				std::cout << "Error creating directory" << std::endl;
+	}
 	if (file.is_open()) {
 		file.write(body.data(), body.size());
 		file.close(); 
