@@ -36,3 +36,31 @@ std::vector<std::string> split(const std::string &s, char delimiter) {
     return tokens;
 }
 
+std::string getContent (std::string filename, int &code, std::string status, std::string errorPath){
+    std::ifstream file(filename.c_str());
+	std::ifstream fileError(errorPath.c_str());
+	std::stringstream buffer;
+	std::string fileContent;
+    std::string type;
+
+    if (file.good()) {
+		buffer << file.rdbuf();
+		fileContent = buffer.str();
+	}
+	else {
+		if (fileError.good()) {
+			buffer << fileError.rdbuf();
+			fileContent = buffer.str();
+			//type = "image/png";
+		}
+		else {
+			fileContent = "Page not Found";
+			code = 404;
+			status = "Not Found";
+		}
+	}
+
+    file.close();
+    return fileContent;
+}
+

@@ -14,7 +14,6 @@
 
 
 void	readImage(std::string filename, int code, std::string status, std::string& content, std::string errorPath, std::string extension) {
-	std::stringstream buffer;
 	std::string fileContent;
 	std::string type;
 
@@ -32,52 +31,14 @@ void	readImage(std::string filename, int code, std::string status, std::string& 
 	}
 	else
 		type = "text/html";
-	
-	std::ifstream fileError(errorPath.c_str());
-	std::ifstream file(filename.c_str());
-	if (file.good()) {
-		buffer << file.rdbuf();
-		fileContent = buffer.str();
-	}
-	else {
-		if (fileError.good()) {
-			buffer << fileError.rdbuf();
-			fileContent = buffer.str();
-			type = "image/png";
-		}
-		else {
-			fileContent = "Page not Found";
-			code = 404;
-			status = "Not Found";
-		}
-	}
+	fileContent = getContent(filename, code, status, errorPath);
 	content = createResponse(code, status, fileContent, type);
-	file.close();
 }
 
 void	readPage(std::string filename, int code, std::string status, std::string& content, std::string errorPath) {
-	std::ifstream file(filename.c_str());
-	std::ifstream fileError(errorPath.c_str());
-	std::stringstream buffer;
 	std::string fileContent;
-	
-	if (file.good()) {
-		buffer << file.rdbuf();
-		fileContent = buffer.str();
-	}
-	else {
-		if (fileError.good()) {
-			buffer << fileError.rdbuf();
-			fileContent = buffer.str();
-		}
-		else {
-			fileContent = "Page not Found";
-			code = 404;
-			status = "Not Found";
-		}
-	}
+	fileContent = getContent(filename, code, status, errorPath);
 	content = createResponse(code, status, fileContent, "text/html");
-	file.close();
 }
 
 void	executeGet(std::string& response, Server server, HandleRequest handleRequest) {

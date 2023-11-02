@@ -22,9 +22,11 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <cerrno>
+#include <iostream>
+#include <fstream>
 #include <vector>
 
 std::string replaceAll(const std::string& str, const std::string& from, const std::string& to);
 std::vector<std::string> split(const std::string &s, char delimiter);
-
+std::string getContent (std::string filename, int &code, std::string status, std::string errorPath);
 #endif

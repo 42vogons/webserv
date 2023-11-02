@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 14:52:02 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/02 15:35:19 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,6 @@ void autoIndex(std::string path) {
 void generatePageFiles(std::string path, std::string& content, std::string pathDir, std::string pathFileError)
 {
 	std::string pathFilePage = pathDir + "/files.html" ;
-	std::ifstream file(pathFilePage.c_str());
-	std::ifstream fileError(pathFileError.c_str());
-	std::stringstream buffer;
 	std::string fileContent;
 	int code = 200;
 	std::string status = "Ok";
@@ -95,23 +92,8 @@ void generatePageFiles(std::string path, std::string& content, std::string pathD
 		html +="<p>Error opening the directory.</p>";
 	html += "</tr></table>";
 
-	if (file.good()) {
-		buffer << file.rdbuf();
-		fileContent = buffer.str();
-	}
-	else {
-		if (fileError.good()) {
-			buffer << fileError.rdbuf();
-			fileContent = buffer.str();
-		}
-		else {
-			fileContent = "Page not Found";
-			code = 404;
-			status = "Not Found";
-		}
-	}
-	std::string text = "{{pages}}";
-	std::string fileContent2 = replaceAll(fileContent, text ,html);
-	content = createResponse(code, status, fileContent2, "text/html");
-	file.close();
+	std::string form = "{{pages}}";
+	fileContent = getContent(pathFilePage, code, status, pathFileError);
+	std::string newContent = replaceAll(fileContent, form ,html);
+	content = createResponse(code, status, newContent, "text/html");
 }
