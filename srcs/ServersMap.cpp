@@ -12,46 +12,34 @@
 
 #include "ServersMap.hpp"
 
-ServersMap::ServersMap(void)
-{
+ServersMap::ServersMap(void) {
 	return ;
 }
 
-ServersMap::ServersMap(const ServersMap& obj)
-{
+ServersMap::ServersMap(const ServersMap& obj) {
 	*this = obj;
 	return ;
 }
 
-ServersMap::~ServersMap(void)
-{
+ServersMap::~ServersMap(void) {
 	return ;
 }
 
-ServersMap& ServersMap::operator=(const ServersMap& obj)
-{
-	if (this != &obj){
+ServersMap& ServersMap::operator=(const ServersMap& obj) {
+	if (this != &obj) {
 		this->_serversMap = obj._serversMap;
 		this->_portsAccepted = obj._portsAccepted;
 	}
-		
-		
 	return (*this);
 }
 
-void ServersMap::addServer(std::string serverName, Server server)
-{
+void ServersMap::addServer(std::string serverName, Server server) {
 	this->_serversMap[serverName] = server;
 }
 
-std::set<int>	ServersMap::checkServers(void){
-
+std::set<int>	ServersMap::checkServers(void) {
 	std::map<std::string, Server> servers = this->getServersMap();
-
-	
-
-	for (std::map<std::string, Server>::iterator it = servers.begin(); it != servers.end(); ++it) 
-	{
+	for (std::map<std::string, Server>::iterator it = servers.begin(); it != servers.end(); ++it) {
 		std::string errors = "";
 		std::cout << "Server: " << it->first;
 		Server server = it->second;
@@ -76,9 +64,7 @@ std::set<int>	ServersMap::checkServers(void){
 	return this->_portsAccepted;
 }
 
-
-void	ServersMap::readFile(std::string fileName)
-{
+void	ServersMap::readFile(std::string fileName) {
 	std::ifstream	myFile(fileName.c_str());
 	std::string		line;
 	std::string		key, name;
@@ -88,28 +74,23 @@ void	ServersMap::readFile(std::string fileName)
 
 	if (!myFile.is_open())
 		std::cerr << "Error opening file" << std::endl;
-	else
-	{
-		while (!myFile.eof() )
-		{
+	else {
+		while (!myFile.eof()) {
 			getline(myFile, line);
 			level = countTabs(line);
-			if (level == 0 && line.size() > 1)
-			{
+			if (level == 0 && line.size() > 1) {
 				std::istringstream iss(line);
 				iss >> key;
 				Server server(key);
 				lastServer = key;
 				addServer(key, server);
 			}
-			if (level == 1)
-			{
+			if (level == 1) {
 				Server serverEdit = getServer(lastServer);
 				serverEdit.readLine(line);
 				setServer(lastServer, serverEdit);
 			}
-			if (level == 2)
-			{
+			if (level == 2) {
 				Server serverEdit = getServer(lastServer);
 				locationServer = serverEdit.getLocationServer(serverEdit.getLastLocation());
 				locationServer.readLine(line);
@@ -121,11 +102,9 @@ void	ServersMap::readFile(std::string fileName)
 	myFile.close();
 }
 
-int ServersMap::countTabs(std::string line)
-{
+int ServersMap::countTabs(std::string line) {
 	int countTab = 0;
-	for (unsigned int i = 0; i < line.length(); i++)
-	{
+	for (unsigned int i = 0; i < line.length(); i++) {
 		if (line[i] == '\t')
 			countTab++;
 		else
@@ -134,23 +113,19 @@ int ServersMap::countTabs(std::string line)
 	return (countTab);
 }
 
-void	ServersMap::setServer(std::string serverName, Server server)
-{
+void	ServersMap::setServer(std::string serverName, Server server) {
 	this->_serversMap[serverName] =  server;
 }
 
-Server	ServersMap::getServer(std::string serverName)
-{
+Server	ServersMap::getServer(std::string serverName) {
 	return (this->_serversMap[serverName]);
 }
 
-std::map<std::string, Server>	ServersMap::getServersMap(void)
-{
+std::map<std::string, Server>	ServersMap::getServersMap(void) {
 	return (this->_serversMap);
 }
 
-std::ostream&	operator<<(std::ostream& o, const ServersMap& i)
-{
+std::ostream&	operator<<(std::ostream& o, const ServersMap& i) {
 	(void)i;
 	o << "something";
 	return o;

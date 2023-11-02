@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:23:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/10/03 13:49:49 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/10/30 23:16:04 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,23 @@
 
 //WebServer web_server;
 
-static void handle_signal(int signal)
-{
+static void handle_signal(int signal) {
 	exit(signal);
 }
 
-int	main(int argc, char** argv)
-{
+int	main(int argc, char** argv) {
 	std::string fileName;
 	
-	if (argc > 2)
-	{
+	if (argc > 2) {
 		std::cout << "Invalid args" << std::endl;
 		return 1;
 	}
 	if (argc == 1)
 		fileName = "./conf/conf_sample";
-	else
-	{
+	else {
 		fileName = argv[1];
 		std::ifstream file(fileName.c_str());
-		if (!file.good())
-		{
+		if (!file.good()) {
 			std::cout << "File not found" << std::endl;
 			return 1;
 		}

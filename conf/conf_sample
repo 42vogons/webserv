@@ -133,7 +133,7 @@ sample_server_Z2 {
 		autoindex	true
 		allowed_methods	GET		true
 		allowed_methods	POST	true
-		allowed_methods	DELETE	false
+		allowed_methods	DELETE	true
 	}
 
 	location /images {
@@ -150,7 +150,7 @@ sample_server_Z2 {
 		autoindex	true
 		allowed_methods	GET		true
 		allowed_methods	POST	true
-		allowed_methods	DELETE	false
+		allowed_methods	DELETE	true
 	}
 
 	location /sum {
