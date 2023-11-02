@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/09/11 23:52:17 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/02 13:03:39 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 #include <dirent.h> // para ler diretorios
 #include <iostream>
 #include <fstream>
+#include "Util.hpp"
+
 
 
 	void		createPage(std::string newPage, int code, std::string status, std::string& content);

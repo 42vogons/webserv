@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/10/30 23:20:34 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/02 13:03:21 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,7 @@ void autoIndex(std::string path) {
 	os.close();
 }
 
-std::string replaceAll2(const std::string& str, const std::string& from, const std::string& to) {
-    std::string result = str;
-    std::string::size_type pos = 0;
-    
-    while ((pos = result.find(from, pos)) != std::string::npos) {
-        result.replace(pos, from.length(), to);
-        pos += to.length();
-    }
 
-    return result;
-}
 
 void generatePageFiles(std::string path, std::string& content, std::string pathDir, std::string pathFileError, std::string baseUrl)
 {
@@ -126,7 +116,7 @@ void generatePageFiles(std::string path, std::string& content, std::string pathD
 		}
 	}
 	std::string text = "{{pages}}";
-	std::string fileContent2 = replaceAll2(fileContent, text ,html);
+	std::string fileContent2 = replaceAll(fileContent, text ,html);
 	content = createResponse(code, status, fileContent2, "text/html");
 	file.close();
 }

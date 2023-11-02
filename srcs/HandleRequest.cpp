@@ -34,33 +34,6 @@ HandleRequest& HandleRequest::operator=(const HandleRequest& obj) {
 	return (*this);
 }
 
-
-///////////////////////////////// FUNCOES UTEIS ///////////////////
-std::vector<std::string> split(const std::string &s, char delimiter) {
-    std::vector<std::string> tokens;
-    std::string token;
-    std::istringstream tokenStream(s);
-
-    while (std::getline(tokenStream, token, delimiter)) {
-        tokens.push_back(token);
-    }
-
-    return tokens;
-}
-
-///////////////////////////////// FUNCOES UTEIS ///////////////////
-std::string replaceAll(const std::string& str, const std::string& from, const std::string& to) {
-    std::string result = str;
-    std::string::size_type pos = 0;
-    
-    while ((pos = result.find(from, pos)) != std::string::npos) {
-        result.replace(pos, from.length(), to);
-        pos += to.length();
-    }
-
-    return result;
-}
-
 void HandleRequest::readBody(std::string buffer, int client_fd){
 	size_t header_end = buffer.find("\r\n\r\n");
 	std::string header2 = buffer.substr(0, header_end);
@@ -135,14 +108,12 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 		key = line.substr(start, end - start);
 		start = end + 1;
 		end = line.size() - start - 1;
-		// remove os espaços iniciais
 		while (end > 0 && line[start] == ' ') {
             ++start;
             --end;
         }
 		value = line.substr(start, end);
 
-		//std::cout << "key = *"<< key <<"* value3=*"<< value << "*" << std::endl;
 		std::string delimiter = "\r\n\r\n";
 
 		if (key == "\r")
