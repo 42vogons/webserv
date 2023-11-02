@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 15:58:50 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/02 18:19:58 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,21 +54,21 @@ Socket& Socket::operator=(const Socket& obj) {
 	return (*this);
 }
 
-void	Socket::setHandleRequest(HandleRequest HandleRequest) {
+void Socket::setHandleRequest(HandleRequest HandleRequest) {
 	this->_HandleRequest = HandleRequest;
 }
 
-HandleRequest	Socket::getHandleRequest(void) {
+HandleRequest Socket::getHandleRequest(void) {
 	return (this->_HandleRequest);
 }
 
-void	Socket::createSocketTCP(void) {
+void Socket::createSocketTCP(void) {
 	int opt = 1;
 	this->_server_fd = socket(AF_INET, SOCK_STREAM, 0);
 	setsockopt(_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(int));
 }
 
-void	Socket::configSocketAddress(void) {
+void Socket::configSocketAddress(void) {
 	this->_addrlen = sizeof(this->_address);
 	memset(&this->_address, 0, sizeof(this->_address));
 	this->_address.sin_family = AF_INET;
@@ -76,7 +76,7 @@ void	Socket::configSocketAddress(void) {
 	this->_address.sin_port = htons(this->_port);
 }
 
-void	Socket::bindSocketToAddress(void) {
+void Socket::bindSocketToAddress(void) {
 	bind(
 		this->_server_fd,
 		(struct sockaddr *)&this->_address,
@@ -84,16 +84,16 @@ void	Socket::bindSocketToAddress(void) {
 	);
 }
 
-void	Socket::waitConnection(void) {
+void Socket::waitConnection(void) {
 	int queue = 1000;
 	listen(this->_server_fd, queue);
 }
 
-int	Socket::getServerFd(void) const {
+int Socket::getServerFd(void) const {
 	return (this->_server_fd);
 }
 
-void	Socket::acceptConnection(void) {
+void Socket::acceptConnection(void) {
 	this->_client_fd = accept(this->_server_fd, (struct sockaddr *)&this->_address, (socklen_t*)&this->_addrlen);
 	std::set<int>::iterator it = _portsAccept.find(this->_port);
 	if (it == _portsAccept.end()) {
@@ -106,7 +106,6 @@ void	Socket::acceptConnection(void) {
 	std::string response ;
 	HandleRequest handleRequest;
 	std::string header = handleRequest.receiveBody(this->_client_fd);
-	//std::cout <<" receive----------" << header << " receive----------" << std::endl;
 	handleRequest.readBuffer(header, this->_client_fd);
 	setHandleRequest(handleRequest);
 	process(response, handleRequest, _server);
@@ -115,7 +114,7 @@ void	Socket::acceptConnection(void) {
 	std::cout << "Closed connection" << std::endl;
 }
 
-std::string	Socket::findField(std::string src, std::string field) {
+std::string Socket::findField(std::string src, std::string field) {
 	size_t pos = src.find(field);
 	if (pos == std::string::npos)
 		return "";
@@ -131,21 +130,21 @@ std::string	Socket::findField(std::string src, std::string field) {
 	return src.substr(pos, end_pos - pos);
 }
 
-bool	fdIsValid(int fd) {
+bool fdIsValid(int fd) {
 	return (fcntl(fd, F_GETFD) != -1 || errno != EBADF);
 }
 
-void	Socket::closeServerFd(void) {
+void Socket::closeServerFd(void) {
 	if (fdIsValid(this->_server_fd))
 		close(this->_server_fd);
 }
 
-void	Socket::closeClientFd(void) {
+void Socket::closeClientFd(void) {
 	if (fdIsValid(this->_client_fd))
 		close(this->_client_fd);
 }
 
-std::ostream&	operator<<(std::ostream& o, const Socket& i) {
+std::ostream& operator<<(std::ostream& o, const Socket& i) {
 	o << "Socket: " << i.getServerFd();
 	return o;
 }

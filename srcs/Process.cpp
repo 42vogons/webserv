@@ -6,17 +6,15 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 17:16:02 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/02 18:29:35 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Process.hpp"
 
-
-void	readImage(std::string filename, int code, std::string status, std::string& content, std::string errorPath, std::string extension) {
+void readImage(std::string filename, int code, std::string status, std::string& content, std::string errorPath, std::string extension) {
 	std::string fileContent;
 	std::string type;
-
 	if (extension == "png" || extension == "bmp" || extension == "jpeg" || extension == "tiff" || extension == "jpg") {
 		type = "image/"+ extension;
 	}
@@ -35,17 +33,17 @@ void	readImage(std::string filename, int code, std::string status, std::string& 
 	content = createResponse(code, status, fileContent, type);
 }
 
-void	readPage(std::string filename, int code, std::string status, std::string& content, std::string errorPath) {
+void readPage(std::string filename, int code, std::string status, std::string& content, std::string errorPath) {
 	std::string fileContent;
 	fileContent = getContent(filename, code, status, errorPath);
 	content = createResponse(code, status, fileContent, "text/html");
 }
 
-void	executeGet(std::string& response, Server server, HandleRequest handleRequest) {
+void executeGet(std::string& response, Server server, HandleRequest handleRequest) {
 	LocationServer locationServer;
 	locationServer = server.getLocationServer(handleRequest.getField("BaseUrl"));
 	std::string rootPath = locationServer.getField("root");
-	if (rootPath[0] == '/'){
+	if (rootPath[0] == '/') {
 		rootPath.erase(0, 1);
 	}
 	std::string basePath = handleRequest.getField("BaseUrl") + handleRequest.getField("Endpoint");
@@ -59,12 +57,10 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
 		return ;
 	}
-
 	if (handleRequest.getField("LastPath") == "files.html") {
 		generatePageFiles(uploadPath, response, rootPath, server.getErrorPages(404)) ;
 		return;	
 	}
-
 	std::string extension;
 	size_t dotPosition = handleRequest.getField("LastPath").find_last_of(".");
 	if (dotPosition != std::string::npos) {
@@ -73,7 +69,6 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 	else {
 		extension = "";
 	}
-	
 	if (extension == "") {
 		std::set<std::string> pages = locationServer.getPagesIndex();
 		for (std::set<std::string>::iterator it = pages.begin(); it != pages.end(); ++it) {
@@ -97,7 +92,6 @@ void	executeGet(std::string& response, Server server, HandleRequest handleReques
 			readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(404));
 		return ;
 	}
-	
 	if (handleRequest.getField("Accept").find("text/html") != std::string::npos && (extension == "html" || extension == "")) {
 		std:: string pathError = server.getErrorPages(404).c_str();
 		std::string endpoint = rootPath + "/" + handleRequest.getField("LastPath");
@@ -112,35 +106,31 @@ void executeDelete(std::string& response, Server server, HandleRequest handleReq
 	LocationServer locationServer;
 	std::string baseUrl = handleRequest.getField("BaseUrl");
 	locationServer = server.getLocationServer(baseUrl);
-
 	if (locationServer.getAllowedMethods("DELETE") != true) {
 		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
 		return ;
 	}
-	if (baseUrl[0] == '/'){
+	if (baseUrl[0] == '/') {
 		baseUrl.erase(0, 1);
 	}
 	std::string pathFile = baseUrl + "/" + handleRequest.getField("LastPath");
 	const char *filename = pathFile.c_str();
-	
 	if (std::remove(filename) == 0) {
-		createPage("Arquivo excluído com sucesso",200, "Ok",response);
-		std::printf("Arquivo excluído com sucesso.\n");
+		createPage("File successfully deleted.",200, "Ok",response);
+		std::printf("File successfully deleted.\n");
 	} else {
-		createPage("Erro ao excluir o arquivo",500, "Internal Server Error",response);
-		std::perror("Erro ao excluir o arquivo");
+		createPage("File deletion unsuccessful. Please try again",500, "Internal Server Error",response);
+		std::perror("File deletion unsuccessful. Please try again.\n");
 	}
 }
 
-void	saveFile(Server server, HandleRequest handlerRequest, std::string& response) {
+void saveFile(Server server, HandleRequest handlerRequest, std::string& response) {
 	LocationServer locationServer = server.getLocationServer(handlerRequest.getField("BaseUrl"));
 	std::string upload_dir = ".";
-
 	std::string rootPath = locationServer.getField("root");
 	if (rootPath[0] == '/') {
 		rootPath.erase(0, 1);
 	}
-	
 	std::string filePage = rootPath + "/files.html";
 	std::string path = rootPath + locationServer.getField("upload_path");
 	if (!directoryExists(path.c_str())) {
@@ -162,32 +152,26 @@ void	saveFile(Server server, HandleRequest handlerRequest, std::string& response
 	response = "HTTP/1.1 301 Found\r\nLocation: /" + filePage + "\r\n\r\n";
 }
 
-void	executePost(std::string& response, Server server, HandleRequest handleRequest) {
+void executePost(std::string& response, Server server, HandleRequest handleRequest) {
 	LocationServer locationServer = server.getLocationServer(handleRequest.getField("BaseUrl"));
 	if (locationServer.getAllowedMethods("POST") != true) {
 		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
 		return ;
 	}
-	//std::cout << "content type = " << handleRequest.getField("Content-Type") << std::endl;
-	
 	std::string body = handleRequest.getBody();
-
 	if (body.empty())
 		body = locationServer.getAllCgiParm().c_str();
-	
-	if (handleRequest.getTypePost() == "File"){
+	if (handleRequest.getTypePost() == "File") {
 		saveFile(server, handleRequest, response);
 		return;
 	}
-
 	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
 	std::string cgiPass = locationServer.getField("cgi_pass");
 	std::ifstream fileCGI(cgiPath.c_str());
-	if (!fileCGI.good() || cgiPass != "pass"){
+	if (!fileCGI.good() || cgiPass != "pass") {
 		createPage("CGI file not found or not allowed",200, "Ok",response);
 		return;
 	}
-		
 	locationServer.getAllCgiParm();
 		int pipe_fd[2];
 	if (pipe(pipe_fd) == -1) {
@@ -195,12 +179,10 @@ void	executePost(std::string& response, Server server, HandleRequest handleReque
 		return ;
 	}
 	pid_t child_pid = fork();
-	if (child_pid == -1)
-	{
+	if (child_pid == -1) {
 		perror("fork");
 	}
-	else if (child_pid == 0)
-	{
+	else if (child_pid == 0) {
 		close(pipe_fd[0]);
 		dup2(pipe_fd[1], STDOUT_FILENO);
 		close(pipe_fd[1]);
@@ -210,8 +192,7 @@ void	executePost(std::string& response, Server server, HandleRequest handleReque
 		perror("execve");
 		_exit(1);
 	}
-	else
-	{
+	else {
 		close(pipe_fd[1]);
 		char buffer[4096];
 		ssize_t bytesRead;
@@ -225,26 +206,17 @@ void	executePost(std::string& response, Server server, HandleRequest handleReque
 	}
 }
 
-void	process(std::string& response, HandleRequest handlerRequest, Server server) {
+void process(std::string& response, HandleRequest handlerRequest, Server server) {
 	LocationServer locationServer;
 	locationServer = server.getLocationServer(handlerRequest.getField("BaseUrl"));
 	std::string method = handlerRequest.getField("Method");
 	std::string version = handlerRequest.getField("Version");
-
-	
-
-	
-	
-
-	
-	if (version.find("1.1") == std::string::npos){
+	if (version.find("1.1") == std::string::npos) {
 		createPage("Version is not HTTP 1.1",400,"Bad Request",response);
 		return;
 	}
-
 	int bodySize = std::atoi(handlerRequest.getField("Content-Length").c_str());
-	if ( bodySize > server.getClientMaxBodySize())
-	{
+	if ( bodySize > server.getClientMaxBodySize()) {
 		createPage("Body max size error",400,"Bad Request",response);
 		return;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/10/30 23:38:03 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/02 18:13:10 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ Server& Server::operator=(const Server& obj) {
 	return (*this);
 }
 
-void	Server::readLine(std::string line) {
+void Server::readLine(std::string line) {
 	std::string			key;
 	std::string			valueString;
 	int					valueInt;
@@ -79,65 +79,65 @@ void	Server::readLine(std::string line) {
 	}
 }
 
-void	Server::setPorts(int port) {
+void Server::setPorts(int port) {
 	if (this->_ports.find(port) == this->_ports.end())
 		this->_ports.insert(port);
 }
 
-void	Server::setServeName(std::string serverName) {
+void Server::setServeName(std::string serverName) {
 	this->_serverName = serverName;
 }
 
-void	Server::setClientMaxBodySize(int clientMaxBodySize) {
+void Server::setClientMaxBodySize(int clientMaxBodySize) {
 	this->_clientMaxBodySize = clientMaxBodySize;
 }
 
-void	Server::setErrorPages(int code, std::string page) {
+void Server::setErrorPages(int code, std::string page) {
 	this->_errorPages[code] =  page;
 }
 
-void	Server::setLocationServer(std::string name, LocationServer locationServer) {
+void Server::setLocationServer(std::string name, LocationServer locationServer) {
 	this->_locationServer[name] =  locationServer;
 	this->_sizeLocation += 1;
 }
 
-void	Server::setStatus(bool status){
+void Server::setStatus(bool status){
 	this->_status = status;
 }
 
-std::set<int>	Server::getPorts(void) const {
+std::set<int> Server::getPorts(void) const {
 	return (this->_ports);
 }
 
-std::string	Server::getServerName(void) const {
+std::string Server::getServerName(void) const {
 	return (this->_serverName);
 }
 
-int	Server::getClientMaxBodySize(void) const {
+int Server::getClientMaxBodySize(void) const {
 	return (this->_clientMaxBodySize);
 }
 
-std::string	Server::getErrorPages(int code) const {
+std::string Server::getErrorPages(int code) const {
 	if (this->_errorPages.find(code) != this->_errorPages.end())
 		return (this->_errorPages.find(code)->second);
 	return (this->_errorPages.find(404)->second);
 }
 
-LocationServer	Server::getLocationServer(std::string name) const {
+LocationServer Server::getLocationServer(std::string name) const {
 	if (this->_locationServer.find(name) != this->_locationServer.end())
 		return (this->_locationServer.find(name)->second);
 	return LocationServer();
 }
 
-std::string	Server::getLastLocation(void) const {
+std::string Server::getLastLocation(void) const {
 	return (this->_lastLocation);
 }
 
-int		Server::getSizeLocation(void) {
+int Server::getSizeLocation(void) {
 	return this->_sizeLocation;
 }
 
-std::ostream&	operator<<(std::ostream& o, const Server& i) {
+std::ostream& operator<<(std::ostream& o, const Server& i) {
 	o << "server: " << i.getServerName();
 	return o;
 }
