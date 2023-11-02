@@ -3,23 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:23:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/10/30 23:16:04 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/02 18:27:52 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "WebServer.hpp"
 #include <csignal>
 
-//WebServer web_server;
-
 static void handle_signal(int signal) {
 	exit(signal);
 }
 
-int	main(int argc, char** argv) {
+int main(int argc, char** argv) {
 	std::string fileName;
 	
 	if (argc > 2) {

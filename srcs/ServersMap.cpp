@@ -37,7 +37,7 @@ void ServersMap::addServer(std::string serverName, Server server) {
 	this->_serversMap[serverName] = server;
 }
 
-std::set<int>	ServersMap::checkServers(void) {
+std::set<int> ServersMap::checkServers(void) {
 	std::map<std::string, Server> servers = this->getServersMap();
 	for (std::map<std::string, Server>::iterator it = servers.begin(); it != servers.end(); ++it) {
 		std::string errors = "";
@@ -49,7 +49,7 @@ std::set<int>	ServersMap::checkServers(void) {
 			errors += " Invalid ports ";
 		if (server.getSizeLocation() == 0)
 			errors += " No Locations registred ";
-		if (errors != ""){
+		if (errors != "") {
 			server.setStatus(false);
 			std::cout << errors << "\r\n" << std::endl;
 		} else {
@@ -64,14 +64,13 @@ std::set<int>	ServersMap::checkServers(void) {
 	return this->_portsAccepted;
 }
 
-void	ServersMap::readFile(std::string fileName) {
+void ServersMap::readFile(std::string fileName) {
 	std::ifstream	myFile(fileName.c_str());
 	std::string		line;
 	std::string		key, name;
 	std::string		lastServer;
 	LocationServer	locationServer;
 	int				level;
-
 	if (!myFile.is_open())
 		std::cerr << "Error opening file" << std::endl;
 	else {
@@ -113,19 +112,19 @@ int ServersMap::countTabs(std::string line) {
 	return (countTab);
 }
 
-void	ServersMap::setServer(std::string serverName, Server server) {
+void ServersMap::setServer(std::string serverName, Server server) {
 	this->_serversMap[serverName] =  server;
 }
 
-Server	ServersMap::getServer(std::string serverName) {
+Server ServersMap::getServer(std::string serverName) {
 	return (this->_serversMap[serverName]);
 }
 
-std::map<std::string, Server>	ServersMap::getServersMap(void) {
+std::map<std::string, Server> ServersMap::getServersMap(void) {
 	return (this->_serversMap);
 }
 
-std::ostream&	operator<<(std::ostream& o, const ServersMap& i) {
+std::ostream& operator<<(std::ostream& o, const ServersMap& i) {
 	(void)i;
 	o << "something";
 	return o;

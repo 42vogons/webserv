@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   LocationServer.cpp                           :+:      :+:    :+:   */
+/*   LocationServer.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/09 17:32:15 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/10 00:48:38 by cpereira         ###   ########.fr       */
+/*   Created: 2023/11/02 17:48:11 by anolivei          #+#    #+#             */
+/*   Updated: 2023/11/02 18:27:26 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,27 +35,27 @@ LocationServer& LocationServer::operator=(const LocationServer& obj) {
 	return (*this);
 }
 
-void	LocationServer::setCgiParam(std::string key, std::string value) {
+void LocationServer::setCgiParam(std::string key, std::string value) {
 	_cgiParam[key] = value;
 }
 
-void	LocationServer::setAllowedMethods(std::string name, bool status) {
+void LocationServer::setAllowedMethods(std::string name, bool status) {
 	_allowedMethods[name] = status;
 }
 
-void	LocationServer::setPagesIndex(std::string page) {
+void LocationServer::setPagesIndex(std::string page) {
 	if(_pagesIndex.find(page) == _pagesIndex.end())
 		_pagesIndex.insert(page);
 }
 
-bool	LocationServer::getAllowedMethods(std::string methods) {
+bool LocationServer::getAllowedMethods(std::string methods) {
 	if (_allowedMethods.find(methods) != _allowedMethods.end())
 		return _allowedMethods.find(methods)->second;
 	else
 		return 0;
 }
 
-std::set<std::string>	LocationServer::getPagesIndex(void) {
+std::set<std::string> LocationServer::getPagesIndex(void) {
 	return _pagesIndex;
 }
 
@@ -67,24 +67,24 @@ std::string	LocationServer::getCgiParm(std::string param) {
 
 std::string LocationServer::getAllCgiParm(void) {
 	std::string concatenatedArguments;
-    for (std::map<std::string, std::string>::iterator it = _cgiParam.begin(); it != _cgiParam.end(); ++it)
+	for (std::map<std::string, std::string>::iterator it = _cgiParam.begin(); it != _cgiParam.end(); ++it)
 		concatenatedArguments += it->first + "=" + it->second + "&";
-    if (!concatenatedArguments.empty())
-        concatenatedArguments.erase(concatenatedArguments.size() - 1);
-    return concatenatedArguments;
+	if (!concatenatedArguments.empty())
+		concatenatedArguments.erase(concatenatedArguments.size() - 1);
+	return concatenatedArguments;
 }
 
 std::string	LocationServer::getField(std::string field) {
 	return _variables[field];
 }
 
-void	LocationServer::readLine(std::string line) {
+void LocationServer::readLine(std::string line) {
 	std::string key, valueString;
 	std::istringstream iss(line);
 	iss >> key >> valueString;
 	if (key.empty() || key.substr(0, 1) == "#")
 		return;
-	if (key.find("allowed_methods") == 0) 	{
+	if (key.find("allowed_methods") == 0) {
 		key = valueString;
 		iss >> valueString;
 		if (valueString == "true")
@@ -92,8 +92,7 @@ void	LocationServer::readLine(std::string line) {
 		else
 			this->setAllowedMethods(key, false);
 		return;
-	}	
-
+	}
 	if (key.find("cgi_param") == 0) {
 		key = valueString;
 		iss >> valueString;
@@ -110,7 +109,7 @@ void	LocationServer::readLine(std::string line) {
 	_variables[key] = valueString;
 }
 
-std::ostream&	operator<<(std::ostream& o, const LocationServer& i) {
+std::ostream& operator<<(std::ostream& o, const LocationServer& i) {
 	(void)i;
 	o << "something";
 	return o;
