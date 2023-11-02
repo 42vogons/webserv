@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Exemplo de Exclusão de Imagem</title>
+    <title>Files</title>
     <style>
         .image-container {
             display: inline-block;
@@ -16,7 +16,7 @@
 
 <script>
 function deleteImage(imageName) {
-    if (confirm("Tem certeza de que deseja excluir esta arquivowww : "+imageName+" ?")) {
+    if (confirm("Tem certeza de que deseja excluir esta arquivo : "+imageName+" ?")) {
         fetch('deletert/' + encodeURIComponent(imageName), {
             method: 'DELETE'
         })

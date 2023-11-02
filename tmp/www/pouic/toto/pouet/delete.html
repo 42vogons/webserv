@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Exemplo de Exclusão de Imagem</title>
+    <title>Files/title>
     <style>
         .image-container {
             display: inline-block;
@@ -31,7 +31,6 @@
         <br>
         <span class="delete-icon" onclick="deleteImage('texto.txt')"><img src="images/lixeira.png" height="20" width="20"></span>
     </div>
-    <!-- Adicione mais divs de image-container conforme necessário -->
 </div>
 
 <script>
@@ -43,7 +42,6 @@ function deleteImage(imageName) {
         .then(response => {
             if (response.ok) {
                 console.log('Imagem excluída com sucesso.');
-                // Remova a div de image-container após excluir
                 var imageContainer = document.querySelector(`[onclick="deleteImage('${imageName}')"]`).parentNode;
                 imageContainer.parentNode.removeChild(imageContainer);
             } else {
@@ -56,6 +54,5 @@ function deleteImage(imageName) {
     }
 }
 </script>
-
 </body>
 </html>

@@ -6,7 +6,7 @@
 #    By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/27 00:08:05 by cpereira          #+#    #+#              #
-#    Updated: 2023/11/02 16:41:07 by anolivei         ###   ########.fr        #
+#    Updated: 2023/11/02 16:45:10 by anolivei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,8 @@ SRC =	$(SRC_DIR)/main.cpp \
 		$(SRC_DIR)/HandleRequest.cpp \
 		$(SRC_DIR)/Pages.cpp \
 		$(SRC_DIR)/Process.cpp \
-		$(SRC_DIR)/Utils.cpp
+		$(SRC_DIR)/Utils.cpp \
+		$(SRC_DIR)/Util.cpp
 
 OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.opp, $(SRC))
 

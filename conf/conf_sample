@@ -53,7 +53,7 @@ sample_server_Z1 {
 	location /sum {
 		root pages/site1/sum.html
 		upload_path pages/site1
-		cgi_pass	pass
+		cgi_pass	pa2ss
 		#index	index.htm index.html4 index.php
 		index	index.htm index.html index.php
 		autoindex	true

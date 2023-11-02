@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 12:12:19 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/02 15:58:50 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	Socket::acceptConnection(void) {
 	process(response, handleRequest, _server);
 	send(_client_fd, response.c_str(), response.size(), 0);
 	close(_client_fd);
-	std::cout << "Closed connection" << _client_fd << std::endl;
+	std::cout << "Closed connection" << std::endl;
 }
 
 std::string	Socket::findField(std::string src, std::string field) {
