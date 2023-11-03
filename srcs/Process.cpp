@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 19:29:00 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/02 23:32:07 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,7 @@ void executeDelete(std::string& response, Server server, HandleRequest handleReq
 		createPage("File successfully deleted.",200, "Ok",response);
 		std::printf("File successfully deleted.\n");
 	} else {
-		createPage("File deletion unsuccessful. Please try again",500, "Internal Server Error",response);
-		std::perror("File deletion unsuccessful. Please try again.\n");
+		createPage("File deletion unsuccessful. File Not Found",404, "File Not Found",response);
 	}
 }
 
