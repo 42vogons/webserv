@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Process.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 18:29:35 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/02 23:32:07 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void readImage(std::string filename, int code, std::string status, std::string& content, std::string errorPath, std::string extension) {
 	std::string fileContent;
+	
 	std::string type;
 	if (extension == "png" || extension == "bmp" || extension == "jpeg" || extension == "tiff" || extension == "jpg") {
 		type = "image/"+ extension;
@@ -29,6 +30,9 @@ void readImage(std::string filename, int code, std::string status, std::string& 
 	}
 	else
 		type = "text/html";
+	// colocar uma logica aqui para quando não for esses tipos de arquivo, ele baixa o arquivo		
+	
+	
 	fileContent = getContent(filename, code, status, errorPath);
 	content = createResponse(code, status, fileContent, type);
 }
@@ -98,7 +102,7 @@ void executeGet(std::string& response, Server server, HandleRequest handleReques
 		readPage(endpoint, 200, "Ok", response, pathError);
 	} 
 	else {
-		readImage(uploadPath +"/"+ handleRequest.getField("LastPath"), 200, "Ok", response, "images/noPhoto.png", extension);
+		readImage(uploadPath +"/"+ handleRequest.getField("LastPath"), 200, "Ok", response, "", extension);
 	}
 }
 
@@ -119,8 +123,7 @@ void executeDelete(std::string& response, Server server, HandleRequest handleReq
 		createPage("File successfully deleted.",200, "Ok",response);
 		std::printf("File successfully deleted.\n");
 	} else {
-		createPage("File deletion unsuccessful. Please try again",500, "Internal Server Error",response);
-		std::perror("File deletion unsuccessful. Please try again.\n");
+		createPage("File deletion unsuccessful. File Not Found",404, "File Not Found",response);
 	}
 }
 
