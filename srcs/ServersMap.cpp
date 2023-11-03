@@ -41,20 +41,20 @@ std::set<int> ServersMap::checkServers(void) {
 	std::map<std::string, Server> servers = this->getServersMap();
 	for (std::map<std::string, Server>::iterator it = servers.begin(); it != servers.end(); ++it) {
 		std::string errors = "";
-		std::cout << "Server: " << it->first;
+		std::cout << "\e[38;2;0;186;188mServer: \e[0;38;5;199m" << it->first;
 		Server server = it->second;
 		if (server.getClientMaxBodySize()  < 0)
-			errors += " Max body size is inválid ";
+			errors += "\033[0;31m Max body size is invalid\033[0m\n";
 		if (server.getPorts().empty())
-			errors += " Invalid ports ";
+			errors += "\033[0;31m Invalid ports\033[0m\n";
 		if (server.getSizeLocation() == 0)
-			errors += " No Locations registred ";
+			errors += "\033[0;31m No Locations registered\033[0m\n";
 		if (errors != "") {
 			server.setStatus(false);
-			std::cout << errors << "\r\n" << std::endl;
+			std::cout << errors << "\033[0m\n" << std::endl;
 		} else {
 			server.setStatus(true);
-			std::cout << "OK\r\n" << std::endl;
+			std::cout << "\033[0;32m OK\033[0m\n" << std::endl;
 		}
 		std::set<int> ports = server.getPorts();
 		for (std::set<int>::iterator pt = ports.begin(); pt != ports.end(); ++pt) {

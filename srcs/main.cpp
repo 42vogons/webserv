@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:23:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 18:27:52 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/03 17:03:28 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int main(int argc, char** argv) {
 		}
 	}
 	WebServer webServer;
+	std::cout << webServer;
 	webServer.loadFile(fileName);
 	signal(SIGINT, handle_signal);
 	webServer.handleSocketConnections();

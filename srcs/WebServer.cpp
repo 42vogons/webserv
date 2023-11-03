@@ -108,6 +108,6 @@ void WebServer::_connect(Socket *socket) {
 
 std::ostream& operator<<(std::ostream& o, const WebServer& i) {
 	(void)i;
-	o << "something";
+	o << WEBSERV;
 	return o;
 }
