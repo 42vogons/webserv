@@ -1,0 +1,96 @@
+server1 {
+
+	listen 8080
+	server_name localhost
+	client_max_body_size 70000
+
+	error_page 301 pages/errors/301.html
+	error_page 400 pages/errors/400.html
+	error_page 403 pages/errors/403.html
+	error_page 404 pages/errors/404.html
+	error_page 405 pages/errors/405.html
+	error_page 500 pages/errors/500.html
+
+
+	location / {
+		root /pages/site1
+		upload_path /uploads
+		cgi_pass	pass
+
+		index	index.htm index.html index.php
+		autoindex	false
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+		cgi sum.py
+	}
+
+	location /pages/site1 {
+		root pages/site1
+		upload_path /uploads
+		cgi_pass	pass
+		index	index.htm index.html index.php
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+	}
+
+	location /sum {
+		root pages/site1/sum.html
+		upload_path pages/site1
+		cgi_pass	pass
+		index	index.htm index.html index.php
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+	}
+
+	location /images {
+		root images
+		allowed_methods	GET		true
+	}
+
+	location /pages/site1/uploads {
+		root /pages/site1
+		upload_path /uploads
+		index	index.htm index.html index.php
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+	}
+
+	location /pages {
+		root pages/site2
+		upload_path /uploads
+		cgi_pass	pass
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+	}
+
+	location /pages/site2 {
+		root pages/site2
+		upload_path /uploads
+		cgi_pass	pass
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+	}
+
+	location /pages/site2/upload {
+		root pages/site2/upload
+		upload_path /uploads
+		cgi_pass	pass
+		autoindex	true
+		allowed_methods	GET		false
+		allowed_methods	POST	false
+		allowed_methods	DELETE	false
+	}
+}
+
+

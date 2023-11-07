@@ -14,7 +14,7 @@ server1 {
 
 	location / {
 		#redirection www.amazon.com
-		root /pages/site1
+		root ./pages/site1
 		upload_path /uploads
 		cgi_pass	pass
 		#index	index.htm index.html4 index.php

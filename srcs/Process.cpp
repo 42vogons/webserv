@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 23:32:07 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/07 17:18:32 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void executeGet(std::string& response, Server server, HandleRequest handleReques
 	if (rootPath[0] == '/') {
 		rootPath.erase(0, 1);
 	}
+	
 	std::string basePath = handleRequest.getField("BaseUrl") + handleRequest.getField("Endpoint");
 	std::string uploadPath = rootPath + locationServer.getField("upload_path");
 	std::string redirect = locationServer.getField("redirection");
@@ -214,6 +215,7 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 	locationServer = server.getLocationServer(handlerRequest.getField("BaseUrl"));
 	std::string method = handlerRequest.getField("Method");
 	std::string version = handlerRequest.getField("Version");
+	
 	if (version.find("1.1") == std::string::npos) {
 		createPage("Version is not HTTP 1.1",400,"Bad Request",response);
 		return;

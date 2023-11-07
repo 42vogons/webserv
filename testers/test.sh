@@ -1,133 +1,106 @@
+#!/bin/bash
+
+# Defina o caminho para o executável webserver e o arquivo de configuração
+webserver="../webserv"
+config_file="conf_test_good"
 PORT=8080
-URL="www.localhost:8081"
-
-INVALIDURL="www.localhost:8081/99"
-
-URLIMG="http://localhost:8081/upload"
-URLDELTE="http://localhost:8081/delete.html"
 
 
-#curl -v www.localhost:$PORT >> response_code.txt
+cp -r ../pages .
+cp -r ../images .
+#cp -r image_small.png pages/site2/uploads
 
-###### GET ########
+# Inicie o servidor web em segundo plano com a configuração especificada
+"$webserver" "$config_file" &
 
-#### get de uma pagina valida
+# Aguarde um tempo para garantir que o servidor web esteja totalmente iniciado
+sleep 2
+
+
+# Variáveis para contar os acertos e erros
+acertos=0
+erros=0
+
+# Função para verificar o código de status da resposta
+check_status() {
+    method=$1
+    expected_status=$2
+    url=$3
+
+    if [ "$method" = "GET" ]; then
+        http_status=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+    fi
+
+    if [ "$method" = "POST" ]; then
+        http_status=$(curl -s -o /dev/null -X POST -w "%{http_code}" -F "imagem=@$4" "$url")
+    fi
+
+    if [ "$method" = "DELETE" ]; then
+        http_status=$(curl -s -o /dev/null -X DELETE -w "%{http_code}" "$url")
+    fi
+    echo ""
+
+    if [ "$http_status" = "$expected_status" ]; then
+        echo -e "\e[32mOK (código de status $http_status)\e[0m"
+        ((acertos++))
+    else
+        echo -e "\e[31mFAIL (código de status $http_status)\e[0m"
+        ((erros++))
+    fi
+}
+
+# Teste 1: GET de uma página válida
 echo "TEST 1 - GET VALID PAGE EXPECTED 200"
-curl -s -o /dev/null -w "%{http_code}" $URL > response_code.txt
-HTTP_STATUS=$(cat response_code.txt)
-if [ "$HTTP_STATUS" = "200" ]; then
-    echo "OK (código de status $HTTP_STATUS)."
-else
-    echo "FAIL (código de status $HTTP_STATUS)."
-fi
-rm response_code.txt
-echo ""
+check_status "GET" 200 "http://localhost:$PORT/pages/site1/"
 
-
-#### get de uma pagina invalida
+# Teste 2: GET de uma página inválida
 echo "TEST 2 - GET INVALID PAGE EXPECTED 404"
-curl -s -o /dev/null -w "%{http_code}" $INVALIDURL > response_code.txt
-HTTP_STATUS=$(cat response_code.txt)
-if [ "$HTTP_STATUS" = "404" ]; then
-    echo "OK (código de status $HTTP_STATUS)."
-else
-    echo "FAIL (código de status $HTTP_STATUS)."
-fi
-rm response_code.txt
-echo ""
+check_status "GET" 404 "http://localhost:$PORT/pages/site1/dd"
 
-
-### get de uma imagem invalida
+# Teste 3: GET de uma imagem inválida
 echo "TEST 3 - GET INVALID PAGE IMAGE EXPECTED 404"
-curl -s -o /dev/null -w "%{http_code}" "http://localhost:8081/pages/site2/uploads/produto.png" > response_code.txt
-HTTP_STATUS=$(cat response_code.txt)
-if [ "$HTTP_STATUS" = "404" ]; then
-    echo "OK (código de status $HTTP_STATUS)."
-else
-    echo "FAIL (código de status $HTTP_STATUS)."
-fi
-rm response_code.txt
-echo ""
+check_status "GET" 404 "http://localhost:$PORT/pages/site1/uploads/image_small.png"
 
-### post envio de arquivo
+# Teste 4: POST envio de arquivo (redirecionamento)
 echo "TEST 4 - POST SEND IMAGE EXPECTED 301 - REDIRECT"
-IMAGE_FILE="produto.png"
-curl -s -o /dev/null -X POST -w "%{http_code}" -F "imagem=@$IMAGE_FILE" $URLIMG > response_code.txt
-HTTP_STATUS=$(cat response_code.txt)
-if [ "$HTTP_STATUS" = "301" ]; then
-    echo "OK (código de status $HTTP_STATUS)."
-else
-    echo "FAIL (código de status $HTTP_STATUS)."
-fi
-rm response_code.txt
-echo ""
+check_status "POST" 301 "http://localhost:$PORT/upload" "image_small.png"
 
-### get de uma imagem valida
-
+# Teste 5: GET de uma imagem válida
 echo "TEST 5 - GET VALID PAGE IMAGE EXPECTED 200"
-curl -s -o /dev/null -w "%{http_code}" "http://localhost:8081/pages/site2/uploads/produto.png" > response_code.txt
-HTTP_STATUS=$(cat response_code.txt)
-if [ "$HTTP_STATUS" = "200" ]; then
-    echo "OK (código de status $HTTP_STATUS)."
-else
-    echo "FAIL (código de status $HTTP_STATUS)."
-fi
-rm response_code.txt
-echo ""
+check_status "GET" 200 "http://localhost:$PORT/pages/site1/uploads/image_small.png"
 
-### DELETA o arquivo enviado
+# Teste 6: DELETE de um arquivo enviado
 echo "TEST 6 - DELETE FILE EXPECTED 200"
-curl -s -o /dev/null -X DELETE -w "%{http_code}" "http://localhost:8081/pages/site2/uploads/produto.png" > response_code.txt
-HTTP_STATUS=$(cat response_code.txt)
-if [ "$HTTP_STATUS" = "200" ]; then
-    echo "OK (código de status $HTTP_STATUS)."
-else
-    echo "FAIL (código de status $HTTP_STATUS)."
-fi
+check_status "DELETE" 200 "http://localhost:$PORT/pages/site1/uploads/image_small.png"
 
-rm response_code.txt
-echo ""
-
-### DELETA já deletado
+# Teste 7: DELETE de um arquivo já deletado
 echo "TEST 7 - DELETE INVALID FILE EXPECTED 404"
-curl -s -o /dev/null -X DELETE -w "%{http_code}" "http://localhost:8080/pages/site1/uploads/produto.png" > response_code.txt
-HTTP_STATUS=$(cat response_code.txt)
-if [ "$HTTP_STATUS" = "404" ]; then
-    echo "OK (código de status $HTTP_STATUS)."
-else
-    echo "FAIL (código de status $HTTP_STATUS)."
-fi
+check_status "DELETE" 404 "http://localhost:$PORT/pages/site1/uploads/image_small.png"
 
-rm response_code.txt
-echo ""
+# Teste 8: GET de uma página não encontrada mas autoindex on
+echo "TEST 8 - GET PAGE NOT FOUND AUTOINDEX ON"
+check_status "GET" 200 "http://localhost:$PORT/pages/site2"
 
-### GET DE UMA PASTA NÃO PERMITIDA
-echo "TEST 8 - GET PAGE NOT ALLOWED EXPECTED 403"
-curl -s -o /dev/null -X DELETE -w "%{http_code}" "http://localhost:8080" > response_code.txt
-HTTP_STATUS=$(cat response_code.txt)
-if [ "$HTTP_STATUS" = "403" ]; then
-    echo "OK (código de status $HTTP_STATUS)."
-else
-    echo "FAIL (código de status $HTTP_STATUS)."
-fi
+# Teste 9: GET de uma página não permitida
+echo "TEST 9 - GET PAGE NOT ALLOWED EXPECTED 403"
+check_status "GET" 403 "http://localhost:$PORT/pages/site2/uploads/upload.html"
 
-rm response_code.txt
-echo ""
+# Teste 10: DELETE de um arquivo já deletado
+echo "TEST 10 - DELETE INVALID FILE EXPECTED 403"
+check_status "DELETE" 403 "http://localhost:$PORT/pages/site2/uploads/image_small.png"
+
+# Teste 11: POST envio de arquivo (redirecionamento)
+echo "TEST 11 - POST SEND BIG IMAGE EXPECTED 413 - REDIRECT"
+check_status "POST" 413 "http://localhost:$PORT/upload" "foto_42.jpg"
 
 
+rm -rf pages
+rm -rf images
 
+# Encerre o servidor web
+killall -9 webserv
+# Mostrar o total de acertos e erros
+echo "Quantidade de acertos: $acertos"
+echo "Quantidade de erros: $erros"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+echo "O teste foi concluído."
