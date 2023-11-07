@@ -102,10 +102,10 @@ rm response_code.txt
 echo ""
 
 ### GET DE UMA PASTA NÃO PERMITIDA
-echo "TEST 8 - GET PAGE NOT ALLOWED EXPECTED 403"
+echo "TEST 8 - GET PAGE NOT ALLOWED EXPECTED 405"
 curl -s -o /dev/null -X DELETE -w "%{http_code}" "http://localhost:8080" > response_code.txt
 HTTP_STATUS=$(cat response_code.txt)
-if [ "$HTTP_STATUS" = "403" ]; then
+if [ "$HTTP_STATUS" = "405" ]; then
     echo "OK (código de status $HTTP_STATUS)."
 else
     echo "FAIL (código de status $HTTP_STATUS)."
