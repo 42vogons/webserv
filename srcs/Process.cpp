@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Process.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 23:32:07 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/03 17:37:37 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void executeGet(std::string& response, Server server, HandleRequest handleReques
 		return ;
 	}
 	if (locationServer.getAllowedMethods("GET") != true) {
-		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
+		readPage(server.getErrorPages(405), 405, "Refused", response, server.getErrorPages(405));
 		return ;
 	}
 	if (handleRequest.getField("LastPath") == "files.html") {
@@ -111,7 +111,7 @@ void executeDelete(std::string& response, Server server, HandleRequest handleReq
 	std::string baseUrl = handleRequest.getField("BaseUrl");
 	locationServer = server.getLocationServer(baseUrl);
 	if (locationServer.getAllowedMethods("DELETE") != true) {
-		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
+		readPage(server.getErrorPages(405), 405, "Refused", response, server.getErrorPages(405));
 		return ;
 	}
 	if (baseUrl[0] == '/') {
@@ -158,7 +158,7 @@ void saveFile(Server server, HandleRequest handlerRequest, std::string& response
 void executePost(std::string& response, Server server, HandleRequest handleRequest) {
 	LocationServer locationServer = server.getLocationServer(handleRequest.getField("BaseUrl"));
 	if (locationServer.getAllowedMethods("POST") != true) {
-		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
+		readPage(server.getErrorPages(405), 405, "Refused", response, server.getErrorPages(405));
 		return ;
 	}
 	std::string body = handleRequest.getBody();
@@ -220,7 +220,7 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 	}
 	int bodySize = std::atoi(handlerRequest.getField("Content-Length").c_str());
 	if ( bodySize > server.getClientMaxBodySize()) {
-		createPage("Body max size error",400,"Bad Request",response);
+		readPage(server.getErrorPages(413), 413, "Payload Too Large", response, server.getErrorPages(413));
 		return;
 	}
 	std::set<int>::iterator it = server.getPorts().find(atoi(handlerRequest.getField("Ports").c_str()));
