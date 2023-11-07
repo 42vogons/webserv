@@ -48,7 +48,8 @@ void HandleRequest::readBody(std::string buffer, int client_fd){
 			size_t fileNameStart = buffer.find(contentDisposition);
 			fileNameStart += contentDisposition.length();
 			size_t fileNameEnd = buffer.find("\"", fileNameStart);
-			this->_headers["fileName"] = buffer.substr(fileNameStart, fileNameEnd - fileNameStart); 
+			std::string filename = buffer.substr(fileNameStart, fileNameEnd - fileNameStart);
+			this->_headers["fileName"] = replaceAll(filename," ","_"); 
 			_typePost = "File";
 			size_t headerEndPos = body.find("\r\n\r\n");
 			std::string binaryContent = body.substr(headerEndPos + 4);
