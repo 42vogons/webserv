@@ -99,10 +99,10 @@ echo "TEST 11 - POST SEND BIG IMAGE EXPECTED 413 - REDIRECT"
 check_status "POST_FILE" 413 "http://localhost:$PORT/upload" "image_big.png"
 
 echo "TEST 12 - POST CALC - EXPECTED 6.0"
-check_status "POST" "Resultado: 6.0" "http://localhost:8080/soma2.html" "num1=2&num2=4"
+check_status "POST" "Resultado: 6.0" "http://localhost:$PORT/sum.html" "num1=2&num2=4"
 
 echo "TEST 13 - POST CALC - NOT SEND NUMBERS"
-check_status "POST" "<p>Por favor, preencha ambos os números.</p>" "http://localhost:8080/soma2.html" "num1=1&num4=4"
+check_status "POST" "<p>Por favor, preencha ambos os números.</p>" "http://localhost:$PORT/sum.html" "num1=1&num4=4"
 
 rm -rf pages
 rm -rf images
