@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Defina o caminho para o executável webserver e o arquivo de configuração
 webserver="../webserv"
 config_file="conf_test_good"
 PORT=8080
@@ -10,7 +9,7 @@ cp -r ../pages .
 cp -r ../images .
 cp -r ../cgi .
 
-#cp -r image_small.png pages/site2/uploads
+cp -r image_small.png pages/site2/uploads
 
 # Inicie o servidor web em segundo plano com a configuração especificada
 "$webserver" "$config_file" &
@@ -38,7 +37,7 @@ check_status() {
     fi
 
     if [ "$method" = "POST" ]; then
-        http_status=$(curl -s -X POST -d "$4" "$url")
+        http_status=$(curl -s -o -X POST -d "$4" "$url")
     fi
 
     if [ "$method" = "DELETE" ]; then
