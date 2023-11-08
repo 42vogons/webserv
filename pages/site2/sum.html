@@ -4,7 +4,66 @@
     <meta charset="UTF-8">
     <title>Soma de Números</title>
     <style>
-        /* ... Estilos ... */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        form label {
+            display: block;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        #calculate-btn {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        p#result {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
@@ -16,6 +75,7 @@
             <button type="button" id="calculate-btn">Calcular</button>
         </form>
         <p id="result"></p>
+        <button onclick="window.location.href = 'index.html'">Voltar para a Home</button>
     </div>
 
     <script>

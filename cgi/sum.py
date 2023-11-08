@@ -15,6 +15,6 @@ if "num1" in form and "num2" in form:
     num1 = form["num1"].value
     num2 = form["num2"].value
     result = sum_numbers(num1, num2)
-    print(f"Resultado: {result}")
+    print(result)
 else:
     print("<p>Por favor, preencha ambos os números.</p>")

@@ -145,7 +145,7 @@ server2 {
 	location /uploads {
 		root pages/site2/uploads
 		autoindex	true
-		allowed_methods	GET		false
+		allowed_methods	GET		true
 	}
 
 	location /mercadolivre {
