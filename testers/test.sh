@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Defina o caminho para o executável webserver e o arquivo de configuração
 webserver="../webserv"
 config_file="conf_test_good"
 PORT=8080
@@ -8,7 +7,9 @@ PORT=8080
 
 cp -r ../pages .
 cp -r ../images .
-#cp -r image_small.png pages/site2/uploads
+cp -r ../cgi .
+
+cp -r image_small.png pages/site2/uploads
 
 # Inicie o servidor web em segundo plano com a configuração especificada
 "$webserver" "$config_file" &
@@ -31,14 +32,17 @@ check_status() {
         http_status=$(curl -s -o /dev/null -w "%{http_code}" "$url")
     fi
 
-    if [ "$method" = "POST" ]; then
+    if [ "$method" = "POST_FILE" ]; then
         http_status=$(curl -s -o /dev/null -X POST -w "%{http_code}" -F "imagem=@$4" "$url")
+    fi
+
+    if [ "$method" = "POST" ]; then
+        http_status=$(curl -s -o -X POST -d "$4" "$url")
     fi
 
     if [ "$method" = "DELETE" ]; then
         http_status=$(curl -s -o /dev/null -X DELETE -w "%{http_code}" "$url")
     fi
-    echo ""
 
     if [ "$http_status" = "$expected_status" ]; then
         echo -e "\e[32mOK (código de status $http_status)\e[0m"
@@ -47,6 +51,7 @@ check_status() {
         echo -e "\e[31mFAIL (código de status $http_status)\e[0m"
         ((erros++))
     fi
+    echo ""
 }
 
 # Teste 1: GET de uma página válida
@@ -55,7 +60,7 @@ check_status "GET" 200 "http://localhost:$PORT/pages/site1/"
 
 # Teste 2: GET de uma página inválida
 echo "TEST 2 - GET INVALID PAGE EXPECTED 404"
-check_status "GET" 404 "http://localhost:$PORT/pages/site1/dd"
+check_status "GET" 404 "http://localhost:$PORT/pages/lalala.html"
 
 # Teste 3: GET de uma imagem inválida
 echo "TEST 3 - GET INVALID PAGE IMAGE EXPECTED 404"
@@ -63,7 +68,7 @@ check_status "GET" 404 "http://localhost:$PORT/pages/site1/uploads/image_small.p
 
 # Teste 4: POST envio de arquivo (redirecionamento)
 echo "TEST 4 - POST SEND IMAGE EXPECTED 301 - REDIRECT"
-check_status "POST" 301 "http://localhost:$PORT/upload" "image_small.png"
+check_status "POST_FILE" 301 "http://localhost:$PORT/pages/site1/upload.html" "image_small.png"
 
 # Teste 5: GET de uma imagem válida
 echo "TEST 5 - GET VALID PAGE IMAGE EXPECTED 200"
@@ -83,19 +88,25 @@ check_status "GET" 200 "http://localhost:$PORT/pages/site2"
 
 # Teste 9: GET de uma página não permitida
 echo "TEST 9 - GET PAGE NOT ALLOWED EXPECTED 403"
-check_status "GET" 403 "http://localhost:$PORT/pages/site2/uploads/upload.html"
+check_status "GET" 405 "http://localhost:$PORT/pages/site2/uploads/upload.html"
 
 # Teste 10: DELETE de um arquivo já deletado
 echo "TEST 10 - DELETE INVALID FILE EXPECTED 403"
-check_status "DELETE" 403 "http://localhost:$PORT/pages/site2/uploads/image_small.png"
+check_status "DELETE" 405 "http://localhost:$PORT/pages/site2/uploads/image_small.png"
 
 # Teste 11: POST envio de arquivo (redirecionamento)
 echo "TEST 11 - POST SEND BIG IMAGE EXPECTED 413 - REDIRECT"
-check_status "POST" 413 "http://localhost:$PORT/upload" "foto_42.jpg"
+check_status "POST_FILE" 413 "http://localhost:$PORT/upload" "image_big.png"
 
+echo "TEST 12 - POST CALC - EXPECTED 6.0"
+check_status "POST" "Resultado: 6.0" "http://localhost:$PORT/sum.html" "num1=2&num2=4"
+
+echo "TEST 13 - POST CALC - NOT SEND NUMBERS"
+check_status "POST" "<p>Por favor, preencha ambos os números.</p>" "http://localhost:$PORT/sum.html" "num1=1&num4=4"
 
 rm -rf pages
 rm -rf images
+rm -rf cgi
 
 # Encerre o servidor web
 killall -9 webserv
@@ -104,3 +115,4 @@ echo "Quantidade de acertos: $acertos"
 echo "Quantidade de erros: $erros"
 
 echo "O teste foi concluído."
+

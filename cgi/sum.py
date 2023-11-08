@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.9
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 import cgi
 
 def sum_numbers(num1, num2):

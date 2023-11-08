@@ -13,38 +13,37 @@ server1 {
 
 
 	location / {
-		#redirection www.amazon.com
-		root ./pages/site1
+		root pages/site1
 		upload_path /uploads
-		cgi_pass	pass
-		#index	index.htm index.html4 index.php
 		index	index.htm index.html index.php
-		autoindex	false
-		allowed_methods	GET		false
-		allowed_methods	POST	false
-		allowed_methods	DELETE	false
-		cgi sum.py
-		cgi_param num1 5
-		cgi_param num2 6
+		autoindex	true
+		allowed_methods	GET		true
 	}
 
-	location /kapouet {
-		root /tmp/www
+	location /pages {
+		root pages
 		upload_path /uploads
+		cgi_pass	pass
 		index	index.htm index.html index.php
+		autoindex	false
+		allowed_methods	GET		true
+	}
+
+	location /pages/site1 {
+		root pages/site1
+		upload_path /uploads
+		index pag1.html
 		autoindex	false
 		allowed_methods	GET		true
 		allowed_methods	POST	true
 		allowed_methods	DELETE	true
 	}
 
-	location /pages/site1 {
-		root pages/site1
+	location /pages/site1/uploads {
+		root /pages/site1
 		upload_path /uploads
-		cgi_pass	pass
-		#index	index.htm index.html4 index.php
-		index	index.htm index.html index.php
-		autoindex	true
+		index	upload.html
+		autoindex	false
 		allowed_methods	GET		true
 		allowed_methods	POST	true
 		allowed_methods	DELETE	true
@@ -54,7 +53,6 @@ server1 {
 		root pages/site1/sum.html
 		upload_path pages/site1
 		cgi_pass	pa2ss
-		#index	index.htm index.html4 index.php
 		index	index.htm index.html index.php
 		autoindex	true
 		allowed_methods	GET		true
@@ -68,32 +66,12 @@ server1 {
 		allowed_methods	GET		true
 	}
 
-	location /pages/site1/uploads {
-		root /pages/site1
-		upload_path /uploads
-		#index	index.htm index.html4 index.php
-		index	index.htm index.html index.php
-		autoindex	true
-		allowed_methods	GET		true
-		allowed_methods	POST	true
-		allowed_methods	DELETE	true
-	}
-
-
 	location /mercadolivre {
 		redirection www.mercadolivre.com.br
-		root pages/site1
-		upload_path /www/site1/uploads
-		#index	index.htm index.html4 index.php
-		index	index.htm index.htm index.php
 		autoindex	true
 		allowed_methods	GET		true
-		allowed_methods	POST	true
-		allowed_methods	DELETE	true
 	}
 }
-
-
 
 server2 {
 

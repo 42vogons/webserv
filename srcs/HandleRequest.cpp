@@ -48,7 +48,8 @@ void HandleRequest::readBody(std::string buffer, int client_fd){
 			size_t fileNameStart = buffer.find(contentDisposition);
 			fileNameStart += contentDisposition.length();
 			size_t fileNameEnd = buffer.find("\"", fileNameStart);
-			this->_headers["fileName"] = buffer.substr(fileNameStart, fileNameEnd - fileNameStart); 
+			std::string filename = buffer.substr(fileNameStart, fileNameEnd - fileNameStart);
+			this->_headers["fileName"] = replaceAll(filename," ","_"); 
 			_typePost = "File";
 			size_t headerEndPos = body.find("\r\n\r\n");
 			std::string binaryContent = body.substr(headerEndPos + 4);
@@ -62,6 +63,7 @@ void HandleRequest::readBody(std::string buffer, int client_fd){
 
 void HandleRequest::readBuffer(std::string buffer, int client_fd)
 {
+
 	std::string::size_type start = 0;
 	std::string::size_type end = 0;
 	std::string line;
@@ -81,16 +83,21 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 	if (result.size() == 0)
 		return;
 	size_t i;
-    for (i = 1; i < result.size() -1 ; ++i) {
+    for (i = 1; i < result.size() ; ++i) {
 		if (i > result.size())
 			std::cout<< "algum erro ocorreu" << protocolConverted << "*" << result.size() << "*" << std::endl;
-		baseUrl += "/" + result[i];
+		
+		if (result[i].find(".") == std::string::npos)
+			baseUrl += "/" + result[i];
+		else 
+			_headers["LastPath"] = result[i];
+
     }
 	if (baseUrl[0] == '/' && baseUrl.size() > 1 && baseUrl[1] == '/' )
 		baseUrl.erase(0, 1);
 	
 	_headers["BaseUrl"] = baseUrl;
-	_headers["LastPath"] = result[i];
+	
 	
 	if (_headers["BaseUrl"] == "")
 		_headers["BaseUrl"] = "/";
