@@ -1,56 +1,69 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Welcome to My Fun Site!</title>
-    <link rel="icon" type="image/x-icon" href="../../images/icon.png">
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>42 webserv</title>
     <style>
-      body {
-        background-color: #fffad4;
-        font-family: Arial, sans-serif;
-        text-align: center;
-      }
-      h1 {
-        font-size: 6em;
-        margin-top: 50px;
-        margin-bottom: 20px;
-        color: #ff0066;
-        text-shadow: 3px 3px 0px #ffffff;
-      }
-      p {
-        font-size: 1.5em;
-        color: #333333;
-        max-width: 800px;
-        margin: 0 auto;
-        line-height: 1.5;
-      }
-      img {
-        width: 400px;
-        height: auto;
-        margin-top: 50px;
-        border-radius: 50%;
-      }
-      button {
-        background-color: #ff0066;
-        color: #ffffff;
-        padding: 10px 20px;
-        font-size: 1.2em;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        margin-top: 20px;
-      }
-      button:hover {
-        background-color: #ffffff;
-        color: #ff0066;
-      }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-top: 30px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        #listaArquivos {
+            font-size: 16px;
+            margin-top: 20px;
+        }
     </style>
-  </head>
-  <body>
-    <h1>Welcome to My Fun Site!</h1>
-    <p>Hey there! Thanks for dropping by. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu mauris eu ex maximus malesuada a et lorem. Praesent rhoncus nulla augue, a iaculis lorem euismod vel. Suspendisse faucibus lectus sit amet posuere rhoncus. Sed vel lorem nec ex laoreet imperdiet. Integer ac efficitur magna. Nullam et ex ac odio dictum bibendum. Donec eu sapien quam.</p>
-    <button><a href="upload.html">Upload</a></button>
-    <button><a href="files.html">Files</a></button>
-    <button><a href="soma2.html">Calculadora</a></button>
-  </body>
+</head>
+<body>
+    <h1>Bem-vindo ao Webserv do Mochileiro das Galáxias</h1>
+    <p>"Não entre em pânico!"</p>
+    
+    <h2>Calculadora Intergaláctica</h2>
+    <button onclick="window.location.href = 'sum.html'">Abrir Calculadora</button>
+
+    <h2>Arquivos Intergalácticos</h2>
+    <input type="file" id="uploadFile" style="display: none;">
+    <button onclick="window.location.href = 'upload.html'">Fazer Upload de Arquivo</button>
+    <button onclick="window.location.href = 'files.html'">Ver Arquivos</button>
+
+    <div id="listaArquivos"></div>
+
+    <script>
+        // Você pode adicionar lógica adicional de upload de arquivo aqui, se necessário.
+    </script>
+</body>
 </html>

@@ -1,12 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Exemplo de Exclusão de Imagem</title>
+    <title>Exemplo de Exclusão de Arquivos</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
         .image-container {
             display: inline-block;
             text-align: center;
             margin: 10px;
+        }
+
+        .message {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -15,38 +38,37 @@
         {{pages}}
     </div>
 
+    <!-- Botão de redirecionamento para a página inicial -->
+    <button onclick="window.location.href = 'index.html'">Voltar para a Home</button>
 
-<script>
-function deleteImage(imageName) {
-    if (confirm("Tem certeza de que deseja excluir esta arquivo : "+imageName+" ?")) {
-        fetch('/' + encodeURIComponent(imageName), {
-            method: 'DELETE'
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('Imagem excluída com sucesso.');
-                // Remova a div de image-container após excluir
-                var imageContainer = document.querySelector(`[onclick="deleteImage('${imageName}')"]`).parentNode;
-                imageContainer.parentNode.removeChild(imageContainer);
-            } else {
-                
-                response.text().then(
-                    responseText => {
-                        document.getElementById('messageDiv').innerHTML = responseText;
-                        console.error('Erro ao excluir a imagem.');
+    <script>
+        function deleteImage(imageName) {
+            if (confirm("Tem certeza de que deseja excluir este arquivo: " + imageName + " ?")) {
+                fetch('/' + encodeURIComponent(imageName), {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Arquivo excluído com sucesso.');
+                        // Remova a div de image-container após excluir
+                        var imageContainer = document.querySelector(`[onclick="deleteImage('${imageName}')"]`).parentNode;
+                        imageContainer.parentNode.removeChild(imageContainer);
+                    } else {
+                        response.text().then(
+                            responseText => {
+                                document.getElementById('messageDiv').innerHTML = responseText;
+                                console.error('Erro ao excluir o arquivo.');
+                            }
+                        ).catch(error => {
+                            console.error('Erro ao obter conteúdo da resposta:', error);
+                        });
                     }
-                ).catch(error => {
-                    console.error('Erro ao obter conteúdo da resposta:', error);
-                    });
-                
+                })
+                .catch(error => {
+                    console.error('Erro ao excluir o arquivo:', error);
+                });
             }
-        })
-        .catch(error => {
-            console.error('Erro ao excluir a ima--', error);
-        });
-    }
-}
-</script>
-
+        }
+    </script>
 </body>
 </html>
