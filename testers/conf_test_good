@@ -91,6 +91,52 @@ server1 {
 		allowed_methods	POST	false
 		allowed_methods	DELETE	false
 	}
+
+}
+
+server2 {
+
+	listen 8082
+	server_name localhost2
+	client_max_body_size 70000
+
+	error_page 301 pages/errors/301.html
+	error_page 400 pages/errors/400.html
+	error_page 403 pages/errors/403.html
+	error_page 404 pages/errors/404.html
+	error_page 405 pages/errors/405.html
+	error_page 500 pages/errors/500.html
+
+
+	location / {
+		root /pages/site3
+		upload_path /uploads
+		cgi_pass	pass
+		index	index.htm index.html index.php
+		autoindex	false
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+		cgi sum.py
+	}
+
+	location /pages/site3 {
+		root pages/site3
+		upload_path /uploads
+		cgi_pass	pass
+		index	index.htm index.html index.php
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+	}
+
+	location /images {
+		root images
+		allowed_methods	GET		true
+	}
+
+	
 }
 
 
