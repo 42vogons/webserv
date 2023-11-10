@@ -77,13 +77,13 @@ server1 {
 		upload_path /uploads
 		cgi_pass	pass
 		autoindex	true
-		allowed_methods	GET		true
-		allowed_methods	POST	true
-		allowed_methods	DELETE	true
+		allowed_methods	GET		false
+		allowed_methods	POST	false
+		allowed_methods	DELETE	false
 	}
 
-	location /pages/site2/upload {
-		root pages/site2/upload
+	location /pages/site2/uploads {
+		root pages/site2/uploads
 		upload_path /uploads
 		cgi_pass	pass
 		autoindex	true
