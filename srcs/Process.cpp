@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/07 17:22:46 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/08 23:07:42 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ void readImage(std::string filename, int code, std::string status, std::string& 
 		filename = "images/icon.png";
 	}
 	else
-		type = "text/html";
+		//type = "text/html";
+		type = "application/octet-stream";
 	// colocar uma logica aqui para quando não for esses tipos de arquivo, ele baixa o arquivo		
 	
 	
@@ -220,6 +221,12 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 		createPage("Version is not HTTP 1.1",400,"Bad Request",response);
 		return;
 	}
+
+	if (locationServer.getField("root") == "") {
+		readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(404));
+		return;
+	}
+		
 	int bodySize = std::atoi(handlerRequest.getField("Content-Length").c_str());
 	if ( bodySize > server.getClientMaxBodySize()) {
 		readPage(server.getErrorPages(413), 413, "Payload Too Large", response, server.getErrorPages(413));
@@ -227,14 +234,16 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 	}
 	std::set<int>::iterator it = server.getPorts().find(atoi(handlerRequest.getField("Ports").c_str()));
 	if (it == server.getPorts().end()){
-		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
+		readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(403));
 	} else {
 		if (method == "POST")
-		executePost(response, server, handlerRequest);
-		if (method == "GET")
-		executeGet(response, server, handlerRequest);
-		if (method == "DELETE")
-		executeDelete(response, server, handlerRequest);
+			executePost(response, server, handlerRequest);
+		else if (method == "GET")
+			executeGet(response, server, handlerRequest);
+		else if (method == "DELETE")
+			executeDelete(response, server, handlerRequest);
+		else
+			readPage(server.getErrorPages(501), 501, "Not Implemented", response, server.getErrorPages(501));
 	}
 	return ;
 }
