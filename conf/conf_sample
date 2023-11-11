@@ -17,7 +17,7 @@ server1 {
 		upload_path /uploads
 		index	index.htm index.html index.php
 		autoindex	true
-		cgi_pass	pass
+		cgi_pass	pas2s
 		cgi sum.py
 		allowed_methods	GET		true
 		allowed_methods	POST	true

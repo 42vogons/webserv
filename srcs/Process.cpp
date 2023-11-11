@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/11 14:36:08 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/11 15:16:27 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,49 +173,11 @@ void executePost(std::string& response, Server server, HandleRequest handleReque
 	
 	std::string cgiPass = locationServer.getField("cgi_pass");
 	if (cgiPass == "pass") {
-		executeCGI(locationServer, response, "POST", body);	
-	}
-	
-	/*
-	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
-	
-	std::ifstream fileCGI(cgiPath.c_str());
-	if (!fileCGI.good() || cgiPass != "pass") {
-		createPage("CGI file not found or not allowed",200, "Ok",response);
+		executeCGI(locationServer, response, "POST", body);
 		return;
 	}
-	locationServer.getAllCgiParm();
-		int pipe_fd[2];
-	if (pipe(pipe_fd) == -1) {
-		perror("pipe");
-		return ;
-	}
-	pid_t child_pid = fork();
-	if (child_pid == -1) {
-		perror("fork");
-	}
-	else if (child_pid == 0) {
-		close(pipe_fd[0]);
-		dup2(pipe_fd[1], STDOUT_FILENO);
-		close(pipe_fd[1]);
-		const char *args[] = { "python", cgiPath.c_str(), body.c_str(), NULL, NULL };
-		const char *env[] = { NULL };
-		execve("/usr/bin/python3", const_cast<char* const*>(args), const_cast<char* const*>(env));
-		perror("execve");
-		_exit(1);
-	}
-	else {
-		close(pipe_fd[1]);
-		char buffer[4096];
-		ssize_t bytesRead;
-		while ((bytesRead = read(pipe_fd[0], buffer, sizeof(buffer))) > 0) {
-			write(STDOUT_FILENO, buffer, bytesRead);
-		}
-		int status;
-		waitpid(child_pid, &status, 0);
-		createPage(buffer, 200 ,"OK", response);
-		close(pipe_fd[0]);
-	}*/
+	createPage("Body enviado = " + body, 200, "OK", response);
+	
 }
 
 void process(std::string& response, HandleRequest handlerRequest, Server server) {
