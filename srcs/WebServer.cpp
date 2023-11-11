@@ -54,18 +54,23 @@ void WebServer::createVecSocket(void) {
 	std::map<std::string, Server>::iterator iteMap = this->_serversMap.end();
 	++itMap;
 	--itMap;
+
+	;
 	std::set<int>	ports;
 	while (itMap != iteMap) {
 		ports.clear();
 		ports = itMap->second.getPorts();
+		bool status = itMap->second.getStatus();
 		std::set<int>::iterator itSet = ports.begin();
 		std::set<int>::iterator iteSet = ports.end();
 		++itSet;
 		--itSet;
-		while (itSet != iteSet) {
+		if (status == true){
+			while (itSet != iteSet) {
 			Socket *socket = new Socket(*itSet, itMap->second, this->_portsAccepted);
 			this->_vecSocket.push_back(socket);
 			itSet++;
+			}
 		}
 		++itMap;
 	}
