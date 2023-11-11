@@ -43,6 +43,14 @@ std::set<int> ServersMap::checkServers(void) {
 		std::string errors = "";
 		std::cout << "\e[38;2;0;186;188mServer: \e[0;38;5;199m" << it->first;
 		Server server = it->second;
+		// colocar um check de portas duplicadas aqui.
+		// fazer check em laço
+		
+		std::set<int> ports = server.getPorts();
+		for (std::set<int>::iterator pt = ports.begin(); pt != ports.end(); ++pt) {
+			if (this->_portsAccepted.find(*pt) != this->_portsAccepted.end())
+				errors += "\033[0;31m Porta duplicada\033[0m\n";
+		}
 		if (server.getClientMaxBodySize()  < 0)
 			errors += "\033[0;31m Max body size is invalid\033[0m\n";
 		if (server.getPorts().empty())
@@ -56,10 +64,13 @@ std::set<int> ServersMap::checkServers(void) {
 			server.setStatus(true);
 			std::cout << "\033[0;32m OK\033[0m\n" << std::endl;
 		}
-		std::set<int> ports = server.getPorts();
-		for (std::set<int>::iterator pt = ports.begin(); pt != ports.end(); ++pt) {
-			this->_portsAccepted.insert(*pt);
+		if (server.getStatus() == true){
+			//std::set<int> ports = server.getPorts();
+			for (std::set<int>::iterator pt = ports.begin(); pt != ports.end(); ++pt) {
+				this->_portsAccepted.insert(*pt);
+			}
 		}
+		
 	}
 	return this->_portsAccepted;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 18:13:10 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/11 00:24:35 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,10 @@ LocationServer Server::getLocationServer(std::string name) const {
 
 std::string Server::getLastLocation(void) const {
 	return (this->_lastLocation);
+}
+
+bool Server::getStatus(void) {
+	return (this->_status);
 }
 
 int Server::getSizeLocation(void) {

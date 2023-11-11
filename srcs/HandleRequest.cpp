@@ -63,7 +63,6 @@ void HandleRequest::readBody(std::string buffer, int client_fd){
 
 void HandleRequest::readBuffer(std::string buffer, int client_fd)
 {
-
 	std::string::size_type start = 0;
 	std::string::size_type end = 0;
 	std::string line;

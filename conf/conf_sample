@@ -1,6 +1,6 @@
 server1 {
 
-	listen 8080
+	listen 8080 8085 8086
 	server_name localhost
 	client_max_body_size 70000000
 
