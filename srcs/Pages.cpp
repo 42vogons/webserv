@@ -6,18 +6,19 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/08 22:08:44 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/11 15:26:41 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Pages.hpp"
 
-std::string createResponse(int code, std::string status, std::string fileContent, std::string type) {
+std::string createResponse(int code, std::string status, std::string fileContent, std::string type, std::string user) {
 	std::stringstream response;
 	response
 		<< "HTTP/1.1 " << code << " " << status << std::endl
 		<< "Content-Type: " << type << std::endl
 		<< "Content-Length: " << fileContent.length() << std::endl
+		<< "Set-Cookie: user=" << user << ";" << std::endl
 		<< std::endl
 		<< fileContent;
 	return response.str();
@@ -27,7 +28,7 @@ void createPage(std::string newPage, int code, std::string status, std::string& 
 	std::stringstream buffer;
 	std::string fileContent;
 	fileContent = newPage;
-	content = createResponse(code, status, fileContent, "text/html");
+	content = createResponse(code, status, fileContent, "text/html","");
 }
 
 void autoIndex(std::string path) {
@@ -102,5 +103,5 @@ void generatePageFiles(std::string path, std::string& content, std::string pathD
 	std::string form = "{{pages}}";
 	fileContent = getContent(pathFilePage, code, status, pathFileError);
 	std::string newContent = replaceAll(fileContent, form ,html);
-	content = createResponse(code, status, newContent, "text/html");
+	content = createResponse(code, status, newContent, "text/html","");
 }

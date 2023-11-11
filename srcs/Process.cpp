@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/11 15:16:27 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/11 16:00:24 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ void readImage(std::string filename, int code, std::string status, std::string& 
 	
 	
 	fileContent = getContent(filename, code, status, errorPath);
-	content = createResponse(code, status, fileContent, type);
+	content = createResponse(code, status, fileContent, type, "");
 }
 
 void readPage(std::string filename, int code, std::string status, std::string& content, std::string errorPath) {
 	std::string fileContent;
 	fileContent = getContent(filename, code, status, errorPath);
-	content = createResponse(code, status, fileContent, "text/html");
+	content = createResponse(code, status, fileContent, "text/html", "");
 }
 
 void executeGet(std::string& response, Server server, HandleRequest handleRequest) {
@@ -201,6 +201,13 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 		readPage(server.getErrorPages(413), 413, "Payload Too Large", response, server.getErrorPages(413));
 		return;
 	}
+	
+	// colocar uma restrição se a pagina não for login
+	if (handlerRequest.getCookie("user") != "cezar"){
+		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
+		return;
+	}
+
 	std::set<int>::iterator it = server.getPorts().find(atoi(handlerRequest.getField("Ports").c_str()));
 	if (it == server.getPorts().end()){
 		readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(403));
