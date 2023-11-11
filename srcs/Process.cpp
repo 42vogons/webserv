@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/08 23:07:42 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/11 14:36:08 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,8 +170,15 @@ void executePost(std::string& response, Server server, HandleRequest handleReque
 		saveFile(server, handleRequest, response);
 		return;
 	}
-	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
+	
 	std::string cgiPass = locationServer.getField("cgi_pass");
+	if (cgiPass == "pass") {
+		executeCGI(locationServer, response, "POST", body);	
+	}
+	
+	/*
+	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
+	
 	std::ifstream fileCGI(cgiPath.c_str());
 	if (!fileCGI.good() || cgiPass != "pass") {
 		createPage("CGI file not found or not allowed",200, "Ok",response);
@@ -208,7 +215,7 @@ void executePost(std::string& response, Server server, HandleRequest handleReque
 		waitpid(child_pid, &status, 0);
 		createPage(buffer, 200 ,"OK", response);
 		close(pipe_fd[0]);
-	}
+	}*/
 }
 
 void process(std::string& response, HandleRequest handlerRequest, Server server) {

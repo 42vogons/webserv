@@ -42,7 +42,7 @@ std::set<int> ServersMap::checkServers(void) {
 	for (std::map<std::string, Server>::iterator it = servers.begin(); it != servers.end(); ++it) {
 		std::string errors = "";
 		std::cout << "\e[38;2;0;186;188mServer: \e[0;38;5;199m" << it->first;
-		Server server = it->second;
+		Server &server = it->second;
 		// colocar um check de portas duplicadas aqui.
 		// fazer check em laço
 		

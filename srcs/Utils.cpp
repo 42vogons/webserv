@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 18:23:54 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/11 14:37:45 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,52 @@ std::string getContent (std::string filename, int &code, std::string status, std
 	}
 	file.close();
 	return fileContent;
+}
+
+void executeCGI(LocationServer locationServer, std::string& response, std::string method, std::string body)
+{
+	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
+	std::ifstream fileCGI(cgiPath.c_str());
+	if (!fileCGI.good()) {
+		createPage("CGI file not found",200, "Ok",response);
+		return;
+	}
+	locationServer.getAllCgiParm();
+		int pipe_fd[2];
+	if (pipe(pipe_fd) == -1) {
+		perror("pipe");
+		return ;
+	}
+	pid_t child_pid = fork();
+	if (child_pid == -1) {
+		perror("fork");
+	}
+	else if (child_pid == 0) {
+		close(pipe_fd[0]);
+		dup2(pipe_fd[1], STDOUT_FILENO);
+		close(pipe_fd[1]);
+		if (method == "POST"){
+			const char *args[] = { "python", cgiPath.c_str(), body.c_str(), NULL, NULL };
+			const char *env[] = { NULL };
+			execve("/usr/bin/python3", const_cast<char* const*>(args), const_cast<char* const*>(env));	
+		} else {
+			std::cout << "implementar";
+			// colocar o metodo de execução do Go aqui
+		}
+		
+		perror("execve");
+		_exit(1);
+	}
+	else {
+		close(pipe_fd[1]);
+		char buffer[4096];
+		ssize_t bytesRead;
+		while ((bytesRead = read(pipe_fd[0], buffer, sizeof(buffer))) > 0) {
+			write(STDOUT_FILENO, buffer, bytesRead);
+		}
+		int status;
+		waitpid(child_pid, &status, 0);
+		createPage(buffer, 200 ,"OK", response);
+		close(pipe_fd[0]);
+	}
 }

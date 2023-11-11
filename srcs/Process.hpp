@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Process.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 18:11:27 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 18:11:33 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/11 14:30:28 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 #include <fstream>
 #include <unistd.h>
 #include <sys/types.h>
-#include <sys/wait.h>
+
 
 void readImage(std::string filename, int code, std::string status, std::string& content, std::string errorPath, std::string extension);
 void readPage(std::string filename, int code, std::string status, std::string& content, std::string errorPath);
