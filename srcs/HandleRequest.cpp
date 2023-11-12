@@ -31,6 +31,8 @@ HandleRequest& HandleRequest::operator=(const HandleRequest& obj) {
 		this->_body = obj._body;
 		this->_typePost = obj._typePost;
 		this-> _cookies = obj._cookies;
+		this-> _user = obj._user;
+
 	}
 	return (*this);
 }
@@ -153,6 +155,16 @@ void HandleRequest::setCookies(void){
 std::string HandleRequest::getCookie(std::string name){
 	return _cookies[name];
 }
+
+std::string HandleRequest::getUser(void){
+	return _user;
+}
+
+void HandleRequest::setUser(std::string name){
+	_user= name;
+}
+
+
 
 bool checkHandler(void){
 	return true;

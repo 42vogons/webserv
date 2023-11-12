@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 17:47:16 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/11 15:48:50 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/12 00:06:50 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,22 @@ class HandleRequest {
 		void	readBody(std::string buffer, int client_fd);
 		void	getHostAndPort(std::string protocol);
 		void	setBody(std::string body);
+		void	setUser(std::string user);
 		void	setCookies(void);
+		
 		std::string		getField(std::string field);
 		std::string		getBody(void);
 		std::string		receiveBody(int client_fd);
 		std::string		getTypePost(void);
 		std::string		getCookie(std::string name);
+		std::string		getUser(void);
 
 	private:
 		std::map<std::string, std::string> _headers;
 		std::string _body;
 		std::string	_typePost;
 		std::map<std::string, std::string> _cookies;
+		std::string	_user;
 
 	protected:
 };

@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/11 22:42:31 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/12 00:12:03 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,12 +207,22 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 		readPage(server.getErrorPages(413), 413, "Payload Too Large", response, server.getErrorPages(413));
 		return;
 	}
-	
-	// colocar uma restrição se a pagina não for login
-	/*if ((handlerRequest.getCookie("user") != "cezar" || handlerRequest.getCookie("user") != "") && handlerRequest.getField("LastPath") != "login.html"){
+
+	if (handlerRequest.getField("LastPath") == "login.html"){
+		std::string body = handlerRequest.getBody();
+		size_t position = body.find("=");
+		std::string key = body.substr(0,position);
+		std::string value = body.substr(position +1);
+		handlerRequest.setUser(value);
+		// colocar para ir para a pagina padrão do root
+		// falta colocar para o createpage importar o user
+		// fazer o botão de logout
+	}
+		
+	if ((handlerRequest.getCookie("user") != "cezar" || handlerRequest.getCookie("user") != "") && handlerRequest.getField("LastPath") != "login.html"){
 		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
 		return;
-	}*/
+	}
 
 	std::set<int>::iterator it = server.getPorts().find(atoi(handlerRequest.getField("Ports").c_str()));
 	if (it == server.getPorts().end()){
