@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/11 16:00:24 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/11 22:18:21 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,7 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 	}
 	
 	// colocar uma restrição se a pagina não for login
-	if (handlerRequest.getCookie("user") != "cezar"){
+	if ((handlerRequest.getCookie("user") != "cezar" || handlerRequest.getCookie("user") != "") && handlerRequest.getField("LastPath") != "login.html"){
 		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
 		return;
 	}
