@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tela de Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Tela de Login</h1>
+        <form id="login-form">
+            <label for="username">Nome de Usuário:</label>
+            <input type="text" id="username" required><br><br>
+            <button type="button" id="login-btn">Enviar</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("login-btn").addEventListener("click", function() {
+            const username = document.getElementById("username").value;
+            
+            if (username.trim() !== "") {
+                // Você pode adicionar lógica adicional para processar o nome de usuário aqui
+                alert("Olá, " + username + "! Você está logado.");
+            } else {
+                alert("Por favor, insira um nome de usuário válido.");
+            }
+        });
+    </script>
+</body>
+</html>
