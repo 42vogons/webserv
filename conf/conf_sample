@@ -68,6 +68,7 @@ server1 {
 	location /random {
 		cgi_pass	pass
 		cgi 		random/random
+		root pages/site1
 		autoindex	true
 		allowed_methods	GET		true
 		allowed_methods	POST	true

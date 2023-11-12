@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/11 14:37:45 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/11 23:25:41 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,13 +94,15 @@ void executeCGI(LocationServer locationServer, std::string& response, std::strin
 		close(pipe_fd[0]);
 		dup2(pipe_fd[1], STDOUT_FILENO);
 		close(pipe_fd[1]);
+		//std::string aaa = "cgi/random/random.go";
 		if (method == "POST"){
 			const char *args[] = { "python", cgiPath.c_str(), body.c_str(), NULL, NULL };
 			const char *env[] = { NULL };
 			execve("/usr/bin/python3", const_cast<char* const*>(args), const_cast<char* const*>(env));	
 		} else {
-			std::cout << "implementar";
-			// colocar o metodo de execução do Go aqui
+			const char *args[] = {cgiPath.c_str(), body.c_str(), NULL};
+			const char *env[] = { NULL };
+			execve(cgiPath.c_str(),const_cast<char* const*>(args), const_cast<char* const*>(env));
 		}
 		
 		perror("execve");
