@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/11 22:18:21 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/11 22:42:31 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,12 @@ void executeGet(std::string& response, Server server, HandleRequest handleReques
 	std::string rootPath = locationServer.getField("root");
 	if (rootPath[0] == '/') {
 		rootPath.erase(0, 1);
+	}
+	
+	std::string cgiPass = locationServer.getField("cgi_pass");
+	if (cgiPass == "pass") {
+		executeCGI(locationServer, response, "GET", "");
+		return;
 	}
 	
 	std::string basePath = handleRequest.getField("BaseUrl") + handleRequest.getField("Endpoint");
@@ -203,10 +209,10 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 	}
 	
 	// colocar uma restrição se a pagina não for login
-	if ((handlerRequest.getCookie("user") != "cezar" || handlerRequest.getCookie("user") != "") && handlerRequest.getField("LastPath") != "login.html"){
+	/*if ((handlerRequest.getCookie("user") != "cezar" || handlerRequest.getCookie("user") != "") && handlerRequest.getField("LastPath") != "login.html"){
 		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
 		return;
-	}
+	}*/
 
 	std::set<int>::iterator it = server.getPorts().find(atoi(handlerRequest.getField("Ports").c_str()));
 	if (it == server.getPorts().end()){
