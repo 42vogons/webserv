@@ -64,6 +64,16 @@ server1 {
 		allowed_methods	DELETE	true
 	}
 
+	
+	location /random {
+		cgi_pass	pass
+		cgi 		random/random
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+	}
+
 	location /images {
 		root images
 		autoindex	true
