@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/08 23:07:42 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/11 22:18:21 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ void readImage(std::string filename, int code, std::string status, std::string& 
 	
 	
 	fileContent = getContent(filename, code, status, errorPath);
-	content = createResponse(code, status, fileContent, type);
+	content = createResponse(code, status, fileContent, type, "");
 }
 
 void readPage(std::string filename, int code, std::string status, std::string& content, std::string errorPath) {
 	std::string fileContent;
 	fileContent = getContent(filename, code, status, errorPath);
-	content = createResponse(code, status, fileContent, "text/html");
+	content = createResponse(code, status, fileContent, "text/html", "");
 }
 
 void executeGet(std::string& response, Server server, HandleRequest handleRequest) {
@@ -170,45 +170,14 @@ void executePost(std::string& response, Server server, HandleRequest handleReque
 		saveFile(server, handleRequest, response);
 		return;
 	}
-	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
+	
 	std::string cgiPass = locationServer.getField("cgi_pass");
-	std::ifstream fileCGI(cgiPath.c_str());
-	if (!fileCGI.good() || cgiPass != "pass") {
-		createPage("CGI file not found or not allowed",200, "Ok",response);
+	if (cgiPass == "pass") {
+		executeCGI(locationServer, response, "POST", body);
 		return;
 	}
-	locationServer.getAllCgiParm();
-		int pipe_fd[2];
-	if (pipe(pipe_fd) == -1) {
-		perror("pipe");
-		return ;
-	}
-	pid_t child_pid = fork();
-	if (child_pid == -1) {
-		perror("fork");
-	}
-	else if (child_pid == 0) {
-		close(pipe_fd[0]);
-		dup2(pipe_fd[1], STDOUT_FILENO);
-		close(pipe_fd[1]);
-		const char *args[] = { "python", cgiPath.c_str(), body.c_str(), NULL, NULL };
-		const char *env[] = { NULL };
-		execve("/usr/bin/python3", const_cast<char* const*>(args), const_cast<char* const*>(env));
-		perror("execve");
-		_exit(1);
-	}
-	else {
-		close(pipe_fd[1]);
-		char buffer[4096];
-		ssize_t bytesRead;
-		while ((bytesRead = read(pipe_fd[0], buffer, sizeof(buffer))) > 0) {
-			write(STDOUT_FILENO, buffer, bytesRead);
-		}
-		int status;
-		waitpid(child_pid, &status, 0);
-		createPage(buffer, 200 ,"OK", response);
-		close(pipe_fd[0]);
-	}
+	createPage("Body enviado = " + body, 200, "OK", response);
+	
 }
 
 void process(std::string& response, HandleRequest handlerRequest, Server server) {
@@ -232,6 +201,13 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 		readPage(server.getErrorPages(413), 413, "Payload Too Large", response, server.getErrorPages(413));
 		return;
 	}
+	
+	// colocar uma restrição se a pagina não for login
+	if ((handlerRequest.getCookie("user") != "cezar" || handlerRequest.getCookie("user") != "") && handlerRequest.getField("LastPath") != "login.html"){
+		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
+		return;
+	}
+
 	std::set<int>::iterator it = server.getPorts().find(atoi(handlerRequest.getField("Ports").c_str()));
 	if (it == server.getPorts().end()){
 		readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(403));

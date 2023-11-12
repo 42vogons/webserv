@@ -30,6 +30,7 @@ HandleRequest& HandleRequest::operator=(const HandleRequest& obj) {
 		this->_headers = obj._headers;
 		this->_body = obj._body;
 		this->_typePost = obj._typePost;
+		this-> _cookies = obj._cookies;
 	}
 	return (*this);
 }
@@ -63,7 +64,6 @@ void HandleRequest::readBody(std::string buffer, int client_fd){
 
 void HandleRequest::readBuffer(std::string buffer, int client_fd)
 {
-
 	std::string::size_type start = 0;
 	std::string::size_type end = 0;
 	std::string line;
@@ -124,6 +124,7 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd)
 
 	readBody(buffer, client_fd);
 	getHostAndPort(_headers["Host"]);
+	setCookies();
 }
 
 void HandleRequest::getHostAndPort(std::string protocol){
@@ -134,6 +135,23 @@ void HandleRequest::getHostAndPort(std::string protocol){
 	start = end + 1;
 	end = protocol.size() - start - 1;
 	_headers["Port"] = protocol.substr(start, end + 1);
+}
+
+void HandleRequest::setCookies(void){
+	if (_headers["Cookie"] != ""){
+		std::vector<std::string> lines = split(_headers["Cookie"], ';');
+		size_t i;
+		for (i = 0; i <= lines.size() ; ++i) {
+			size_t position = lines[i].find("=");
+			std::string key = lines[i].substr(0,position);
+			std::string value = lines[i].substr(position +1);
+			_cookies[key] = value;
+		}
+	}
+}
+
+std::string HandleRequest::getCookie(std::string name){
+	return _cookies[name];
 }
 
 bool checkHandler(void){

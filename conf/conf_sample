@@ -1,6 +1,6 @@
 server1 {
 
-	listen 8080
+	listen 8080 8085 8086
 	server_name localhost
 	client_max_body_size 70000000
 
@@ -17,7 +17,10 @@ server1 {
 		upload_path /uploads
 		index	index.htm index.html index.php
 		autoindex	true
+		cgi_pass	pas2s
+		cgi sum.py
 		allowed_methods	GET		true
+		allowed_methods	POST	true
 	}
 
 	location /pages {
@@ -76,7 +79,7 @@ server1 {
 
 server2 {
 
-	listen 8081 8080
+	listen 8081
 	server_name localhost
 	client_max_body_size 8000000
 
