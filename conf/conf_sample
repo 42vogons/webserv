@@ -17,7 +17,7 @@ server1 {
 		upload_path /uploads
 		index	index.htm index.html index.php
 		autoindex	true
-		cgi_pass	pas2s
+		cgi_pass	pass
 		cgi sum.py
 		allowed_methods	GET		true
 		allowed_methods	POST	true
@@ -108,6 +108,7 @@ server2 {
 		index	index.htm index.html index.php
 		autoindex	true
 		allowed_methods	GET		true
+		allowed_methods	POST	true
 	}
 
 	location /pages {
@@ -117,6 +118,17 @@ server2 {
 		index	index.htm index.html index.php
 		autoindex	false
 		allowed_methods	GET		true
+	}
+
+		
+	location /random {
+		cgi_pass	pass
+		cgi 		random/random
+		root pages/site2
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
 	}
 
 	location /pages/site2 {

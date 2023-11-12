@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/12 16:17:20 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/12 16:56:11 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,6 @@ void executeGet(std::string& response, Server server, HandleRequest handleReques
 	std::string rootPath = locationServer.getField("root");
 	if (rootPath[0] == '/') {
 		rootPath.erase(0, 1);
-	}
-	
-	std::string cgiPass = locationServer.getField("cgi_pass");
-	if (cgiPass == "pass") {
-		executeCGI(locationServer, response, "GET", "");
-		return;
 	}
 	
 	std::string basePath = handleRequest.getField("BaseUrl") + handleRequest.getField("Endpoint");
@@ -110,8 +104,15 @@ void executeGet(std::string& response, Server server, HandleRequest handleReques
 		readPage(endpoint, 200, "Ok", response, pathError);
 	} 
 	else {
+		std::string cgiPass = locationServer.getField("cgi_pass");
+		if (cgiPass == "pass" ) {
+			executeCGI(locationServer, response, "GET", "");
+			return;
+		}
 		readImage(uploadPath +"/"+ handleRequest.getField("LastPath"), 200, "Ok", response, "", extension);
 	}
+	
+
 }
 
 void executeDelete(std::string& response, Server server, HandleRequest handleRequest) {
