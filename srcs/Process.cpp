@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/12 00:12:03 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/12 16:17:20 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ void readImage(std::string filename, int code, std::string status, std::string& 
 	
 	
 	fileContent = getContent(filename, code, status, errorPath);
-	content = createResponse(code, status, fileContent, type, "");
+	content = createResponse(code, status, fileContent, type);
 }
 
 void readPage(std::string filename, int code, std::string status, std::string& content, std::string errorPath) {
 	std::string fileContent;
 	fileContent = getContent(filename, code, status, errorPath);
-	content = createResponse(code, status, fileContent, "text/html", "");
+	content = createResponse(code, status, fileContent, "text/html");
 }
 
 void executeGet(std::string& response, Server server, HandleRequest handleRequest) {
@@ -205,22 +205,6 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 	int bodySize = std::atoi(handlerRequest.getField("Content-Length").c_str());
 	if ( bodySize > server.getClientMaxBodySize()) {
 		readPage(server.getErrorPages(413), 413, "Payload Too Large", response, server.getErrorPages(413));
-		return;
-	}
-
-	if (handlerRequest.getField("LastPath") == "login.html"){
-		std::string body = handlerRequest.getBody();
-		size_t position = body.find("=");
-		std::string key = body.substr(0,position);
-		std::string value = body.substr(position +1);
-		handlerRequest.setUser(value);
-		// colocar para ir para a pagina padrão do root
-		// falta colocar para o createpage importar o user
-		// fazer o botão de logout
-	}
-		
-	if ((handlerRequest.getCookie("user") != "cezar" || handlerRequest.getCookie("user") != "") && handlerRequest.getField("LastPath") != "login.html"){
-		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
 		return;
 	}
 
