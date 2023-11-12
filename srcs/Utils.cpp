@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/11 23:24:10 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/11 23:25:41 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,14 +100,9 @@ void executeCGI(LocationServer locationServer, std::string& response, std::strin
 			const char *env[] = { NULL };
 			execve("/usr/bin/python3", const_cast<char* const*>(args), const_cast<char* const*>(env));	
 		} else {
-			/*std::string goExecutable = cgiPath.c_str();
-			std::string CompileCmd = "go build -o " + goExecutable;
-			system(CompileCmd.c_str());*/
-			
 			const char *args[] = {cgiPath.c_str(), body.c_str(), NULL};
 			const char *env[] = { NULL };
 			execve(cgiPath.c_str(),const_cast<char* const*>(args), const_cast<char* const*>(env));
-			// colocar o metodo de execução do Go aqui
 		}
 		
 		perror("execve");
