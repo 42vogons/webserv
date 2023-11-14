@@ -6,25 +6,23 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/13 23:08:07 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/13 23:22:47 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
-Server::Server(void) {
+Server::Server(void)  : _server("default")  {
 	_clientMaxBodySize = 0;
 	_sizeLocation = 0;
 	_status = true;
-	_serverName.insert("default");
 	return ;
 }
 
-Server::Server(std::string name) {
+Server::Server(std::string name) : _server(name) {
 	_clientMaxBodySize = 0;
 	_sizeLocation = 0;
 	_status = true;
-	_serverName.insert(name);
 	return ;
 }
 
@@ -46,7 +44,8 @@ Server& Server::operator=(const Server& obj) {
 		this->_locationServer = obj._locationServer;
 		this->_lastLocation = obj._lastLocation;
 		this->_sizeLocation = obj._sizeLocation;
-		this->_status = obj._status;
+		this->_server = obj._server;
+		
 	}
 	return (*this);
 }
@@ -64,9 +63,9 @@ void Server::readLine(std::string line) {
 			this->setPorts(valueInt);
 	}
 	if (key.find("server_name") == 0) {
-		while(iss >> valueString)
-		// colocar this->setServerName e criar a lista de serverNames ao inves de string
-		this->setServeName(valueString);
+		while(iss >> valueString) {
+			this->setServeName(valueString);		
+		}
 	}
 	if (key.find("client_max_body_size") == 0) {
 		iss >> valueInt;
@@ -82,6 +81,10 @@ void Server::readLine(std::string line) {
 		this->_lastLocation = valueString;
 		this->setLocationServer(valueString, locationServer);
 	}
+}
+
+std::string	Server::getServer(void) const {
+	return _server;
 }
 
 void Server::setPorts(int port) {
@@ -115,7 +118,7 @@ std::set<int> Server::getPorts(void) const {
 	return (this->_ports);
 }
 
-std::set<std::string> Server::getServerName(void) const {
+std::set<std::string> Server::getServerName(void) {
 	return (this->_serverName);
 }
 
@@ -148,6 +151,6 @@ int Server::getSizeLocation(void) {
 }
 
 std::ostream& operator<<(std::ostream& o, const Server& i) {
-	o << "server: " << i ;
+	o << "server: " << i.getServer() ;
 	return o;
 }

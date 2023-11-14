@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:34:23 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/13 23:04:11 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/13 23:21:54 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,12 @@ class Server {
 		void					setLocationServer(std::string name, LocationServer locationServer);
 		void					setStatus(bool status);
 		std::set<int>			getPorts(void) const;
-		std::set<std::string>	getServerName(void) const;
+		std::set<std::string>	getServerName(void);
 		int						getClientMaxBodySize(void) const;
 		std::string				getErrorPages(int code) const;
 		LocationServer			getLocationServer(std::string name) const;
 		std::string				getLastLocation(void) const;
+		std::string				getServer(void) const;
 		int						getSizeLocation(void);
 		bool					getStatus(void);
 
@@ -56,6 +57,7 @@ class Server {
 		std::string								_lastLocation;
 		int										_sizeLocation;
 		bool									_status;
+		std::string								_server;
 
 	protected:
 };
