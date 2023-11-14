@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:34:23 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/13 23:43:10 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/13 23:49:50 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,23 @@ class Server {
 		Server(std::string name);
 		Server(const Server& obj);
 		virtual ~Server(void);
-
-		Server&	operator=(const Server& obj);
-
-		void	readLine(std::string line);
-		void	setServeName(std::string serverName);
-		void	setErrorPages(int code, std::string page);
-		void	setPorts(int port);
-		void	setClientMaxBodySize(int clientMaxBodySize);
-		void	setLocationServer(std::string name, LocationServer locationServer);
-
-		std::string				getServerName(void);
-		std::string				getErrorPages(int code);
-		std::set<int>			getPorts(void) const;
-		int						getClientMaxBodySize(void);
-		LocationServer			getLocationServer(std::string name);
-		std::string				getLastLocation(void);
+		Server&			operator=(const Server& obj);
+		void			readLine(std::string line);
+		void			setPorts(int port);
+		void			setServeName(std::string serverName);
+		void			setClientMaxBodySize(int clientMaxBodySize);
+		void			setErrorPages(int code, std::string page);
+		void			setLocationServer(std::string name, LocationServer locationServer);
+		void			setStatus(bool status);
+		std::set<int>	getPorts(void) const;
+		std::string		getServerName(void) const;
+		int				getClientMaxBodySize(void) const;
+		std::string		getErrorPages(int code) const;
+		LocationServer	getLocationServer(std::string name) const;
+		std::string		getLastLocation(void) const;
+		int				getSizeLocation(void);
+		bool			getStatus(void);
+		void			addHostServerName(std::string serverName, std::string ipAddress);
 
 	private:
 		std::set<int>							_ports;
