@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/12 16:56:11 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/14 00:09:41 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,10 +208,18 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 		readPage(server.getErrorPages(413), 413, "Payload Too Large", response, server.getErrorPages(413));
 		return;
 	}
+	
+	std::set<std::string> serverNames = server.getHostNames();
+	std::string hostField = handlerRequest.getField("Host");
+	std::set<std::string>::iterator itHost = serverNames.find(hostField);
+	if (itHost == serverNames.end()) {
+		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
+	}
+
 
 	std::set<int>::iterator it = server.getPorts().find(atoi(handlerRequest.getField("Ports").c_str()));
 	if (it == server.getPorts().end()){
-		readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(403));
+		readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(404));
 	} else {
 		if (method == "POST")
 			executePost(response, server, handlerRequest);

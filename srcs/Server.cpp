@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/11 14:51:15 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/13 23:50:14 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ Server& Server::operator=(const Server& obj) {
 		this->_locationServer = obj._locationServer;
 		this->_lastLocation = obj._lastLocation;
 		this->_sizeLocation = obj._sizeLocation;
+		this->_hostNames = obj._hostNames;
 		this->_status = obj._status;
 	}
 	return (*this);
@@ -62,8 +63,9 @@ void Server::readLine(std::string line) {
 			this->setPorts(valueInt);
 	}
 	if (key.find("server_name") == 0) {
-		iss >> valueString;
-		this->setServeName(valueString);
+		while(iss >> valueString) {
+			this->setHostNames(valueString);	
+		}
 	}
 	if (key.find("client_max_body_size") == 0) {
 		iss >> valueInt;
@@ -79,6 +81,15 @@ void Server::readLine(std::string line) {
 		this->_lastLocation = valueString;
 		this->setLocationServer(valueString, locationServer);
 	}
+}
+
+void Server::setHostNames(std::string hostName) {
+	if (this->_hostNames.find(hostName)== this->_hostNames.end())
+		this->_hostNames.insert(hostName);
+}
+
+std::set<std::string> Server::getHostNames(void) {
+	return _hostNames;
 }
 
 void Server::setPorts(int port) {
