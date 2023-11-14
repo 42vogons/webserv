@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>42 webserv</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-top: 30px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        #listaArquivos {
+            font-size: 16px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bem-vindo ao Webserv do Mochileiro das Galáxias</h1>
+    <p>"Não entre em pânico!"</p>
+    
+    <h2>Calculadora Intergaláctica</h2>
+    <button onclick="window.location.href = 'sum.html'">Abrir Calculadora</button>
+
+    <h2>Arquivos Intergalácticos</h2>
+    <input type="file" id="uploadFile" style="display: none;">
+    <button onclick="window.location.href = 'upload.html'">Fazer Upload de Arquivo</button>
+    <button onclick="window.location.href = 'files.html'">Ver Arquivos</button>
+
+    <div id="listaArquivos"></div>
+
+    <script>
+        // Você pode adicionar lógica adicional de upload de arquivo aqui, se necessário.
+    </script>
+</body>
+</html>

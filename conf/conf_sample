@@ -1,7 +1,7 @@
-sample_server_Z1 {
+server1 {
 
 	listen 8080 8081
-	server_name www.site15.com
+	server_name localhost
 	client_max_body_size 8000
 
 	error_page 301 pages/errors/301.html
@@ -13,86 +13,81 @@ sample_server_Z1 {
 
 
 	location / {
-		#redirection www.amazon.com
 		root pages/site1
-		upload_path /www/site1/uploads
-		cgi_pass	pass
-		#index	index.htm index.html4 index.php
-		index	index.htm index.html index.php
-		autoindex	true
-		allowed_methods	GET		true
-		allowed_methods	POST	true
-		allowed_methods	DELETE	true
-		cgi_param p1 um
-		cgi_param p2 dois
-	}
-
-	location /images {
-		redirection www.amazon.com
-		root pages/site1
-		upload_path /www/site1/uploads
-		cgi_pass	pass
-		#index	index.htm index.html4 index.php
-		index	index.htm index.html index.php
-		autoindex	true
-		allowed_methods	GET		true
-		allowed_methods	POST	true
-		allowed_methods	DELETE	true
-		cgi_param p1 um
-		cgi_param p2 dois
-	}
-	location /sounds {
-		#redirection www.amazon.com
-		root pages/site1
-		upload_path /uploads_sounds
-		cgi_pass	pass
-		autoindex	true
-		#index nada vazio vacuo 
-		index	index.htm index.html index.php
-		allowed_methods	GET		true
-		allowed_methods	POST	true
-		allowed_methods	DELETE	true
-		cgi_param p10 dez
-		cgi_param p20 vinte
-	}
-}
-
-
-
-sample_server_Z2 {
-
-	location /images {
-		redirection www.buscape.com
-		root /var/www
 		upload_path /uploads
-		allowed_methods	POST	true
-		allowed_methods	DELETE	true
-		cgi_param p1 dez
-		cgi_pass	pass
+		index	index.htm index.html index.php
 		autoindex	true
-		index	index.htm 
+		cgi_pass	pass
+		cgi sum.py
 		allowed_methods	GET		true
-		cgi_param p2 vinte
+		allowed_methods	POST	true
 	}
-	location /sounds {
-		redirection www.yahoo.com
-		root /var/www
+
+	location /pages {
+		root pages
+		upload_path /uploads
+		cgi_pass	pass
+		index	index.htm index.html index.php
+		autoindex	false
+		allowed_methods	GET		true
+	}
+
+	location /pages/site1 {
+		root pages/site1
+		upload_path /uploads
+		index pag1.html
+		autoindex	false
+		allowed_methods	GET		true
 		allowed_methods	POST	true
 		allowed_methods	DELETE	true
-		cgi_param p10 dez
-		cgi_param p20 vinte
-		upload_path /uploads_sounds
+	}
+
+	location /pages/site1/uploads {
+		root /pages/site1
+		upload_path /uploads
+		index	upload.html
+		autoindex	false
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+	}
+
+	location /sum {
+		root pages/site1
+		upload_path pages/site1
 		cgi_pass	pass
+		cgi sum.py
+		index	sum.html
 		autoindex	true
-		index joao e maria 
-		allowed_methods	GET		false
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+	}
+
+	
+	location /random {
+		cgi_pass	pass
+		cgi 		random/random
+		root pages/site1
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+	}
+
+	location /images {
+		root images
+		autoindex	true
+		allowed_methods	GET		true
+	}
+
+	location /mercadolivre {
+		redirection www.mercadolivre.com.br
+		autoindex	true
+		allowed_methods	GET		true
 	}
 	listen 8082 
-<<<<<<< HEAD
-	server_name www.site25.com
-=======
 	server_name www.site15.com
->>>>>>> main
 	client_max_body_size 4000
 	error_page 301 pages/errors/301.html
 	error_page 400 pages/errors/400.html
@@ -100,9 +95,83 @@ sample_server_Z2 {
 	error_page 404 pages/errors/404.html
 	error_page 405 pages/errors/405.html
 	error_page 500 pages/errors/500.html
+
+
+	location / {
+		root pages/site2
+		upload_path /uploads
+		index	index.htm index.html index.php
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+	}
+
+	location /pages {
+		root pages
+		upload_path /uploads
+		cgi_pass	pass
+		index	index.htm index.html index.php
+		autoindex	false
+		allowed_methods	GET		true
+	}
+
+		
+	location /random {
+		cgi_pass	pass
+		cgi 		random/random
+		root pages/site2
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+	}
+
+	location /pages/site2 {
+		root pages/site2
+		upload_path /uploads
+		index pag1.html
+		autoindex	false
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+	}
+
+	location /pages/site2/uploads {
+		root /pages/site2
+		upload_path /uploads
+		index	upload.html
+		autoindex	false
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+	}
+
+	location /sum {
+		root pages/site2
+		upload_path pages/site2
+		cgi_pass	pass
+		cgi sum.py
+		index	sum.html
+		autoindex	true
+		allowed_methods	GET		true
+		allowed_methods	POST	true
+		allowed_methods	DELETE	true
+	}
+
+	location /images {
+		root images
+		autoindex	true
+		allowed_methods	GET		true
+	}
+
+	location /mercadolivre {
+		redirection www.mercadolivre.com.br
+		autoindex	true
+		allowed_methods	GET		true
+	}
 }
 
-sample_server_Z3 {
+server3 {
 
 	error_page 404 ./error/404.html
 	error_page 403 ./error/403.html

@@ -6,24 +6,38 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:23:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/21 18:38:46 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/03 17:03:28 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Sockets.hpp"
+#include "WebServer.hpp"
 #include <csignal>
 
-Sockets sockets;
-
-static void handle_signal(int signal)
-{
-	sockets.close_sockets();
+static void handle_signal(int signal) {
 	exit(signal);
 }
 
-int	main(void)
-{
+int main(int argc, char** argv) {
+	std::string fileName;
+	
+	if (argc > 2) {
+		std::cout << "Invalid args" << std::endl;
+		return 1;
+	}
+	if (argc == 1)
+		fileName = "./conf/conf_sample";
+	else {
+		fileName = argv[1];
+		std::ifstream file(fileName.c_str());
+		if (!file.good()) {
+			std::cout << "File not found" << std::endl;
+			return 1;
+		}
+	}
+	WebServer webServer;
+	std::cout << webServer;
+	webServer.loadFile(fileName);
 	signal(SIGINT, handle_signal);
-	sockets.handleSocketConnections();
+	webServer.handleSocketConnections();
 	return (0);
 }

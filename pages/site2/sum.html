@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Soma de Números</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        form label {
+            display: block;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        #calculate-btn {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        p#result {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Soma de Números</h1>
+        <form id="sum-form">
+            <label>Primeiro número: <input type="number" id="num1" required></label><br>
+            <label>Segundo número: <input type="number" id="num2" required></label><br>
+            <button type="button" id="calculate-btn">Calcular</button>
+        </form>
+        <p id="result"></p>
+        <button onclick="window.location.href = 'index.html'">Voltar para a Home</button>
+    </div>
+
+    <script>
+        document.getElementById("calculate-btn").addEventListener("click", function() {
+            const num1 = parseFloat(document.getElementById("num1").value);
+            const num2 = parseFloat(document.getElementById("num2").value);
+
+            if (!isNaN(num1) && !isNaN(num2)) {
+                // Requisição assíncrona para o script CGI
+                const xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            document.getElementById("result").textContent = "Resultado: " + xhr.responseText;
+                        } else {
+                            document.getElementById("result").textContent = "Erro ao obter resultado.";
+                        }
+                    }
+                };
+                xhr.open("POST", "", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("num1=" + num1 + "&num2=" + num2);
+            } else {
+                document.getElementById("result").textContent = "Erro: Insira números válidos.";
+            }
+        });
+    </script>
+</body>
+</html>

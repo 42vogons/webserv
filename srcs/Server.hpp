@@ -3,28 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:34:23 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/16 22:29:15 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/13 23:43:10 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#include "LocationServer.hpp"
+
 #include <iostream>
+#include <sstream>
+#include <fstream>
 #include <string>
 #include <map>
 #include <set>
-#include "LocationServer.hpp"
-#include <fstream>
 #include <string>
-#include <sstream>
 #include <cstdlib>
 
-class Server
-{
+class Server {
 	public:
 		Server(void);
 		Server(std::string name);
@@ -39,7 +39,6 @@ class Server
 		void	setPorts(int port);
 		void	setClientMaxBodySize(int clientMaxBodySize);
 		void	setLocationServer(std::string name, LocationServer locationServer);
-		void	addHostServerName(std::string serverName, std::string ipAddress);
 
 		std::string				getServerName(void);
 		std::string				getErrorPages(int code);
@@ -49,12 +48,15 @@ class Server
 		std::string				getLastLocation(void);
 
 	private:
-		std::string									_serverName;
-		std::map<int, std::string>					_errorPages;
-		std::set<int>								_ports;
-		int											_clientMaxBodySize;
-		std::map<std::string, LocationServer>		_locationServer;
-		std::string									_lastLocation;
+		std::set<int>							_ports;
+		std::string								_serverName;
+		int										_clientMaxBodySize;
+		std::map<int, std::string>				_errorPages;
+		std::map<std::string, LocationServer>	_locationServer;
+		std::string								_lastLocation;
+		int										_sizeLocation;
+		bool									_status;
+
 	protected:
 };
 

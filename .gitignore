@@ -2,6 +2,7 @@ webserv
 .objs/
 .vscode/
 hosts_backup
+valgrind-out.txt 
 
 # Prerequisites
 *.d
@@ -22,7 +23,6 @@ hosts_backup
 *.dll
 
 # Fortran module files
-*.mod
 *.smod
 
 # Compiled Static libraries

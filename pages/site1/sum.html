@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Soma de Números</title>
+    <style>
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Soma de Números</h1>
+        <form id="sum-form">
+            <label>Primeiro número: <input type="number" id="num1" required></label><br>
+            <label>Segundo número: <input type="number" id="num2" required></label><br>
+            <button type="button" id="calculate-btn">Calcular</button>
+        </form>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        document.getElementById("calculate-btn").addEventListener("click", function() {
+            const num1 = parseFloat(document.getElementById("num1").value);
+            const num2 = parseFloat(document.getElementById("num2").value);
+
+            if (!isNaN(num1) && !isNaN(num2)) {
+                const xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            document.getElementById("result").textContent = "Resultado: " + xhr.responseText;
+                        } else {
+                            document.getElementById("result").textContent = "Erro ao obter resultado.";
+                        }
+                    }
+                };
+                xhr.open("POST", "", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send("num1=" + num1 + "&num2=" + num2);
+            } else {
+                document.getElementById("result").textContent = "Erro: Insira números válidos.";
+            }
+        });
+    </script>
+</body>
+</html>
