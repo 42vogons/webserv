@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:34:23 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/11 00:24:02 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/13 23:04:11 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,26 +30,26 @@ class Server {
 		Server(std::string name);
 		Server(const Server& obj);
 		virtual ~Server(void);
-		Server&			operator=(const Server& obj);
-		void			readLine(std::string line);
-		void			setPorts(int port);
-		void			setServeName(std::string serverName);
-		void			setClientMaxBodySize(int clientMaxBodySize);
-		void			setErrorPages(int code, std::string page);
-		void			setLocationServer(std::string name, LocationServer locationServer);
-		void			setStatus(bool status);
-		std::set<int>	getPorts(void) const;
-		std::string		getServerName(void) const;
-		int				getClientMaxBodySize(void) const;
-		std::string		getErrorPages(int code) const;
-		LocationServer	getLocationServer(std::string name) const;
-		std::string		getLastLocation(void) const;
-		int				getSizeLocation(void);
-		bool			getStatus(void);
+		Server&					operator=(const Server& obj);
+		void					readLine(std::string line);
+		void					setPorts(int port);
+		void					setServeName(std::string serverName);
+		void					setClientMaxBodySize(int clientMaxBodySize);
+		void					setErrorPages(int code, std::string page);
+		void					setLocationServer(std::string name, LocationServer locationServer);
+		void					setStatus(bool status);
+		std::set<int>			getPorts(void) const;
+		std::set<std::string>	getServerName(void) const;
+		int						getClientMaxBodySize(void) const;
+		std::string				getErrorPages(int code) const;
+		LocationServer			getLocationServer(std::string name) const;
+		std::string				getLastLocation(void) const;
+		int						getSizeLocation(void);
+		bool					getStatus(void);
 
 	private:
 		std::set<int>							_ports;
-		std::string								_serverName;
+		std::set<std::string>					_serverName;
 		int										_clientMaxBodySize;
 		std::map<int, std::string>				_errorPages;
 		std::map<std::string, LocationServer>	_locationServer;

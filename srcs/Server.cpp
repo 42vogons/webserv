@@ -6,23 +6,25 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/11 14:51:15 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/13 23:08:07 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
-Server::Server(void) : _serverName("default") {
+Server::Server(void) {
 	_clientMaxBodySize = 0;
 	_sizeLocation = 0;
 	_status = true;
+	_serverName.insert("default");
 	return ;
 }
 
-Server::Server(std::string name) : _serverName(name) {
+Server::Server(std::string name) {
 	_clientMaxBodySize = 0;
 	_sizeLocation = 0;
 	_status = true;
+	_serverName.insert(name);
 	return ;
 }
 
@@ -62,7 +64,8 @@ void Server::readLine(std::string line) {
 			this->setPorts(valueInt);
 	}
 	if (key.find("server_name") == 0) {
-		iss >> valueString;
+		while(iss >> valueString)
+		// colocar this->setServerName e criar a lista de serverNames ao inves de string
 		this->setServeName(valueString);
 	}
 	if (key.find("client_max_body_size") == 0) {
@@ -87,7 +90,8 @@ void Server::setPorts(int port) {
 }
 
 void Server::setServeName(std::string serverName) {
-	this->_serverName = serverName;
+	if (this->_serverName.find(serverName)==this->_serverName.end())
+		this->_serverName.insert(serverName);
 }
 
 void Server::setClientMaxBodySize(int clientMaxBodySize) {
@@ -111,7 +115,7 @@ std::set<int> Server::getPorts(void) const {
 	return (this->_ports);
 }
 
-std::string Server::getServerName(void) const {
+std::set<std::string> Server::getServerName(void) const {
 	return (this->_serverName);
 }
 
@@ -144,6 +148,6 @@ int Server::getSizeLocation(void) {
 }
 
 std::ostream& operator<<(std::ostream& o, const Server& i) {
-	o << "server: " << i.getServerName();
+	o << "server: " << i ;
 	return o;
 }
