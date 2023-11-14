@@ -1,8 +1,8 @@
 server1 {
 
-	listen 8080 8081
+	listen 8080 8085 8086
 	server_name localhost
-	client_max_body_size 8000
+	client_max_body_size 70000000
 
 	error_page 301 pages/errors/301.html
 	error_page 400 pages/errors/400.html
@@ -86,9 +86,14 @@ server1 {
 		autoindex	true
 		allowed_methods	GET		true
 	}
-	listen 8082 
-	server_name www.site15.com
-	client_max_body_size 4000
+}
+
+server2 {
+
+	listen 8081
+	server_name localhost
+	client_max_body_size 8000000
+
 	error_page 301 pages/errors/301.html
 	error_page 400 pages/errors/400.html
 	error_page 403 pages/errors/403.html
@@ -177,7 +182,7 @@ server3 {
 	error_page 403 ./error/403.html
 	error_page 500 ./error/500.html
 	listen 8083
-	server_name www.site35.com
+	server_name www.site3.com
 	client_max_body_size 10000
 	error_page 600 ./error/600.html
 	error_page 500 ./error/500.html
