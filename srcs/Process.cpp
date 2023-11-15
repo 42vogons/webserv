@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/14 00:09:41 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/14 22:55:02 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,11 +209,13 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 		return;
 	}
 	
-	std::set<std::string> serverNames = server.getHostNames();
-	std::string hostField = handlerRequest.getField("Host");
-	std::set<std::string>::iterator itHost = serverNames.find(hostField);
-	if (itHost == serverNames.end()) {
+	std::set<std::string> hostNames = server.getHostNames();
+	std::string host = handlerRequest.getField("Host");
+	std::set<std::string>::iterator itHost = hostNames.find(host);
+	
+	if (itHost == hostNames.end()) {
 		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
+		return;
 	}
 
 
