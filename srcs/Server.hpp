@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:34:23 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/13 23:46:59 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/14 23:02:28 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ class Server {
 		std::string		getLastLocation(void) const;
 		int				getSizeLocation(void);
 		bool			getStatus(void);
+		void			addHostServerName(std::string serverName, std::string ipAddress);
 
 		void 			setHostNames(std::string hostName);
 		std::set<std::string> getHostNames(void);
