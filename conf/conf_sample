@@ -1,7 +1,7 @@
 server1 {
 
 	listen 8080 8085 8086
-	server_name www.site1.com www.site5.com
+	server_name www.site1.com www.site5.com localhost
 	client_max_body_size 7000
 
 	error_page 301 pages/errors/301.html

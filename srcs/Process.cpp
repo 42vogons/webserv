@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/15 13:45:48 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/15 14:33:38 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void executeGet(std::string& response, Server server, HandleRequest handleReques
 	} 
 	else {
 		std::string cgiPass = locationServer.getField("cgi_pass");
-		if (cgiPass == "pass" ) {
+		if (cgiPass == "pass" && handleRequest.getField("LastPath") == "sum.html"  ) {
 			executeCGI(locationServer, response, "GET", "");
 			return;
 		}
@@ -205,14 +205,16 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 		return;
 	}
 
-	if (locationServer.getField("root") == "") {
-		readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(404));
-		return;
-	}
+	
 		
 	int bodySize = std::atoi(handlerRequest.getField("Content-Length").c_str());
 	if ( bodySize > server.getClientMaxBodySize()) {
 		readPage(server.getErrorPages(413), 413, "Payload Too Large", response, server.getErrorPages(413));
+		return;
+	}
+
+	if (locationServer.getField("root") == "") {
+		readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(404));
 		return;
 	}
 

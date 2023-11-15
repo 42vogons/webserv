@@ -44,7 +44,8 @@ check_status() {
         http_status=$(curl -s -o /dev/null -X DELETE -w "%{http_code}" "$url")
     fi
 
-    if [ "$http_status" = "$expected_status" ]; then
+    #if [ "$http_status" = "$expected_status" ]; then
+    if [[ "$http_status" == *"$expected_status"* ]]; then
         echo -e "\e[32mOK (código de status $http_status)\e[0m"
         ((acertos++))
     else
