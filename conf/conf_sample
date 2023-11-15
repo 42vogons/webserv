@@ -1,12 +1,13 @@
 server1 {
 
 	listen 8080 8085 8086
-	server_name www.site1.com www.site2.com
-	client_max_body_size 70000000
+	server_name www.site1.com www.site5.com
+	client_max_body_size 7000
 
 	error_page 301 pages/errors/301.html
 	error_page 400 pages/errors/400.html
 	error_page 403 pages/errors/403.html
+	error_page 413 pages/errors/413.html
 	error_page 404 pages/errors/404.html
 	error_page 405 pages/errors/405.html
 	error_page 500 pages/errors/500.html
@@ -26,7 +27,6 @@ server1 {
 	location /pages {
 		root pages
 		upload_path /uploads
-		cgi_pass	pass
 		index	index.htm index.html index.php
 		autoindex	false
 		allowed_methods	GET		true
@@ -36,7 +36,7 @@ server1 {
 		root pages/site1
 		upload_path /uploads
 		index pag1.html
-		autoindex	false
+		autoindex	true
 		allowed_methods	GET		true
 		allowed_methods	POST	true
 		allowed_methods	DELETE	true
@@ -97,6 +97,7 @@ server2 {
 	error_page 301 pages/errors/301.html
 	error_page 400 pages/errors/400.html
 	error_page 403 pages/errors/403.html
+	error_page 413 pages/errors/413.html
 	error_page 404 pages/errors/404.html
 	error_page 405 pages/errors/405.html
 	error_page 500 pages/errors/500.html

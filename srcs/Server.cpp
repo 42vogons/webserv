@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/14 23:03:11 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/15 01:25:06 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,9 @@ void Server::readLine(std::string line) {
 	std::string			valueString;
 	int					valueInt;
 	std::istringstream	iss(line);
+
+	std::string hostss = "";
+
 	iss >> key;
 	if (key.empty() || key.substr(0, 1) == "#")
 		return;
@@ -67,6 +70,9 @@ void Server::readLine(std::string line) {
 			this->setHostNames(valueString);
 			addHostServerName(valueString,"127.0.0.1");	
 		}
+		iss >> valueString;
+		this->setServeName(valueString);
+		
 	}
 	if (key.find("client_max_body_size") == 0) {
 		iss >> valueInt;

@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/11 23:25:41 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/15 01:38:15 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,20 @@ std::string getContent (std::string filename, int &code, std::string status, std
 	std::stringstream buffer;
 	std::string fileContent;
 	std::string type;
+
+	
+	
+
 	if (file.good()) {
 		buffer << file.rdbuf();
 		fileContent = buffer.str();
 	}
 	else {
 		if (fileError.good()) {
+			if (errorPath.find("autoIndex.html") == std::string::npos){
+				code = 404;
+				status = "Not Found";
+			} 
 			buffer << fileError.rdbuf();
 			fileContent = buffer.str();
 		}

@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/14 22:55:02 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/15 01:32:28 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,10 @@ void executeGet(std::string& response, Server server, HandleRequest handleReques
 	std::string basePath = handleRequest.getField("BaseUrl") + handleRequest.getField("Endpoint");
 	std::string uploadPath = rootPath + locationServer.getField("upload_path");
 	std::string redirect = locationServer.getField("redirection");
+	std::string autoindexPath = rootPath + "/autoIndex.html" ;
+	std:: string pathError = server.getErrorPages(404).c_str();
+
+	
 	if (!redirect.empty()) {
 		response = "HTTP/1.1 301 Found\r\nLocation: http://" + redirect + "\r\n\r\n";
 		return ;
@@ -63,10 +67,33 @@ void executeGet(std::string& response, Server server, HandleRequest handleReques
 		readPage(server.getErrorPages(405), 405, "Refused", response, server.getErrorPages(405));
 		return ;
 	}
+
+	if (locationServer.getField("autoindex") == "true") {
+		autoIndex(rootPath);
+		pathError = rootPath + "/autoIndex.html" ;
+	}
+	
 	if (handleRequest.getField("LastPath") == "files.html") {
-		generatePageFiles(uploadPath, response, rootPath, server.getErrorPages(404)) ;
+		generatePageFiles(uploadPath, response, rootPath, pathError) ;
 		return;	
 	}
+
+	std::set<std::string> pages = locationServer.getPagesIndex();
+	for (std::set<std::string>::iterator it = pages.begin(); it != pages.end(); ++it) {
+		std::string page = *it;
+		std::string endpoint = rootPath + "/" + handleRequest.getField("LastPath") + "/" + page;
+		std::ifstream file(endpoint.c_str());
+		if (file.good()) {
+			readPage(endpoint, 200, "Ok", response, pathError);
+			file.close();
+			return ;
+		}
+	}
+
+	
+
+
+	
 	std::string extension;
 	size_t dotPosition = handleRequest.getField("LastPath").find_last_of(".");
 	if (dotPosition != std::string::npos) {
@@ -75,31 +102,11 @@ void executeGet(std::string& response, Server server, HandleRequest handleReques
 	else {
 		extension = "";
 	}
-	if (extension == "") {
-		std::set<std::string> pages = locationServer.getPagesIndex();
-		for (std::set<std::string>::iterator it = pages.begin(); it != pages.end(); ++it) {
-			std::string page = *it;
-			std::string endpoint = rootPath + "/" + handleRequest.getField("LastPath") + "/" + page;
-			std::ifstream file(endpoint.c_str());
-			if (file.good()) {
-				readPage(endpoint, 200, "Ok", response,server.getErrorPages(404));
-				file.close();
-				return ;
-			}
-		}
-		if (locationServer.getField("autoindex") == "true") {
-			autoIndex(rootPath);
-			std::string endpoint = rootPath + "/autoIndex.html" ;
-			readPage(endpoint, 200, "Ok", response,server.getErrorPages(404));
-			remove(endpoint.c_str());
-			return ;
-		}
-		else
-			readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(404));
-		return ;
-	}
-	if (handleRequest.getField("Accept").find("text/html") != std::string::npos && (extension == "html" || extension == "")) {
-		std:: string pathError = server.getErrorPages(404).c_str();
+
+	if ((handleRequest.getField("Accept").find("text/html") != std::string::npos || 
+		handleRequest.getField("Accept").find("*/*") != std::string::npos ) && 
+		(extension == "html" || extension == "")) {
+		
 		std::string endpoint = rootPath + "/" + handleRequest.getField("LastPath");
 		readPage(endpoint, 200, "Ok", response, pathError);
 	} 
@@ -208,20 +215,10 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 		readPage(server.getErrorPages(413), 413, "Payload Too Large", response, server.getErrorPages(413));
 		return;
 	}
-	
-	std::set<std::string> hostNames = server.getHostNames();
-	std::string host = handlerRequest.getField("Host");
-	std::set<std::string>::iterator itHost = hostNames.find(host);
-	
-	if (itHost == hostNames.end()) {
-		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
-		return;
-	}
-
 
 	std::set<int>::iterator it = server.getPorts().find(atoi(handlerRequest.getField("Ports").c_str()));
 	if (it == server.getPorts().end()){
-		readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(404));
+		readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(403));
 	} else {
 		if (method == "POST")
 			executePost(response, server, handlerRequest);
@@ -232,5 +229,6 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 		else
 			readPage(server.getErrorPages(501), 501, "Not Implemented", response, server.getErrorPages(501));
 	}
+	
 	return ;
 }

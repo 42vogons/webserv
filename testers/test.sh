@@ -95,7 +95,7 @@ echo "TEST 10 - DELETE INVALID FILE EXPECTED 403"
 check_status "DELETE" 405 "http://localhost:$PORT/pages/site2/uploads/image_small.png"
 
 # Teste 11: POST envio de arquivo (redirecionamento)
-echo "TEST 11 - POST SEND BIG IMAGE EXPECTED 413 - REDIRECT"
+echo "TEST 11 - POST SEND BIG IMAGE EXPECTED 413 "
 check_status "POST_FILE" 413 "http://localhost:$PORT/upload" "image_big.png"
 
 echo "TEST 12 - POST CALC - EXPECTED 6.0"
