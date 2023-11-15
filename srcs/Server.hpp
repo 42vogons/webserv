@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:34:23 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/11 00:24:02 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/13 23:49:50 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ class Server {
 		std::string		getLastLocation(void) const;
 		int				getSizeLocation(void);
 		bool			getStatus(void);
+		void			addHostServerName(std::string serverName, std::string ipAddress);
 
 	private:
 		std::set<int>							_ports;
