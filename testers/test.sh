@@ -105,6 +105,9 @@ check_status "POST" "6.0" "http://localhost:$PORT/sum.html" "num1=2&num2=4"
 echo "TEST 13 - POST CALC - NOT SEND NUMBERS"
 check_status "POST" "<p>Por favor, preencha ambos os números.</p>" "http://localhost:$PORT/sum.html" "num1=1&num4=4"
 
+echo "TEST 14 - GET RANDOM MSG"
+check_status "GET" 200 "http://localhost:$PORT/random"
+
 rm -rf pages
 rm -rf images
 rm -rf cgi

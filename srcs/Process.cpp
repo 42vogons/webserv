@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/15 14:33:38 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/15 14:58:02 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,16 +106,16 @@ void executeGet(std::string& response, Server server, HandleRequest handleReques
 	if ((handleRequest.getField("Accept").find("text/html") != std::string::npos || 
 		handleRequest.getField("Accept").find("*/*") != std::string::npos ) && 
 		(extension == "html" || extension == "")) {
-		
+		std::string cgiPass = locationServer.getField("cgi_pass");
+		if (cgiPass == "pass" && handleRequest.getField("LastPath") != "sum.html"  ) {
+			executeCGI(locationServer, response, "GET", "");
+			return;
+		}
 		std::string endpoint = rootPath + "/" + handleRequest.getField("LastPath");
 		readPage(endpoint, 200, "Ok", response, pathError);
 	} 
 	else {
-		std::string cgiPass = locationServer.getField("cgi_pass");
-		if (cgiPass == "pass" && handleRequest.getField("LastPath") == "sum.html"  ) {
-			executeCGI(locationServer, response, "GET", "");
-			return;
-		}
+		
 		readImage(uploadPath +"/"+ handleRequest.getField("LastPath"), 200, "Ok", response, "", extension);
 	}
 	
@@ -222,7 +222,7 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 	std::set<std::string> hostNames = server.getHostNames();
 	std::set<std::string>::iterator itHost = hostNames.find(host);
 	if(itHost == hostNames.end()){
-		readPage(server.getErrorPages(403), 403, "Payload Too Large", response, server.getErrorPages(403));
+		readPage(server.getErrorPages(403), 403, "Refused", response, server.getErrorPages(403));
 		return;
 	}
 	
