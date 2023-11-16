@@ -32,7 +32,7 @@ func main() {
 }
 
 func getSource() (*Source, error) {
-	url := "https://uselessfacts.jsph.pl/api/v2/facts/random?language=%22pt-BR%22"
+	url := "https://uselessfacts.jsph.pl/api/v2/facts/random"
 	res, err := http.Get(url)
 	if err != nil {
 		return nil, err
