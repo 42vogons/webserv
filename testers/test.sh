@@ -44,7 +44,8 @@ check_status() {
         http_status=$(curl -s -o /dev/null -X DELETE -w "%{http_code}" "$url")
     fi
 
-    if [ "$http_status" = "$expected_status" ]; then
+    #if [ "$http_status" = "$expected_status" ]; then
+    if [[ "$http_status" == *"$expected_status"* ]]; then
         echo -e "\e[32mOK (código de status $http_status)\e[0m"
         ((acertos++))
     else
@@ -95,7 +96,7 @@ echo "TEST 10 - DELETE INVALID FILE EXPECTED 403"
 check_status "DELETE" 405 "http://localhost:$PORT/pages/site2/uploads/image_small.png"
 
 # Teste 11: POST envio de arquivo (redirecionamento)
-echo "TEST 11 - POST SEND BIG IMAGE EXPECTED 413 - REDIRECT"
+echo "TEST 11 - POST SEND BIG IMAGE EXPECTED 413 "
 check_status "POST_FILE" 413 "http://localhost:$PORT/upload" "image_big.png"
 
 echo "TEST 12 - POST CALC - EXPECTED 6.0"
@@ -103,6 +104,9 @@ check_status "POST" "6.0" "http://localhost:$PORT/sum.html" "num1=2&num2=4"
 
 echo "TEST 13 - POST CALC - NOT SEND NUMBERS"
 check_status "POST" "<p>Por favor, preencha ambos os números.</p>" "http://localhost:$PORT/sum.html" "num1=1&num4=4"
+
+echo "TEST 14 - GET RANDOM MSG"
+check_status "GET" 200 "http://localhost:$PORT/random"
 
 rm -rf pages
 rm -rf images

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3.9
+# -*- coding: utf-8 -*-
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 import cgi
@@ -15,4 +16,6 @@ if "num1" in form and "num2" in form:
     num1 = form["num1"].value
     num2 = form["num2"].value
     result = sum_numbers(num1, num2)
-    print(result)
+    print(str(result)+"")
+else:
+    print("<p>Por favor, preencha ambos os números.</p>")
