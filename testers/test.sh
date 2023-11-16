@@ -88,11 +88,11 @@ echo "TEST 8 - GET PAGE NOT FOUND AUTOINDEX ON"
 check_status "GET" 200 "http://localhost:$PORT/pages/site2"
 
 # Teste 9: GET de uma página não permitida
-echo "TEST 9 - GET PAGE NOT ALLOWED EXPECTED 403"
+echo "TEST 9 - GET PAGE NOT ALLOWED EXPECTED 405"
 check_status "GET" 405 "http://localhost:$PORT/pages/site2/uploads/upload.html"
 
 # Teste 10: DELETE de um arquivo já deletado
-echo "TEST 10 - DELETE INVALID FILE EXPECTED 403"
+echo "TEST 10 - DELETE INVALID FILE EXPECTED 405"
 check_status "DELETE" 405 "http://localhost:$PORT/pages/site2/uploads/image_small.png"
 
 # Teste 11: POST envio de arquivo (redirecionamento)

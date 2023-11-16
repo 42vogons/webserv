@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/15 01:38:15 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/15 23:57:12 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,6 @@ std::string getContent (std::string filename, int &code, std::string status, std
 	std::stringstream buffer;
 	std::string fileContent;
 	std::string type;
-
-	
-	
-
 	if (file.good()) {
 		buffer << file.rdbuf();
 		fileContent = buffer.str();
@@ -80,8 +76,7 @@ std::string getContent (std::string filename, int &code, std::string status, std
 	return fileContent;
 }
 
-void executeCGI(LocationServer locationServer, std::string& response, std::string method, std::string body)
-{
+void executeCGI(LocationServer locationServer, std::string& response, std::string method, std::string body) {
 	std::string cgiPath = "cgi/" + locationServer.getField("cgi");
 	std::ifstream fileCGI(cgiPath.c_str());
 	if (!fileCGI.good()) {
@@ -102,7 +97,6 @@ void executeCGI(LocationServer locationServer, std::string& response, std::strin
 		close(pipe_fd[0]);
 		dup2(pipe_fd[1], STDOUT_FILENO);
 		close(pipe_fd[1]);
-		//std::string aaa = "cgi/random/random.go";
 		if (method == "POST"){
 			const char *args[] = { "python", cgiPath.c_str(), body.c_str(), NULL, NULL };
 			const char *env[] = { NULL };
@@ -112,7 +106,6 @@ void executeCGI(LocationServer locationServer, std::string& response, std::strin
 			const char *env[] = { NULL };
 			execve(cgiPath.c_str(),const_cast<char* const*>(args), const_cast<char* const*>(env));
 		}
-		
 		perror("execve");
 		_exit(1);
 	}
