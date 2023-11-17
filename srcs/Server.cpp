@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:38:55 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/15 01:25:06 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/16 00:16:30 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,6 @@ void Server::readLine(std::string line) {
 	std::string			valueString;
 	int					valueInt;
 	std::istringstream	iss(line);
-
-	std::string hostss = "";
-
 	iss >> key;
 	if (key.empty() || key.substr(0, 1) == "#")
 		return;
@@ -72,7 +69,6 @@ void Server::readLine(std::string line) {
 		}
 		iss >> valueString;
 		this->setServeName(valueString);
-		
 	}
 	if (key.find("client_max_body_size") == 0) {
 		iss >> valueInt;
@@ -154,7 +150,6 @@ void	Server::addHostServerName(std::string serverName, std::string ipAddress){
 	std::string line;
 	std::string context;
 	int add = 0;
-	
 	while (getline(fileHost, line)){
 		if (line.find(serverName) != std::string::npos)
 			continue;

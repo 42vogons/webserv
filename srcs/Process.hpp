@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Process.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 18:11:27 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/11 14:30:28 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/15 23:18:02 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@
 void readImage(std::string filename, int code, std::string status, std::string& content, std::string errorPath, std::string extension);
 void readPage(std::string filename, int code, std::string status, std::string& content, std::string errorPath);
 void executeGet(std::string& response, Server server, HandleRequest handleRequest);
+void executeDelete(std::string& response, Server server, HandleRequest handleRequest);
 void executePost(std::string& response, Server server, HandleRequest handleRequest);
 void process(std::string& response, HandleRequest handlerRequest, Server server);
+void saveFile(Server server, HandleRequest handlerRequest, std::string& response);
 
 #endif

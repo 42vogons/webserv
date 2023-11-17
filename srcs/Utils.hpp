@@ -3,15 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   Utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:53 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/11 14:35:39 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/15 23:57:52 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_HPP
 #define UTILS_HPP
+
+#include "Pages.hpp"
+#include "LocationServer.hpp"
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -25,8 +28,6 @@
 #include <cerrno>
 #include <vector>
 #include <sys/wait.h>
-#include "Pages.hpp"
-#include "LocationServer.hpp"
 
 std::string replaceAll(const std::string& str, const std::string& from, const std::string& to);
 std::vector<std::string> split(const std::string &s, char delimiter);
