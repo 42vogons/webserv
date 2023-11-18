@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/15 23:57:12 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/18 11:33:08 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void executeCGI(LocationServer locationServer, std::string& response, std::strin
 	}
 	else {
 		close(pipe_fd[1]);
-		char buffer[4096];
+		char buffer[4096] = "";
 		ssize_t bytesRead;
 		while ((bytesRead = read(pipe_fd[0], buffer, sizeof(buffer))) > 0) {
 			write(STDOUT_FILENO, buffer, bytesRead);

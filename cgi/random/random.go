@@ -27,6 +27,7 @@ func main() {
 	} else {
 		fmt.Println("<p>",  source.Text,"</p>")
 		fmt.Println("<p><a href='", source.SourceURL,"'>Font</a></p>")
+		fmt.Println("<p><a href='", "/","'>Return to home</a></p>")
 	}
 	fmt.Println("</body></html>")
 }
