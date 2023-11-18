@@ -8,7 +8,7 @@ import (
 
 const (
 	concurrentRequests = 999
-	serverURL          = "http://localhost:8080"
+	serverURL          = "http://pink:8080"
 )
 
 func main() {
