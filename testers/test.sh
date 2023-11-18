@@ -24,35 +24,34 @@ erros=0
 
 # Função para verificar o código de status da resposta
 check_status() {
-    method=$1
-    expected_status=$2
-    url=$3
+	method=$1
+	expected_status=$2
+	url=$3
 
-    if [ "$method" = "GET" ]; then
-        http_status=$(curl -s -o /dev/null -w "%{http_code}" "$url")
-    fi
+	if [ "$method" = "GET" ]; then
+		http_status=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+	fi
 
-    if [ "$method" = "POST_FILE" ]; then
-        http_status=$(curl -s -o /dev/null -X POST -w "%{http_code}" -F "imagem=@$4" "$url")
-    fi
+	if [ "$method" = "POST_FILE" ]; then
+		http_status=$(curl -s -o /dev/null -X POST -w "%{http_code}" -F "imagem=@$4" "$url")
+	fi
 
-    if [ "$method" = "POST" ]; then
-        http_status=$(curl -s -o -X POST -d "$4" "$url")
-    fi
+	if [ "$method" = "POST" ]; then
+		http_status=$(curl -s -o -X POST -d "$4" "$url")
+	fi
 
-    if [ "$method" = "DELETE" ]; then
-        http_status=$(curl -s -o /dev/null -X DELETE -w "%{http_code}" "$url")
-    fi
+	if [ "$method" = "DELETE" ]; then
+		http_status=$(curl -s -o /dev/null -X DELETE -w "%{http_code}" "$url")
+	fi
 
-    #if [ "$http_status" = "$expected_status" ]; then
-    if [[ "$http_status" == *"$expected_status"* ]]; then
-        echo -e "\e[32mOK (código de status $http_status)\e[0m"
-        ((acertos++))
-    else
-        echo -e "\e[31mFAIL (código de status $http_status)\e[0m"
-        ((erros++))
-    fi
-    echo ""
+	if [ "$http_status" = "$expected_status" ]; then
+		echo -e "\e[32mOK (código de status $http_status)\e[0m"
+		((acertos++))
+	else
+		echo -e "\e[31mFAIL (código de status $http_status)\e[0m"
+		((erros++))
+	fi
+	echo ""
 }
 
 # Teste 1: GET de uma página válida

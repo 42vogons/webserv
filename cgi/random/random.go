@@ -17,8 +17,6 @@ type Source struct {
 }
 
 func main() {
-	fmt.Println("Content-Type: text/html; charset=utf-8")
-	fmt.Println()
 	fmt.Println("<html><head><title>Useless Fact</title></head><body>")
 	fmt.Println("<h1>Useless Fact</h1>")
 	source, err := getSource()
@@ -30,6 +28,7 @@ func main() {
 		fmt.Println("<p><a href='", "/","'>Return to home</a></p>")
 	}
 	fmt.Println("</body></html>")
+	fmt.Println()
 }
 
 func getSource() (*Source, error) {

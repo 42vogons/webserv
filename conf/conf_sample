@@ -1,7 +1,6 @@
 server1 {
-
-	listen 8080 8085 8086
-	server_name www.site1.com www.site5.com localhost
+	listen 8080 8081 8082
+	server_name www.site1.com pink
 	client_max_body_size 7000
 
 	error_page 301 pages/errors/301.html
@@ -11,7 +10,6 @@ server1 {
 	error_page 404 pages/errors/404.html
 	error_page 405 pages/errors/405.html
 	error_page 500 pages/errors/500.html
-
 
 	location / {
 		root pages/site1
@@ -64,7 +62,6 @@ server1 {
 		allowed_methods	DELETE	true
 	}
 
-	
 	location /random {
 		cgi_pass	pass
 		cgi 		random/random
@@ -89,9 +86,8 @@ server1 {
 }
 
 server2 {
-
-	listen 8081
-	server_name localhost
+	listen 8083 8084 8085
+	server_name www.site2.com green
 	client_max_body_size 8000000
 
 	error_page 301 pages/errors/301.html
@@ -101,7 +97,6 @@ server2 {
 	error_page 404 pages/errors/404.html
 	error_page 405 pages/errors/405.html
 	error_page 500 pages/errors/500.html
-
 
 	location / {
 		root pages/site2
@@ -123,7 +118,6 @@ server2 {
 		allowed_methods	GET		true
 	}
 
-		
 	location /random {
 		cgi_pass	pass
 		cgi 		random/random
@@ -180,13 +174,15 @@ server2 {
 }
 
 server3 {
-
-	error_page 404 ./error/404.html
-	error_page 403 ./error/403.html
-	error_page 500 ./error/500.html
-	listen 8083
+	listen 8086
 	server_name www.site3.com
 	client_max_body_size 10000
-	error_page 600 ./error/600.html
-	error_page 500 ./error/500.html
+
+	error_page 301 pages/errors/301.html
+	error_page 400 pages/errors/400.html
+	error_page 403 pages/errors/403.html
+	error_page 413 pages/errors/413.html
+	error_page 404 pages/errors/404.html
+	error_page 405 pages/errors/405.html
+	error_page 500 pages/errors/500.html
 }
