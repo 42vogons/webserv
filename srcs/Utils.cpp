@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/18 14:41:18 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/18 15:50:26 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,9 @@ bool directoryExists(const char* path) {
 
 bool createDirectory(const char* path) {
 	if (mkdir(path, 0777) == 0) {
-		std::cout << "Folder created with success" << std::endl;
 		return (true);
 	}
-	std::cout << "Error creating the folder" << std::endl;
+	std::cout << "error creating the folder" << std::endl;
 	return (false);
 }
 
@@ -121,7 +120,6 @@ void executeCGI(LocationServer locationServer, std::string& response, std::strin
 		close(pipe_fd[0]);
 		int status;
 		waitpid(child_pid, &status, 0);
-		std::cout << output;
 		createPage(output, 200 ,"OK", response);
 		close(pipe_fd[0]);
 	}

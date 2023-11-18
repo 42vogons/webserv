@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/15 23:29:13 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/18 15:50:55 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ void saveFile(Server server, HandleRequest handlerRequest, std::string& response
 	std::string path = rootPath + locationServer.getField("upload_path");
 	if (!directoryExists(path.c_str())) {
 		if (!createDirectory(path.c_str()))
-			std::cout << "Error creating directory" << std::endl;
+			std::cout << "error creating directory" << std::endl;
 	}
 	std::string body = handlerRequest.getBody();
 	std::string fileName = path + "/" + handlerRequest.getField("fileName");
@@ -144,10 +144,9 @@ void saveFile(Server server, HandleRequest handlerRequest, std::string& response
 		file.close(); 
 		std::ifstream infile(fileName.c_str());
 		std::string file_contents((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
-		std::cout << "File saved successfully!" << std::endl;
 	}
 	else
-		std::cout << "Error opening the file for writing!" << std::endl;
+		std::cout << "error opening the file for write" << std::endl;
 	response = "HTTP/1.1 301 Found\r\nLocation: /" + filePage + "\r\n\r\n";
 }
 

@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/03 16:46:06 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/18 15:49:25 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void Socket::acceptConnection(void) {
 	std::set<int>::iterator it = _portsAccept.find(this->_port);
 	if (it == _portsAccept.end()) {
 		close(_client_fd);
-		std::cout << "Invalid port" << std::endl;
+		std::cout << "invalid port" << std::endl;
 		return;	
 	}
 	if (this->_client_fd == -1)

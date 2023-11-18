@@ -78,7 +78,7 @@ void HandleRequest::readBuffer(std::string buffer, int client_fd) {
 	size_t i;
 	for (i = 1; i < result.size() ; ++i) {
 		if (i > result.size())
-			std::cout<< "algum erro ocorreu" << protocolConverted << "*" << result.size() << "*" << std::endl;
+			std::cout<< "read buffer error" << protocolConverted << "*" << result.size() << "*" << std::endl;
 		
 		if (result[i].find(".") == std::string::npos)
 			baseUrl += "/" + result[i];
