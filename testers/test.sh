@@ -107,6 +107,10 @@ check_status "POST" "<p>Por favor, preencha ambos os números.</p>" "http://loca
 echo "TEST 14 - GET RANDOM MSG"
 check_status "GET" 200 "http://localhost:$PORT/random"
 
+echo "TEST 15 - GET REDIRECT"
+check_status "GET" 301 "http://localhost:$PORT/mercadolivre"
+
+
 rm -rf pages
 rm -rf images
 rm -rf cgi

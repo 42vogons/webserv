@@ -103,7 +103,6 @@ server1 {
 
 	location /mercadolivre {
 		redirection www.mercadolivre.com.br
-		autoindex	true
 		allowed_methods	GET		true
 	}
 }
@@ -191,7 +190,6 @@ server2 {
 
 	location /mercadolivre {
 		redirection www.mercadolivre.com.br
-		autoindex	true
 		allowed_methods	GET		true
 	}
 }

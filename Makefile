@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+         #
+#    By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/27 00:08:05 by cpereira          #+#    #+#              #
-#    Updated: 2023/11/14 23:23:06 by cpereira         ###   ########.fr        #
+#    Updated: 2023/11/18 17:02:42 by anolivei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ CFLAGS = -Wall -Wextra -Werror -std=c++98 -Wshadow -g -fsanitize=address
 RM = /bin/rm -rf
 CP = /bin/cp
 
-all: backup $(NAME)
+all: $(NAME)
 
 $(NAME): $(OBJ)
 		@$(CC) $(OBJ) $(CFLAGS) -o $(NAME)
@@ -66,11 +66,14 @@ clean:
 		@$(RM) $(OBJ_DIR)
 		@echo "\033[0;32m[OK]\033[0m    \033[0;38;5;44mRemoving objects\033[0m"
 
-fclean: clean
+fclean: clean restore
 		@$(RM) $(NAME)
 		@$(RM) host_backup
 		@echo "\033[0;32m[OK]\033[0m    \033[0;38;5;44mRemoving $(NAME)\033[0m"
 
-re: restore fclean all
+re: fclean all
 
-.PHONY: all clean fclean re backup restore
+run: backup all
+	./$(NAME)
+
+.PHONY: all clean fclean re backup restore run

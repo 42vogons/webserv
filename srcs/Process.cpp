@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/18 15:50:55 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/18 16:40:00 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,10 +185,7 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 		readPage(server.getErrorPages(413), 413, "Payload Too Large", response, server.getErrorPages(413));
 		return;
 	}
-	if (locationServer.getField("root") == "") {
-		readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(404));
-		return;
-	}
+
 	std::string host = handlerRequest.getField("Host");
 	std::set<std::string> hostNames = server.getHostNames();
 	std::set<std::string>::iterator itHost = hostNames.find(host);
