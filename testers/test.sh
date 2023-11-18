@@ -1,7 +1,7 @@
 #!/bin/bash
 
 webserver="../webserv"
-config_file="conf_test_good"
+config_file="conf_test"
 PORT=8080
 
 
