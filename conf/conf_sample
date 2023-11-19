@@ -1,6 +1,6 @@
 server1 {
 	listen 8080 8081 8082
-	server_name www.site1.com pink
+	server_name www.site1.com pink localhost
 	client_max_body_size 70000
 
 	error_page 301 pages/errors/301.html
@@ -70,7 +70,7 @@ server1 {
 
 server2 {
 	listen 8083 8084 8085
-	server_name www.site2.com green
+	server_name www.site2.com green localhost
 	client_max_body_size 8000000
 
 	error_page 301 pages/errors/301.html
@@ -140,7 +140,7 @@ server2 {
 
 server3 {
 	listen 8086
-	server_name www.site3.com
+	server_name www.site3.com localhost
 	client_max_body_size 10000
 
 	error_page 301 pages/errors/301.html

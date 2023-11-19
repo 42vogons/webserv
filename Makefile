@@ -6,7 +6,7 @@
 #    By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/27 00:08:05 by cpereira          #+#    #+#              #
-#    Updated: 2023/11/18 17:02:42 by anolivei         ###   ########.fr        #
+#    Updated: 2023/11/19 14:57:06 by anolivei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.opp, $(SRC))
 
 
 CC = c++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -Wshadow -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -Wshadow -g #-fsanitize=address
 RM = /bin/rm -rf
 CP = /bin/cp
 
@@ -50,16 +50,12 @@ backup:
 	@if [ ! -e host_backup ]; then \
 		$(CP) /etc/hosts host_backup; \
 		echo "\033[0;32m[OK]\033[0m    \033[0;38;5;199mBackup created: host_backup\033[0m"; \
-	else \
-		echo "\033[0;31m[ERROR]\033[0m \033[0;38;5;196mBackup already exists\033[0m"; \
 	fi
 
 restore:
 	@if [ -e host_backup ]; then \
 		$(CP) host_backup /etc/hosts; \
 		echo "\033[0;32m[OK]\033[0m    \033[0;38;5;199mBackup restored to /etc/hosts\033[0m"; \
-	else \
-		echo "\033[0;31m[ERROR]\033[0m \033[0;38;5;196mNo backup found\033[0m"; \
 	fi
 
 clean:
