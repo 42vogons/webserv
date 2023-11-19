@@ -1,7 +1,7 @@
 server1 {
 
-	listen 8080 8085 8086
-	server_name www.site1.com www.site5.com localhost
+	listen 8080 8081 8082
+	server_name www.site1.com pink
 	client_max_body_size 70000
 
 	error_page 301 pages/errors/301.html
@@ -17,35 +17,19 @@ server1 {
 		root pages/site1
 		upload_path /uploads
 		index	index.htm index.html index.php
-		autoindex	true
-		cgi_pass	pass
-		cgi sum.py
 		allowed_methods	GET		true
-		allowed_methods	POST	true
 	}
 
 	location /pages {
 		root pages
 		upload_path /uploads
-		index	index.htm index.html index.php
-		autoindex	false
 		allowed_methods	GET		true
 	}
 
 	location /pages/site1 {
 		root pages/site1
-		upload_path /uploads
 		index pag1.html
-		autoindex	false
-		allowed_methods	GET		true
-		allowed_methods	POST	true
-		allowed_methods	DELETE	true
-	}
-
-	location /pages/site2 {
-		root pages/site2
 		upload_path /uploads
-		index pag1.html
 		autoindex	true
 		allowed_methods	GET		true
 		allowed_methods	POST	true
@@ -60,16 +44,6 @@ server1 {
 		allowed_methods	GET		true
 		allowed_methods	POST	true
 		allowed_methods	DELETE	true
-	}
-
-	location /pages/site2/uploads {
-		root /pages/site2
-		upload_path /uploads
-		index	upload.html
-		autoindex	false
-		allowed_methods	GET		false
-		allowed_methods	POST	false
-		allowed_methods	DELETE	false
 	}
 
 	location /sum {
@@ -89,10 +63,8 @@ server1 {
 		cgi_pass	pass
 		cgi 		random/random
 		root pages/site1
-		autoindex	true
 		allowed_methods	GET		true
 		allowed_methods	POST	true
-		allowed_methods	DELETE	true
 	}
 
 	location /images {
@@ -109,8 +81,8 @@ server1 {
 
 server2 {
 
-	listen 8081
-	server_name localhost
+	listen 8083 8084 8085
+	server_name www.site2.com green
 	client_max_body_size 8000000
 
 	error_page 301 pages/errors/301.html
@@ -126,7 +98,7 @@ server2 {
 		upload_path /uploads
 		index	index.htm index.html index.php
 		autoindex	true
-		allowed_methods	GET		true
+		allowed_methods	GET		false
 		allowed_methods	POST	true
 	}
 

@@ -1,7 +1,7 @@
 server1 {
 	listen 8080 8081 8082
 	server_name www.site1.com pink
-	client_max_body_size 7000
+	client_max_body_size 70000
 
 	error_page 301 pages/errors/301.html
 	error_page 400 pages/errors/400.html
@@ -13,20 +13,13 @@ server1 {
 
 	location / {
 		root pages/site1
-		upload_path /uploads
 		index	index.htm index.html index.php
-		autoindex	true
-		cgi_pass	pass
-		cgi sum.py
 		allowed_methods	GET		true
-		allowed_methods	POST	true
 	}
 
 	location /pages {
 		root pages
-		upload_path /uploads
-		index	index.htm index.html index.php
-		autoindex	false
+		autoindex	true
 		allowed_methods	GET		true
 	}
 
@@ -34,7 +27,6 @@ server1 {
 		root pages/site1
 		upload_path /uploads
 		index pag1.html
-		autoindex	true
 		allowed_methods	GET		true
 		allowed_methods	POST	true
 		allowed_methods	DELETE	true
@@ -44,43 +36,34 @@ server1 {
 		root /pages/site1
 		upload_path /uploads
 		index	upload.html
-		autoindex	false
 		allowed_methods	GET		true
-		allowed_methods	POST	true
 		allowed_methods	DELETE	true
+		
 	}
 
 	location /sum {
 		root pages/site1
-		upload_path pages/site1
 		cgi_pass	pass
 		cgi sum.py
 		index	sum.html
-		autoindex	true
 		allowed_methods	GET		true
 		allowed_methods	POST	true
-		allowed_methods	DELETE	true
 	}
 
 	location /random {
 		cgi_pass	pass
 		cgi 		random/random
 		root pages/site1
-		autoindex	true
 		allowed_methods	GET		true
-		allowed_methods	POST	true
-		allowed_methods	DELETE	true
 	}
 
 	location /images {
 		root images
-		autoindex	true
 		allowed_methods	GET		true
 	}
 
 	location /mercadolivre {
 		redirection www.mercadolivre.com.br
-		autoindex	true
 		allowed_methods	GET		true
 	}
 }
@@ -100,21 +83,13 @@ server2 {
 
 	location / {
 		root pages/site2
-		upload_path /uploads
 		index	index.htm index.html index.php
-		autoindex	true
-		cgi_pass	pass
-		cgi sum.py
 		allowed_methods	GET		true
-		allowed_methods	POST	true
 	}
 
 	location /pages {
 		root pages
-		upload_path /uploads
-		cgi_pass	pass
-		index	index.htm index.html index.php
-		autoindex	false
+		autoindex	true
 		allowed_methods	GET		true
 	}
 
@@ -122,17 +97,13 @@ server2 {
 		cgi_pass	pass
 		cgi 		random/random
 		root pages/site2
-		autoindex	true
 		allowed_methods	GET		true
-		allowed_methods	POST	true
-		allowed_methods	DELETE	true
 	}
 
 	location /pages/site2 {
 		root pages/site2
 		upload_path /uploads
 		index pag1.html
-		autoindex	false
 		allowed_methods	GET		true
 		allowed_methods	POST	true
 		allowed_methods	DELETE	true
@@ -142,33 +113,27 @@ server2 {
 		root /pages/site2
 		upload_path /uploads
 		index	upload.html
-		autoindex	false
-		allowed_methods	GET		true
-		allowed_methods	POST	true
-		allowed_methods	DELETE	true
+		#allowed_methods	GET		true
+		#allowed_methods	DELETE	true
+
 	}
 
 	location /sum {
 		root pages/site2
-		upload_path pages/site2
 		cgi_pass	pass
 		cgi sum.py
 		index	sum.html
-		autoindex	true
 		allowed_methods	GET		true
 		allowed_methods	POST	true
-		allowed_methods	DELETE	true
 	}
 
 	location /images {
 		root images
-		autoindex	true
 		allowed_methods	GET		true
 	}
 
 	location /mercadolivre {
 		redirection www.mercadolivre.com.br
-		autoindex	true
 		allowed_methods	GET		true
 	}
 }
