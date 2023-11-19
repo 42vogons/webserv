@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/19 15:57:35 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/19 16:31:26 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,11 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 		readPage(server.getErrorPages(403), 403, "Forbidden", response, server.getErrorPages(403));
 		return;
 	}
-	std::set<int>::iterator it = server.getPorts().find(atoi(handlerRequest.getField("Ports").c_str()));
+	
+	std::set<int> portsSet = server.getPorts();
+	int portToFind = atoi(handlerRequest.getField("Ports").c_str());
+
+	std::set<int>::iterator it = portsSet.find(portToFind);
 	if (it == server.getPorts().end()){
 		readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(404));
 	} else {
