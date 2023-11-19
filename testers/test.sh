@@ -68,7 +68,7 @@ check_status "GET" 404 "$SERVER1:$PORT1/pages/lalala.html"
 
 # Teste 3: GET de uma imagem inválida
 echo "TEST 3 - GET INVALID PAGE IMAGE EXPECTED 404"
-check_status "GET" 404 "$SERVE1:$PORT1/pages/site1/uploads/image_small.png"
+check_status "GET" 404 "$SERVER1:$PORT1/pages/site1/uploads/image_small.png"
 
 # Teste 4: POST envio de arquivo (redirecionamento)
 echo "TEST 4 - POST SEND IMAGE EXPECTED 301 - REDIRECT"
