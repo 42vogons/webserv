@@ -1,7 +1,7 @@
 server1 {
 	listen 8080 8081 8082
 	server_name www.site1.com pink
-	client_max_body_size 7000
+	client_max_body_size 70000
 
 	error_page 301 pages/errors/301.html
 	error_page 400 pages/errors/400.html
