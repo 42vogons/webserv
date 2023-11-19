@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/19 14:56:19 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/19 15:57:35 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void readImage(std::string filename, int code, std::string status, std::string& 
 		type = "application/octet-stream";
 	fileContent = getContent(filename, code, status, errorPath);
 	if (code == 404){
-		type = "text/html";
+		type = "image/png";
 	}
 	
 	content = createResponse(code, status, fileContent, type);
@@ -119,7 +119,7 @@ void executeGet(std::string& response, Server server, HandleRequest handleReques
 		readPage(endpoint, 200, "Ok", response, pathError);
 	} 
 	else {
-		readImage(uploadPath +"/"+ handleRequest.getField("LastPath"), 200, "Ok", response, "", extension);
+		readImage(uploadPath +"/"+ handleRequest.getField("LastPath"), 200, "Ok", response, "images/noPhoto.png", extension);
 	}
 }
 
