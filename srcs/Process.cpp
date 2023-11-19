@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Process.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/18 22:26:58 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/18 22:53:28 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void executeGet(std::string& response, Server server, HandleRequest handleReques
 		response = "HTTP/1.1 301 Found\r\nLocation: http://" + redirect + "\r\n\r\n";
 		return ;
 	}
-	if (locationServer.getAllowedMethods("GET") != true) {
+	if (locationServer.getAllowedMethods("GET") != true && rootPath != "") {
 		readPage(server.getErrorPages(405), 405, "Method Not Allowed", response, server.getErrorPages(405));
 		return ;
 	}
@@ -86,14 +86,31 @@ void executeGet(std::string& response, Server server, HandleRequest handleReques
 	else {
 		extension = "";
 	}
+	
+	
+
+	if (locationServer.getField("root") == "") {
+		readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(404));
+		return;
+	}
+
+	std::string cgiPass = locationServer.getField("cgi_pass");
+
+	if (handleRequest.getField("LastPath") == "" ) {
+		if (locationServer.getField("autoindex") == "true") {
+			readPage(rootPath + "/autoIndex.html", 200, "Ok", response, pathError);
+		} else if (cgiPass == "pass" && handleRequest.getField("LastPath") != "sum.html") {
+			executeCGI(locationServer, response, "GET", "");
+		} else {
+			readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(404));
+		}
+		return;
+	}
+	
+
 	if ((handleRequest.getField("Accept").find("text/html") != std::string::npos || 
 		handleRequest.getField("Accept").find("*/*") != std::string::npos ) && 
 		(extension == "html" || extension == "")) {
-		std::string cgiPass = locationServer.getField("cgi_pass");
-		if (cgiPass == "pass" && handleRequest.getField("LastPath") != "sum.html"  ) {
-			executeCGI(locationServer, response, "GET", "");
-			return;
-		}
 		std::string endpoint = rootPath + "/" + handleRequest.getField("LastPath");
 		readPage(endpoint, 200, "Ok", response, pathError);
 	} 

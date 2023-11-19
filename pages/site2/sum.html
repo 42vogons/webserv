@@ -84,7 +84,6 @@
             const num2 = parseFloat(document.getElementById("num2").value);
 
             if (!isNaN(num1) && !isNaN(num2)) {
-                // Requisição assíncrona para o script CGI
                 const xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -95,7 +94,7 @@
                         }
                     }
                 };
-                xhr.open("POST", "", true);
+                xhr.open("POST", "/sum/", true);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhr.send("num1=" + num1 + "&num2=" + num2);
             } else {
