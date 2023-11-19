@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/18 22:22:23 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/18 22:52:50 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,9 @@ void Socket::acceptConnection(void) {
 	handleRequest.readBuffer(header, this->_client_fd);
 	setHandleRequest(handleRequest);
 	process(response, handleRequest, _server);
-	send(_client_fd, response.c_str(), response.size(), 0);
+	if (send(_client_fd, response.c_str(), response.size(), 0) < 0) {
+		throw (AcceptConnectionError());
+	};
 	close(_client_fd);
 }
 
