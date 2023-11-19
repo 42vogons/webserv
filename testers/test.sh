@@ -36,6 +36,10 @@ check_status() {
 		http_status=$(curl -s -o /dev/null -w "%{http_code}" "$url")
 	fi
 
+	if [ "$method" = "GET2" ]; then
+		http_status=$(curl -s -o /dev/null  "$url")
+	fi
+
 	if [ "$method" = "POST_FILE" ]; then
 		http_status=$(curl -s -o /dev/null -X POST -w "%{http_code}" -F "imagem=@$4" "$url")
 	fi

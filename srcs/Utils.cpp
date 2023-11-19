@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/18 15:50:26 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/19 14:33:19 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ std::string getContent (std::string filename, int &code, std::string status, std
 	std::ifstream fileError(errorPath.c_str());
 	std::stringstream buffer;
 	std::string fileContent;
-	std::string type;
 	if (file.good()) {
 		buffer << file.rdbuf();
 		fileContent = buffer.str();

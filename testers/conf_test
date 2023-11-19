@@ -40,7 +40,6 @@ server1 {
 		root /pages/site1
 		upload_path /uploads
 		index	upload.html
-		autoindex	false
 		allowed_methods	GET		true
 		allowed_methods	POST	true
 		allowed_methods	DELETE	true
