@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/19 14:56:19 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/19 16:31:26 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void readImage(std::string filename, int code, std::string status, std::string& 
 		type = "application/octet-stream";
 	fileContent = getContent(filename, code, status, errorPath);
 	if (code == 404){
-		type = "text/html";
+		type = "image/png";
 	}
 	
 	content = createResponse(code, status, fileContent, type);
@@ -119,7 +119,7 @@ void executeGet(std::string& response, Server server, HandleRequest handleReques
 		readPage(endpoint, 200, "Ok", response, pathError);
 	} 
 	else {
-		readImage(uploadPath +"/"+ handleRequest.getField("LastPath"), 200, "Ok", response, "", extension);
+		readImage(uploadPath +"/"+ handleRequest.getField("LastPath"), 200, "Ok", response, "images/noPhoto.png", extension);
 	}
 }
 
@@ -213,7 +213,11 @@ void process(std::string& response, HandleRequest handlerRequest, Server server)
 		readPage(server.getErrorPages(403), 403, "Forbidden", response, server.getErrorPages(403));
 		return;
 	}
-	std::set<int>::iterator it = server.getPorts().find(atoi(handlerRequest.getField("Ports").c_str()));
+	
+	std::set<int> portsSet = server.getPorts();
+	int portToFind = atoi(handlerRequest.getField("Ports").c_str());
+
+	std::set<int>::iterator it = portsSet.find(portToFind);
 	if (it == server.getPorts().end()){
 		readPage(server.getErrorPages(404), 404, "Not Found", response, server.getErrorPages(404));
 	} else {
