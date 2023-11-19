@@ -132,13 +132,18 @@ std::string HandleRequest::receiveBody(int client_fd) {
 	const int BUFFER_SIZE = 1024;
 	char buffer[BUFFER_SIZE];
 	std::string received;
+	int bytes_received = 1;
 	while(true) {
-		int bytes_received = recv(client_fd, buffer, sizeof(buffer), 0);
+		bytes_received = recv(client_fd, buffer, sizeof(buffer), 0);
 		if (bytes_received <= 0)
-			return "";
+			break;
 		received.append(buffer, bytes_received);
 		if (bytes_received < BUFFER_SIZE) 
 			break;
+	}
+	if (bytes_received <= 0) {
+		close(client_fd);
+		client_fd = -1;
 	}
 	return received;
 }
