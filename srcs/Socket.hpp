@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 18:23:13 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/18 22:22:37 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 
 #include <unistd.h>
 #include <dirent.h>
-#include <fcntl.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>

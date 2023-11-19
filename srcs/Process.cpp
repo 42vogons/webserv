@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:37 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/18 16:40:00 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/18 22:26:58 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ void executeDelete(std::string& response, Server server, HandleRequest handleReq
 	const char *filename = pathFile.c_str();
 	if (std::remove(filename) == 0) {
 		createPage("File successfully deleted.",200, "Ok",response);
-		std::printf("File successfully deleted.\n");
 	} else {
 		createPage("File deletion unsuccessful. File Not Found",404, "File Not Found",response);
 	}

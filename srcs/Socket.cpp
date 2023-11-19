@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/18 15:49:25 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/18 22:22:23 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,14 @@ std::string Socket::findField(std::string src, std::string field) {
 }
 
 bool fdIsValid(int fd) {
-	return (fcntl(fd, F_GETFD) != -1 || errno != EBADF);
+	int newFd = dup(fd);
+	if (newFd == -1 && errno == EBADF) {
+		return false;
+	}
+	if (newFd != -1) {
+		close(newFd);
+	}
+	return true;
 }
 
 void Socket::closeServerFd(void) {
