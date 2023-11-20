@@ -26,10 +26,10 @@
 
 <p align="center">
   <a href="#about">About</a> &#xa0; | &#xa0; 
-  <a href="#features">Features</a> &#xa0; | &#xa0;
   <a href="#technologies">Technologies</a> &#xa0; | &#xa0;
   <a href="#requirements">Requirements</a> &#xa0; | &#xa0;
   <a href="#starting">Starting</a> &#xa0; | &#xa0;
+  <a href="#testing">Testing</a> &#xa0; | &#xa0;
   <a href="#license">License</a> &#xa0; | &#xa0;
   <a href="https://github.com/42vogons" target="_blank">Author</a>
 </p>
@@ -43,17 +43,13 @@ You will be able to test it with an actual browser.<br>
 HTTP is one of the most used protocols on the internet.<br>
 Knowing its arcane will be useful, even if you won’t be working on a website.
 
-## Features ##
-
-* Socket
-* Parse the config file
-* change /etc/hosts (?)
-
 ## Technologies ##
 
 The following tools were used in this project:
 
-* [C++](https://isocpp.org/std/the-standard)
+* [C++98](https://cplusplus.com/doc/oldtutorial/)
+* [Python](https://www.python.org/)
+* [Go](https://go.dev/)
 
 ## Requirements ##
 
@@ -68,15 +64,35 @@ git clone https://github.com/42vogons/webserv
 # Access
 cd webserv
 
-# Run the project
+# Compile the project
 make
 
-# The server will initialize in the <http://localhost:9000>
-```
+# Run the project
+./webserv
 
-To use the template to initialize files:
-```shell
-bash template.sh path_to_your_class class_name
+# The server will initialize in the <http://localhost:8080>
+```
+## Testing ##
+
+```bash
+# Access the test dir
+cd testers
+
+# Execute shell test
+bash test.sh
+
+# Access the concurrent_requests test dir
+cd testers/concurrent_requests
+
+# Execute concurrent_requests test
+go run concurrent_requests.go [concurrentRequests] [serverURL]
+# Example
+go run concurrent_requests.go 999 http://localhost:8080
+
+# or (using the compiled file - if you don't have go installed in your machine)
+./concurrent_requests [concurrentRequests] [serverURL]
+# Example
+./concurrent_requests 999 http://localhost:8080
 ```
 
 ## License ##

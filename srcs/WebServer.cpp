@@ -24,8 +24,6 @@ WebServer::WebServer(const WebServer& obj) {
 WebServer::~WebServer(void) {
 	for (size_t i = 0; i < this->_vecSocket.size(); i++) {
 		if (this->_vecSocket[i]) {
-			this->_vecSocket[i]->closeServerFd();
-			this->_vecSocket[i]->closeClientFd();
 			delete this->_vecSocket[i];
 		}
 	}
@@ -74,10 +72,10 @@ void WebServer::createVecSocket(void) {
 	}
 }
 
-void WebServer::handleSocketConnections(void) {
+void WebServer::handleSocketConnections(bool &monitor) {
 	this->createVecSocket();
 	this->_poll.start(this->_vecSocket);
-	while (true) {
+	while (monitor) {
 		this->_poll.exec();
 		for (std::vector<int>::size_type i = 0; i < this->_vecSocket.size(); i++){
 			this->_checkEvent(this->_poll, i);

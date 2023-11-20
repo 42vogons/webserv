@@ -3,20 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:23:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/19 23:53:08 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/20 20:04:52 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "WebServer.hpp"
 #include <csignal>
 
+bool monitor = true;
 
 static void handle_signal(int signal) {
 	restore();
-	exit(signal);
+	std::cout << "terminating program, signal: " << signal << std::endl;
+	monitor =false;
 }
 
 int main(int argc, char** argv) {
@@ -39,6 +41,6 @@ int main(int argc, char** argv) {
 	std::cout << webServer;
 	webServer.loadFile(fileName);
 	signal(SIGINT, handle_signal);
-	webServer.handleSocketConnections();
+	webServer.handleSocketConnections(monitor);
 	return (0);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   WebServer.hpp                                        :+:      :+:    :+:   */
+/*   WebServer.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/16 19:35:12 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/24 22:50:33 by anolivei         ###   ########.fr       */
+/*   Created: 2023/11/20 20:07:28 by anolivei          #+#    #+#             */
+/*   Updated: 2023/11/20 20:09:57 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,12 @@ class WebServer {
 	public:
 		WebServer(void);
 		WebServer(const WebServer& obj);
-		virtual ~WebServer(void);
+		~WebServer(void);
 		WebServer&	operator=(const WebServer& obj);
-		void		handleSocketConnections(void);
+		void		handleSocketConnections(bool &monitor);
 		void		createVecSocket(void);
 		void		loadFile(std::string file);
+		volatile sig_atomic_t 			signalReceived;
 
 	private:
 		void	_checkEvent(Poll &poll, size_t index);

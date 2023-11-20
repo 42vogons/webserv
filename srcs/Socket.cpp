@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/18 22:52:50 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/20 19:53:01 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ Socket::Socket(const Socket& obj) {
 }
 
 Socket::~Socket(void) {
-	this->closeClientFd();
-	this->closeServerFd();
 	return ;
 }
 
