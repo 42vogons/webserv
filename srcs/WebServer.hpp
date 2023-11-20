@@ -37,7 +37,7 @@ class WebServer {
 	public:
 		WebServer(void);
 		WebServer(const WebServer& obj);
-		virtual ~WebServer(void);
+		~WebServer(void);
 		WebServer&	operator=(const WebServer& obj);
 		void		handleSocketConnections(bool &monitor);
 		void		createVecSocket(void);

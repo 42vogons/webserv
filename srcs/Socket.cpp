@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/20 11:28:46 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/20 13:55:49 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ Socket::Socket(const Socket& obj) {
 
 Socket::~Socket(void) {
 	std::cout<< "Destrutor Socket" << std::endl;
-	this->closeClientFd();
-	this->closeServerFd();
+	//this->closeClientFd();
+	//this->closeServerFd();
 	
 
 	return ;

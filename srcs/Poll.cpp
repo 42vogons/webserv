@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/22 14:58:15 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/20 13:18:42 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/20 14:15:40 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,8 @@ void Poll::start(std::vector <Socket *> &sockets) {
 }
 
 void Poll::exec(void) {
-	int ret = poll(this->_socketsToWatch, this->_size, 1000);
-	if (ret == -1){
-		throw (PollError());
-	}
+	poll(this->_socketsToWatch, this->_size, 1000);
+
 		
 }
 
