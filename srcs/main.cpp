@@ -6,16 +6,22 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:23:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/19 23:53:08 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/20 13:20:28 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "WebServer.hpp"
 #include <csignal>
 
+bool globalVariable = true;
+
 
 static void handle_signal(int signal) {
 	restore();
+	if (signal == 1)
+    		std::cout << "n sei";
+	std::cout << "saindo" << std::endl;
+	globalVariable = false;
 	exit(signal);
 }
 
@@ -39,6 +45,7 @@ int main(int argc, char** argv) {
 	std::cout << webServer;
 	webServer.loadFile(fileName);
 	signal(SIGINT, handle_signal);
-	webServer.handleSocketConnections();
+	//while (globalVariable)
+	webServer.handleSocketConnections(globalVariable);
 	return (0);
 }

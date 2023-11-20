@@ -22,12 +22,14 @@ WebServer::WebServer(const WebServer& obj) {
 }
 
 WebServer::~WebServer(void) {
+	std::cout << "aaa" << std::endl;
 	for (size_t i = 0; i < this->_vecSocket.size(); i++) {
-		if (this->_vecSocket[i]) {
+		
+		/*if (this->_vecSocket[i]) {
 			this->_vecSocket[i]->closeServerFd();
-			this->_vecSocket[i]->closeClientFd();
-			delete this->_vecSocket[i];
-		}
+			//this->_vecSocket[i]->closeClientFd();
+			//delete this->_vecSocket[i];
+		}*/
 	}
 	return ;
 }
@@ -67,6 +69,7 @@ void WebServer::createVecSocket(void) {
 			while (itSet != iteSet) {
 			Socket *socket = new Socket(*itSet, itMap->second, this->_portsAccepted);
 			this->_vecSocket.push_back(socket);
+			delete socket;
 			itSet++;
 			}
 		}
@@ -74,15 +77,19 @@ void WebServer::createVecSocket(void) {
 	}
 }
 
-void WebServer::handleSocketConnections(void) {
+void WebServer::handleSocketConnections(bool &monitor) {
+	std::cout << monitor << std::endl;
 	this->createVecSocket();
 	this->_poll.start(this->_vecSocket);
+	if (monitor)
+		std::cout << "true" << std::endl;
 	while (true) {
 		this->_poll.exec();
 		for (std::vector<int>::size_type i = 0; i < this->_vecSocket.size(); i++){
 			this->_checkEvent(this->_poll, i);
 		}
 	}
+	std::cout << "saindo" << std::endl;
 }
 
 void WebServer::_checkEvent(Poll &poll, size_t index) {

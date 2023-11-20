@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Poll.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/22 14:58:20 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 18:29:08 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/20 08:48:59 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ class Poll {
 	public:
 		Poll(void);
 		Poll(const Poll& obj);
-		virtual ~Poll(void);
+		~Poll(void);
 		void	start(std::vector<Socket *> &sockets);
 		void	exec(void);
 		short	getReturnEvents(size_t index);

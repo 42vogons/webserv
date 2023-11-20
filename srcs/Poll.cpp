@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Poll.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/22 14:58:15 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 18:28:54 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/20 13:18:42 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ Poll::Poll(const Poll& obj) {
 }
 
 Poll::~Poll(void) {
+	std::cout << "destruindo poll" << std::endl; 
 	delete[] this->_socketsToWatch;
 	return ;
 }
@@ -38,8 +39,10 @@ void Poll::start(std::vector <Socket *> &sockets) {
 
 void Poll::exec(void) {
 	int ret = poll(this->_socketsToWatch, this->_size, 1000);
-	if (ret == -1)
+	if (ret == -1){
 		throw (PollError());
+	}
+		
 }
 
 Socket* Poll::getSocket(size_t index) {

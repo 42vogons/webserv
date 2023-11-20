@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/18 22:52:50 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/20 11:28:46 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,11 @@ Socket::Socket(const Socket& obj) {
 }
 
 Socket::~Socket(void) {
+	std::cout<< "Destrutor Socket" << std::endl;
 	this->closeClientFd();
 	this->closeServerFd();
+	
+
 	return ;
 }
 

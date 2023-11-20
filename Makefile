@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+         #
+#    By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/27 00:08:05 by cpereira          #+#    #+#              #
-#    Updated: 2023/11/18 17:02:42 by anolivei         ###   ########.fr        #
+#    Updated: 2023/11/20 08:30:44 by cpereira         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.opp, $(SRC))
 
 
 CC = c++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -Wshadow -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -Wshadow -g 
 RM = /bin/rm -rf
 CP = /bin/cp
 

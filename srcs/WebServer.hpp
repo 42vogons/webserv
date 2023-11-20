@@ -30,6 +30,8 @@
 	╚════██║██╔═══╝     ██║███╗██║██╔══╝  ██╔══██╗╚════██║██╔══╝  ██╔══██╗╚██╗ ██╔╝ \n \e[38;2;0;186;188m\
 	     ██║███████╗    ╚███╔███╔╝███████╗██████╔╝███████║███████╗██║  ██║ ╚████╔╝  \n \e[38;2;0;186;188m\
 	     ╚═╝╚══════╝     ╚══╝╚══╝ ╚══════╝╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝   \n\n\033[0m"
+		 
+
 
 class WebServer {
 	public:
@@ -37,9 +39,10 @@ class WebServer {
 		WebServer(const WebServer& obj);
 		virtual ~WebServer(void);
 		WebServer&	operator=(const WebServer& obj);
-		void		handleSocketConnections(void);
+		void		handleSocketConnections(bool &monitor);
 		void		createVecSocket(void);
 		void		loadFile(std::string file);
+		volatile sig_atomic_t 			signalReceived;
 
 	private:
 		void	_checkEvent(Poll &poll, size_t index);
@@ -50,6 +53,7 @@ class WebServer {
 		std::map<std::string, Server>	_serversMap;
 		Poll							_poll;
 		std::set<int>			 		_portsAccepted;
+		
 
 	protected:
 };
