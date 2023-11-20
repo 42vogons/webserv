@@ -6,7 +6,7 @@
 /*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/19 14:33:19 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/19 23:52:45 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,23 @@ std::string getContent (std::string filename, int &code, std::string status, std
 	}
 	file.close();
 	return fileContent;
+}
+
+void	restore(){
+	std::ifstream fileHost("hosts_backup");
+	std::string context;
+	std::string fileName = "/etc/hosts";
+	std::string line;
+	std::ofstream outputFile(fileName.c_str(), std::ios::trunc);
+	
+	while (getline(fileHost, line)){
+		context += line + "\n";
+	}
+
+	 if (outputFile.is_open()) {
+       	outputFile << context;
+        outputFile.close();
+    } 
 }
 
 void executeCGI(LocationServer locationServer, std::string& response, std::string method, std::string body) {
