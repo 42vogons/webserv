@@ -10,16 +10,16 @@ import (
 
 func main() {
 	if len(os.Args) != 3 {
-		fmt.Println("Usage: ./concurrent_requests.go [concurrentRequests] [serverURL]")
-		fmt.Println("Example: ./concurrent_requests.go 999 http://localhost:8080")
+		fmt.Println("Usage: ./concurrent_requests [concurrentRequests] [serverURL]")
+		fmt.Println("Example: ./concurrent_requests 999 http://localhost:8080")
 		os.Exit(1)
 	}
 
 	concurrentRequests, err := strconv.Atoi(os.Args[1])
 	if err != nil {
 		fmt.Printf("Invalid number for concurrent requests: %s\n", err)
-		fmt.Println("Usage: ./concurrent_requests.go [concurrentRequests] [serverURL]")
-		fmt.Println("Example: ./concurrent_requests.go 999 http://localhost:8080")
+		fmt.Println("Usage: ./concurrent_requests [concurrentRequests] [serverURL]")
+		fmt.Println("Example: ./concurrent_requests 999 http://localhost:8080")
 		os.Exit(1)
 	}
 
