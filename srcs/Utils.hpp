@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 16:38:53 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/15 23:57:52 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/19 23:45:19 by cpereira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,6 @@ std::string getContent (std::string filename, int &code, std::string status, std
 void executeCGI(LocationServer locationServer, std::string& response, std::string method, std::string body);
 bool directoryExists(const char* path);
 bool createDirectory(const char* path);
+void    restore(void);
 
 #endif
