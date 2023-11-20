@@ -22,12 +22,8 @@ WebServer::WebServer(const WebServer& obj) {
 }
 
 WebServer::~WebServer(void) {
-	std::cout << "aaa" << std::endl;
 	for (size_t i = 0; i < this->_vecSocket.size(); i++) {
-		
 		if (this->_vecSocket[i]) {
-			//this->_vecSocket[i]->closeServerFd();
-			//this->_vecSocket[i]->closeClientFd();
 			delete this->_vecSocket[i];
 		}
 	}
@@ -69,7 +65,6 @@ void WebServer::createVecSocket(void) {
 			while (itSet != iteSet) {
 			Socket *socket = new Socket(*itSet, itMap->second, this->_portsAccepted);
 			this->_vecSocket.push_back(socket);
-			//delete socket;
 			itSet++;
 			}
 		}

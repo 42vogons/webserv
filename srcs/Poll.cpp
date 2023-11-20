@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Poll.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/22 14:58:15 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/20 14:15:40 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/20 19:52:30 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ Poll::Poll(const Poll& obj) {
 }
 
 Poll::~Poll(void) {
-	std::cout << "destruindo poll" << std::endl; 
 	delete[] this->_socketsToWatch;
 	return ;
 }

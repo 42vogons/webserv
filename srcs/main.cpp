@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpereira <cpereira@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:23:56 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/20 14:19:52 by cpereira         ###   ########.fr       */
+/*   Updated: 2023/11/20 20:04:52 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,9 @@
 
 bool monitor = true;
 
-
 static void handle_signal(int signal) {
 	restore();
-	std::cout << "exit " << signal << std::endl;
+	std::cout << "terminating program, signal: " << signal << std::endl;
 	monitor =false;
 }
 

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   WebServer.hpp                                        :+:      :+:    :+:   */
+/*   WebServer.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/16 19:35:12 by anolivei          #+#    #+#             */
-/*   Updated: 2023/04/24 22:50:33 by anolivei         ###   ########.fr       */
+/*   Created: 2023/11/20 20:07:28 by anolivei          #+#    #+#             */
+/*   Updated: 2023/11/20 20:07:35 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ class WebServer {
 		std::map<std::string, Server>	_serversMap;
 		Poll							_poll;
 		std::set<int>			 		_portsAccepted;
-		
 
 	protected:
 };
