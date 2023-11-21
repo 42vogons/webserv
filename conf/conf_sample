@@ -113,8 +113,8 @@ server2 {
 		root /pages/site2
 		upload_path /uploads
 		index	upload.html
-		#allowed_methods	GET		true
-		#allowed_methods	DELETE	true
+		allowed_methods	GET		true
+		allowed_methods	DELETE	true
 
 	}
 
