@@ -17,13 +17,6 @@
   <!-- <img alt="Github stars" src="https://img.shields.io/github/stars/42vogons/webserv?color=56BEB8" /> -->
 </p>
 
-
- <h4 align="center"> 
-		:construction:  Webserv is under construction...  :construction:
-</h4> 
-
-<hr>
-
 <p align="center">
   <a href="#about">About</a> &#xa0; | &#xa0; 
   <a href="#technologies">Technologies</a> &#xa0; | &#xa0;
