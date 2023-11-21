@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:26 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/21 00:01:01 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/21 00:05:40 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,27 +128,6 @@ std::string Socket::findField(std::string src, std::string field) {
 	if (src[pos] == '"')
 		return src.substr(pos + 1, end_pos - pos - 2);
 	return src.substr(pos, end_pos - pos);
-}
-
-bool fdIsValid(int fd) {
-	int newFd = dup(fd);
-	if (newFd == -1 && errno == EBADF) {
-		return false;
-	}
-	if (newFd != -1) {
-		close(newFd);
-	}
-	return true;
-}
-
-void Socket::closeServerFd(void) {
-	if (fdIsValid(this->_server_fd))
-		close(this->_server_fd);
-}
-
-void Socket::closeClientFd(void) {
-	if (fdIsValid(this->_client_fd))
-		close(this->_client_fd);
 }
 
 std::ostream& operator<<(std::ostream& o, const Socket& i) {

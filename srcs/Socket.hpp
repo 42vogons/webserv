@@ -6,7 +6,7 @@
 /*   By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:39:32 by anolivei          #+#    #+#             */
-/*   Updated: 2023/11/18 22:22:37 by anolivei         ###   ########.fr       */
+/*   Updated: 2023/11/21 00:05:52 by anolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ class Socket {
 		void		bindSocketToAddress(void);
 		void		waitConnection(void);
 		void		acceptConnection(void);
-		void		closeServerFd(void);
-		void		closeClientFd(void);
 		void		setHandleRequest(HandleRequest HandleRequest);
 		std::string	findField(std::string src, std::string field);
 		int			getServerFd(void) const;
