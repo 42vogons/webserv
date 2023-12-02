@@ -3,7 +3,6 @@ webserv
 .vscode/
 hosts_backup
 valgrind-out.txt 
-host_backup
 autoIndex.html
 uploads/
 

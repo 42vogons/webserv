@@ -6,7 +6,7 @@
 #    By: anolivei <anolivei@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/27 00:08:05 by cpereira          #+#    #+#              #
-#    Updated: 2023/11/20 20:11:39 by anolivei         ###   ########.fr        #
+#    Updated: 2023/12/02 15:47:43 by anolivei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,9 +46,9 @@ $(OBJ_DIR)/%.opp: $(SRC_DIR)/%.cpp
 		@echo "\033[0;32m[OK]\033[0m    \033[0;38;5;199mCompiling\033[0m $(<F)"
 
 backup:
-	@if [ ! -e host_backup ]; then \
-		$(CP) /etc/hosts host_backup; \
-		echo "\033[0;32m[OK]\033[0m    \033[0;38;5;199mBackup created: host_backup\033[0m"; \
+	@if [ ! -e hosts_backup ]; then \
+		$(CP) /etc/hosts hosts_backup; \
+		echo "\033[0;32m[OK]\033[0m    \033[0;38;5;199mBackup created: hosts_backup\033[0m"; \
 	else \
 		echo "make: Nothing to be done for 'all'."; \
 	fi
@@ -56,8 +56,8 @@ backup:
 clean:
 		@$(RM) $(OBJ_DIR)
 		@echo "\033[0;32m[OK]\033[0m    \033[0;38;5;44mRemoving objects\033[0m"
-		@$(RM) host_backup
-		@echo "\033[0;32m[OK]\033[0m    \033[0;38;5;44mRemoving host_backup\033[0m"
+		@$(RM) hosts_backup
+		@echo "\033[0;32m[OK]\033[0m    \033[0;38;5;44mRemoving hosts_backup\033[0m"
 
 fclean: clean
 		@$(RM) $(NAME)
